@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QPixmap>
+#include <QResizeEvent>
+#include <QDebug>
+#include <QHostAddress> // Pentru adrese IP
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -8,13 +11,22 @@ MainWindow::MainWindow(QWidget *parent)
     , socket(new QTcpSocket(this)) // Inițializare socket
 {
     ui->setupUi(this);
-    this->setStyleSheet("QMainWindow { background-image: url(:/images/DummyChef.jpg); background-position: center; background-repeat: no-repeat; background-size: cover; }");
+
+    // Creăm un QLabel pentru imaginea de fundal
+    backgroundLabel = new QLabel(this);
+    backgroundLabel->setScaledContents(true);
+    backgroundLabel->lower();  // Trimite în spate pentru a nu acoperi UI-ul
+
+    updateBackground();  // Setează imaginea inițial
 
     // Conectează butoanele din UI la funcții
-    connect(ui->connectButton, &QPushButton::clicked, this, &MainWindow::connectToServer);
-    connect(ui->sendButton, &QPushButton::clicked, this, &MainWindow::sendMessage);
-    connect(socket, &QTcpSocket::readyRead, this, &MainWindow::readResponse);
-    connect(socket, &QTcpSocket::disconnected, this, &MainWindow::handleDisconnect);
+    connect(ui->signUpButton, &QPushButton::clicked, this, &MainWindow::handleSignUp);
+    connect(ui->loginButton, &QPushButton::clicked, this, &MainWindow::handleLogin);
+    connect(ui->forgotPasswordButton, &QPushButton::clicked, this, &MainWindow::handleForgotPassword);
+
+    // Conectarea semnalelor și sloturilor pentru socket
+    connect(socket, &QTcpSocket::connected, this, &MainWindow::onConnected);
+    connect(socket, &QTcpSocket::errorOccurred, this, &MainWindow::onError);
 }
 
 MainWindow::~MainWindow()
@@ -22,39 +34,50 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// Funcția care se conectează la server
-void MainWindow::connectToServer()
+// Funcție pentru a actualiza fundalul
+void MainWindow::updateBackground()
 {
+    QPixmap pixmap(":/images/DummyChef.jpg");  // Încarcă imaginea
+    backgroundLabel->setPixmap(pixmap);
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Ocupă întreaga fereastră
+}
+
+// Suprascriere resizeEvent pentru a redimensiona imaginea la schimbarea dimensiunii ferestrei
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+    updateBackground();  // Redimensionează fundalul
+}
+
+void MainWindow::handleSignUp()
+{
+    qDebug() << "Sign Up button clicked!";
+    // Conectează-te la server
     socket->connectToHost("127.0.0.1", 12345); // IP-ul și portul serverului
-    if (socket->waitForConnected(3000)) {
-        ui->statusLabel->setText("Conectat la server!");
-    } else {
-        ui->statusLabel->setText("Eroare la conectare!");
-    }
 }
 
-// Trimitere mesaj către server
-void MainWindow::sendMessage()
+void MainWindow::handleLogin()
 {
-    QString message = ui->inputField->text(); // Ia textul dintr-un QLineEdit
-    if (socket->state() == QTcpSocket::ConnectedState) {
-        socket->write(message.toUtf8());
-        socket->flush();
-    }
+    qDebug() << "Login button clicked!";
+    // Conectează-te la server
+    socket->connectToHost("127.0.0.1", 12345); // IP-ul și portul serverului
 }
 
-// Citirea răspunsului de la server
-void MainWindow::readResponse()
+void MainWindow::handleForgotPassword()
 {
-    QByteArray data = socket->readAll();  // Citește tot ce a trimis serverul
-    QString mesaj = QString::fromUtf8(data);  // Convertim în string
-
-    qDebug() << "Mesaj primit de la server:" << mesaj; // DEBUG
-    ui->outputLabel->setText(mesaj);  // Afișăm mesajul primit
+    qDebug() << "Forgot Password button clicked!";
+    // Poți implementa această funcționalitate aici
 }
 
-// Gestionarea deconectării
-void MainWindow::handleDisconnect()
+// Slot care va fi apelat când conexiunea este stabilită
+void MainWindow::onConnected()
 {
-    ui->statusLabel->setText("Deconectat de la server.");
+    qDebug() << "Conexiune stabilită cu serverul!";
+    // Poți trimite mesaje sau date la server
+}
+
+// Slot pentru a gestiona erorile de conexiune
+void MainWindow::onError(QTcpSocket::SocketError socketError)
+{
+    qDebug() << "Eroare la conectare: " << socket->errorString();
 }
