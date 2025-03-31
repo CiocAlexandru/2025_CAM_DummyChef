@@ -11,6 +11,7 @@ Utilizator::Utilizator(std::string nume, std::string prenume, std::string nume_u
 	this->nr_telefon = nr_telefon;
 	this->data_nasterii = data_nasterii;
 	this->email = email;
+	this->id = idGetter->getID();
 }
 
 void Utilizator::printInfo() const

@@ -44,6 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -130,6 +131,7 @@
     <ClCompile Include="Administrator.cpp" />
     <ClCompile Include="Bucatar.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="DatabaseConnection.cpp" />
     <ClCompile Include="DummyChef.cpp" />
     <ClCompile Include="Exceptie.cpp" />
     <ClCompile Include="Furnizor.cpp" />
@@ -162,6 +164,7 @@
     <ClInclude Include="Administrator.h" />
     <ClInclude Include="Bucatar.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="DatabaseConnection.h" />
     <ClInclude Include="DummyChef.h" />
     <ClInclude Include="Exceptie.h" />
     <ClInclude Include="Furnizor.h" />
@@ -193,6 +196,11 @@
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
     <None Include="ClassDiagram2.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

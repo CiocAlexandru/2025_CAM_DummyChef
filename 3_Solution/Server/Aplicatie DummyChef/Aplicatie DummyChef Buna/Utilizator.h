@@ -15,9 +15,11 @@ protected:
 	std::string nr_telefon;
 	std::string data_nasterii;
 	std::string email;
+	int id;
 public:
 	Utilizator(std::string nume, std::string prenume, std::string nume_utilizator,
 		std::string parola, std::string nr_telefon, std::string data_nasterii, std::string email);
 	void printInfo()const override;
+	virtual ~Utilizator() { idGetter->eraseID(this->id); };
 };
 
