@@ -8,3 +8,12 @@ Administrator* Administrator::getInstance()
         instance = new Administrator();
     return instance;
 }
+
+void Administrator::destroyInstance()
+{
+    if (instance != nullptr)
+    {
+        delete instance;
+        instance = nullptr;
+    }
+}
