@@ -7,6 +7,7 @@
 class Utilizator :public iUtilizator
 {
 protected:
+	IDGenerator* id_unic;
 	std::string nume;
 	std::string prenume;
 	std::string nume_utilizator;
