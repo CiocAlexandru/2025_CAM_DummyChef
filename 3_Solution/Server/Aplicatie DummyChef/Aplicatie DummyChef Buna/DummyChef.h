@@ -13,5 +13,6 @@ private:
 	std::vector<Ingrediente*>ingrediente;
 	std::vector<Reteta*>retete;
 	std::vector<Furnizor*>furnizori;
+
 };
 

@@ -1,6 +1,15 @@
 #pragma once
-#include "Utilizator.h"
-class Administrator :public Utilizator
+#include<iostream>
+#include<string>
+#include<vector>
+#include"Utilizator.h"
+
+class Administrator
 {
+private:
+	static Administrator* instance;
+	std::vector<Utilizator*>utilizatori;
+public:
+	static Administrator* getInstance();
 };
 
