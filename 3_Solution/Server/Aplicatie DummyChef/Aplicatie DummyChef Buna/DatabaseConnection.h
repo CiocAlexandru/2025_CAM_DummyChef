@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <windows.h>
 #include <sqltypes.h>
 #include <sql.h>
@@ -7,6 +7,8 @@
 #include <string>
 #include <stdexcept>
 #include <codecvt>
+
+class Utilizator;
 
 class DatabaseConnection {
 public:
@@ -21,6 +23,13 @@ public:
     void ExecuteNonQuery(const std::wstring& sqlQuery);
     std::vector<std::vector<std::wstring>> ExecuteQuery(const std::wstring& sqlQuery);
     void InsertProduct(const std::wstring& nume, float pret, int stoc);
+
+    // Funcții noi pentru login
+    bool VerifyCredentials(const std::wstring& email, const std::wstring& password);
+    std::wstring GetUserType(const std::wstring& email); // Returnează tipul utilizatorului (Client/Administrator)
+
+    std::unique_ptr<Utilizator> GetUserByCredentials(const std::wstring& email, const std::wstring& password);
+    bool UserExists(const std::wstring& email);
 
 private:
     std::wstring server, database, username, password;
