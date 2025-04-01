@@ -109,6 +109,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Ws2_32.lib; odbc32.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,6 +135,7 @@
     <ClCompile Include="DatabaseConnection.cpp" />
     <ClCompile Include="DummyChef.cpp" />
     <ClCompile Include="Exceptie.cpp" />
+    <ClCompile Include="ExceptieSocket.cpp" />
     <ClCompile Include="Furnizor.cpp" />
     <ClCompile Include="IDGenerator.cpp" />
     <ClCompile Include="iExceptie.cpp" />
@@ -167,6 +169,7 @@
     <ClInclude Include="DatabaseConnection.h" />
     <ClInclude Include="DummyChef.h" />
     <ClInclude Include="Exceptie.h" />
+    <ClInclude Include="ExceptieSocket.h" />
     <ClInclude Include="Furnizor.h" />
     <ClInclude Include="IDGenerator.h" />
     <ClInclude Include="iExceptie.h" />

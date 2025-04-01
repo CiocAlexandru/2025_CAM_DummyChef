@@ -90,9 +90,6 @@
     <ClCompile Include="StatisticiReteta.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="iExceptie.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Exceptie.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -106,6 +103,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DatabaseConnection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExceptieSocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="iExceptie.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -185,9 +188,6 @@
     <ClInclude Include="StatisticiReteta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="iExceptie.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Exceptie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -198,6 +198,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DatabaseConnection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExceptieSocket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="iExceptie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
