@@ -21,5 +21,6 @@ public:
 		std::string parola, std::string nr_telefon, std::string data_nasterii, std::string email);
 	void printInfo()const override;
 	virtual ~Utilizator() { idGetter->eraseID(this->id); };
+	std::string getNume() { return nume_utilizator; };
 };
 

@@ -26,6 +26,7 @@ public:
 	void connectToClient();
 	void closeSocket();
 	void run();
+	void handleLogin(const std::string& email, const std::string& password);
 private:
 	DummyChef(Administrator* administrator):serverSocket(INVALID_SOCKET),clientSocket(INVALID_SOCKET) 
 	{ this->administrator = administrator; };

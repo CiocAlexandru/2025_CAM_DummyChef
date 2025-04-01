@@ -1,4 +1,4 @@
-#include "DummyChef.h"
+﻿#include "DummyChef.h"
 #include <conio.h>
 #include <iomanip>
 
@@ -38,7 +38,7 @@ void DummyChef::run()
         connectToClient();
     }
     catch (...) {
-        closeSocket(); // Asigura-te c� socket-urile sunt inchise in caz de eroare
+        closeSocket(); // Asigura-te că socket-urile sunt inchise in caz de eroare
         throw; // Re-arunca exceptia pentru gestionare ulterioara
     }
 
@@ -192,3 +192,30 @@ void DummyChef::closeSocket()
 }
 
 
+
+void DummyChef::handleLogin(const std::string& email, const std::string& password) {
+    try {
+        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+        db.Connect();
+
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        auto user = db.GetUserByCredentials(
+            converter.from_bytes(email),
+            converter.from_bytes(password)
+        );
+
+        if (user) {
+            std::cout << "Login successful! Welcome " << user->getNume() << std::endl;
+            // Poți adăuga utilizatorul în vectorul de utilizatori
+            utilizatori.push_back(user.release());
+        }
+        else {
+            std::cout << "Login failed! Invalid credentials." << std::endl;
+        }
+
+        db.Disconnect();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error during login: " << e.what() << std::endl;
+    }
+}
