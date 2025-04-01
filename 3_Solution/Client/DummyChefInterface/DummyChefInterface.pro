@@ -9,14 +9,23 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    forgotpassworddialog.cpp \
+    logindialog.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    signupdialog.cpp
 
 HEADERS += \
-    mainwindow.h
+    forgotpassworddialog.h \
+    logindialog.h \
+    mainwindow.h \
+    signupdialog.h
 
 FORMS += \
-    mainwindow.ui
+    forgotpassworddialog.ui \
+    logindialog.ui \
+    mainwindow.ui \
+    signupdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -25,5 +34,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 QT += network
 
 RESOURCES += \
-    Resources.qrc \
-    resource.qrc
+    Resources.qrc

@@ -4,6 +4,11 @@
 #include <QResizeEvent>
 #include <QDebug>
 #include <QHostAddress> // Pentru adrese IP
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "logindialog.h"
+#include "signupdialog.h"
+#include "forgotpassworddialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -27,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent)
     // Conectarea semnalelor și sloturilor pentru socket
     connect(socket, &QTcpSocket::connected, this, &MainWindow::onConnected);
     connect(socket, &QTcpSocket::errorOccurred, this, &MainWindow::onError);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -37,7 +44,7 @@ MainWindow::~MainWindow()
 // Funcție pentru a actualiza fundalul
 void MainWindow::updateBackground()
 {
-    QPixmap pixmap(":/images/DummyChef.jpg");  // Încarcă imaginea
+    QPixmap pixmap(":/images/DummyChefBackground.jpg");  // Încarcă imaginea
     backgroundLabel->setPixmap(pixmap);
     backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Ocupă întreaga fereastră
 }
@@ -51,22 +58,40 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::handleSignUp()
 {
-    qDebug() << "Sign Up button clicked!";
-    // Conectează-te la server
-    socket->connectToHost("127.0.0.1", 12345); // IP-ul și portul serverului
+    SignUpDialog signUpDialog(this);
+
+    // Conectează semnalul de înregistrare
+   /* connect(&signUpDialog, &SignUpDialog::userRegistered, [this](const QString &email, const QString &password) {
+        qDebug() << "Utilizator înregistrat:" << email;
+        // Trimite datele la server
+        socket->connectToHost("127.0.0.1", 12345);
+    });*/
+
+    signUpDialog.exec();
 }
 
 void MainWindow::handleLogin()
 {
-    qDebug() << "Login button clicked!";
-    // Conectează-te la server
-    socket->connectToHost("127.0.0.1", 12345); // IP-ul și portul serverului
+    LoginDialog loginDialog(this);
+    if (loginDialog.exec() == QDialog::Accepted) {
+        qDebug() << "Utilizatorul a dat Login!";
+        // Aici poți face conexiunea la server
+        socket->connectToHost("127.0.0.1", 12345);
+    }
 }
 
 void MainWindow::handleForgotPassword()
 {
-    qDebug() << "Forgot Password button clicked!";
-    // Poți implementa această funcționalitate aici
+    ForgotPasswordDialog forgotDialog(this);
+
+    // Conectează semnalul de resetare
+    connect(&forgotDialog, &ForgotPasswordDialog::passwordResetRequested, [this](const QString &email) {
+        qDebug() << "Resetare parolă pentru:" << email;
+        // Trimite cererea la server
+        socket->write(QString("RESET_PASSWORD %1").arg(email).toUtf8());
+    });
+
+    forgotDialog.exec();
 }
 
 // Slot care va fi apelat când conexiunea este stabilită
