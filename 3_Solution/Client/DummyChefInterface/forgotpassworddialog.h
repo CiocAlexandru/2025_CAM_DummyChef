@@ -2,6 +2,7 @@
 #define FORGOTPASSWORDDIALOG_H
 
 #include <QDialog>
+#include <QLabel>
 
 namespace Ui {
 class ForgotPasswordDialog;
@@ -21,8 +22,11 @@ signals:
 private slots:
     void on_resetButton_clicked(); // Slot pentru butonul de resetare
     void validateEmail(); // Validare email în timp real
-
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 private:
+    void updateBackground();
+    QLabel *backgroundLabel;
     Ui::ForgotPasswordDialog *ui;
 };
 

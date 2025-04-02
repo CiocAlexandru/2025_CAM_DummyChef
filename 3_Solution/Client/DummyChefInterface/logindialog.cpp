@@ -29,6 +29,7 @@ void LoginDialog::updateBackground()
 void LoginDialog::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
+    setWindowState(windowState() | Qt::WindowFullScreen);
     updateBackground();  // Redimensionează fundalul
 }
 

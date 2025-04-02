@@ -9,12 +9,27 @@ ForgotPasswordDialog::ForgotPasswordDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("Recuperare parolă");
-
+    backgroundLabel = new QLabel(this);
+    backgroundLabel->setScaledContents(true);
+    backgroundLabel->lower();
     // Conectează modificarea emailului la validare
     //connect(ui->emailLineEdit, &QLineEdit::textChanged, this, &ForgotPasswordDialog::validateEmail);
 
     // Dezactivează butonul inițial
     //ui->resetButton->setEnabled(false);
+    updateBackground();
+}
+
+void ForgotPasswordDialog::updateBackground() {
+    QPixmap pixmap(":/images/SignUp.jpg");  // Încarcă imaginea din resurse
+    backgroundLabel->setPixmap(pixmap);
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Acoperă întreaga fereastră
+}
+
+void ForgotPasswordDialog::resizeEvent(QResizeEvent *event) {
+    QDialog::resizeEvent(event);
+    setWindowState(windowState() | Qt::WindowFullScreen);
+    updateBackground();  // Actualizează dimensiunea fundalului la redimensionare
 }
 
 ForgotPasswordDialog::~ForgotPasswordDialog()

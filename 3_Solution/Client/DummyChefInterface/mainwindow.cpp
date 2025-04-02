@@ -56,41 +56,58 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::handleSignUp()
 {
-    SignUpDialog signUpDialog(this);
+    this->hide();  // Ascunde fereastra principală
 
-    // Conectează semnalul de înregistrare
-    /* connect(&signUpDialog, &SignUpDialog::userRegistered, [this](const QString &email, const QString &password) {
-        qDebug() << "Utilizator înregistrat:" << email;
-        // Trimite datele la server
-        socket->connectToHost("127.0.0.1", 12345);
-    });*/
+    SignUpDialog signUpDialog(this);  // Creează dialogul de înregistrare
 
-    signUpDialog.exec();
+    if (signUpDialog.exec() == QDialog::Accepted) {
+        qDebug() << "Utilizatorul s-a înregistrat cu succes!";
+         socket->connectToHost("127.0.0.1", 12345);
+        // Aici poți trimite datele la server sau face alte acțiuni
+        // Exemplu: trimitere username, parolă, etc.
+        // socket->write(...);
+
+        // După înregistrare, poți reveni la login sau afișa fereastra principală
+    }
+    else {
+        this->show();  // Reafișează fereastra principală dacă userul anulează
+    }
 }
 
 void MainWindow::handleLogin()
 {
+    this->hide();
     LoginDialog loginDialog(this);
     if (loginDialog.exec() == QDialog::Accepted) {
         qDebug() << "Utilizatorul a dat Login!";
         // Aici poți face conexiunea la server
         socket->connectToHost("127.0.0.1", 12345);
     }
+    else
+    {
+        this->show();
+    }
 }
 
 void MainWindow::handleForgotPassword()
 {
+    this->hide();  // Ascunde fereastra principală
+
     ForgotPasswordDialog forgotDialog(this);
 
-    // Conectează semnalul de resetare
-    connect(&forgotDialog, &ForgotPasswordDialog::passwordResetRequested, [this](const QString &email) {
-        qDebug() << "Resetare parolă pentru:" << email;
-        // Trimite cererea la server
-        socket->write(QString("RESET_PASSWORD %1").arg(email).toUtf8());
-    });
+    int result = forgotDialog.exec();  // Afișează dialogul modally
+    qDebug() << "ForgotPasswordDialog exec() returned: " << result;
 
-    forgotDialog.exec();
+    if (result == QDialog::Accepted) {
+        qDebug() << "Resetare parolă confirmată!";
+        // Nu mai afișăm MainWindow pentru că userul va merge mai departe în aplicație
+    } else {
+        qDebug() << "Resetare parolă anulată!";
+        this->show();  // Dacă utilizatorul a anulat, readuce MainWindow
+    }
 }
+
+
 
 // Slot care va fi apelat când conexiunea este stabilită
 void MainWindow::onConnected()
