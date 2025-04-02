@@ -6,13 +6,69 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1648</width>
+    <height>987</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <widget class="QPushButton" name="loginButton">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>510</y>
+     <width>161</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #45a049;
+}</string>
+   </property>
+   <property name="text">
+    <string>Login</string>
+   </property>
+  </widget>
+  <widget class="QSplitter" name="splitter">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>380</y>
+     <width>521</width>
+     <height>76</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Orientation::Vertical</enum>
+   </property>
+   <widget class="QLineEdit" name="emailLineEdit">
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>35</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="passwordLineEdit">
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>35</height>
+     </size>
+    </property>
+   </widget>
+  </widget>
  </widget>
  <resources/>
  <connections/>

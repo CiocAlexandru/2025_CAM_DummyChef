@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QLabel>
+#include <QTcpSocket>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {class LoginDialog;}
@@ -17,16 +18,22 @@ public:
     ~LoginDialog();
 
 protected:
-    void resizeEvent(QResizeEvent *event) override;  // Suprascriem resizeEvent pentru fundal
+    void resizeEvent(QResizeEvent *event) override;    // Suprascriem resizeEvent pentru fundal
 
 private slots:
-    void on_loginButton_clicked();  // Slot pentru butonul de login
+    void handleLogin();    // Slot pentru butonul de login
+    void onConnected();  // Slot pentru conexiune reușită
+    void onError(QAbstractSocket::SocketError socketError);  // Slot pentru erori
+    void onReadyRead();
 
 private:
     Ui::LoginDialog *ui;
     QLabel *backgroundLabel;  // Adăugăm QLabel pentru fundal
+    QTcpSocket *socket;
 
     void updateBackground();
+    void sendLoginRequest();
+
 };
 
 #endif
