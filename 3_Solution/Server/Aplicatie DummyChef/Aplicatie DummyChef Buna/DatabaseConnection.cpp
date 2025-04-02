@@ -96,6 +96,52 @@ void DatabaseConnection::InsertProduct(const std::wstring& nume, float pret, int
     ExecuteNonQuery(sqlQuery);
 }
 
+void DatabaseConnection::InsertClient(const std::wstring& nume, const std::wstring& prenume,
+    const std::wstring& nume_utilizator, const std::wstring& parola,
+    const std::wstring& nr_telefon, const std::wstring& data_nasterii,
+    const std::wstring& email, const std::wstring& adresa_livrare)
+{
+    if (!isConnected) {
+        throw std::runtime_error("Not connected to database");
+    }
+
+    SQLHSTMT stmt = nullptr;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    // Use parameterized query
+    std::wstring sqlQuery = L"INSERT INTO Utilizatori (Nume, Prenume, NumeUtilizator, Parola, "
+        L"NrTelefon, DataNasterii, Email, AdresaLivrare, TipUtilizator) "
+        L"VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Client')";
+
+    SQLPrepareW(stmt, (SQLWCHAR*)sqlQuery.c_str(), SQL_NTS);
+
+    // Bind parameters with proper length specifications
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
+        nume.length(), 0, (SQLPOINTER)nume.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
+        prenume.length(), 0, (SQLPOINTER)prenume.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 3, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
+        nume_utilizator.length(), 0, (SQLPOINTER)nume_utilizator.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
+        parola.length(), 0, (SQLPOINTER)parola.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 5, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
+        nr_telefon.length(), 0, (SQLPOINTER)nr_telefon.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 6, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
+        data_nasterii.length(), 0, (SQLPOINTER)data_nasterii.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 7, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
+        email.length(), 0, (SQLPOINTER)email.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 8, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
+        adresa_livrare.length(), 0, (SQLPOINTER)adresa_livrare.c_str(), 0, nullptr);
+
+    SQLRETURN ret = SQLExecute(stmt);
+    if (!SQL_SUCCEEDED(ret)) {
+        ThrowIfFailed(ret, L"Error inserting client", SQL_HANDLE_STMT, stmt);
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    std::wcout << L"Client added successfully!" << std::endl;
+}
+
 void DatabaseConnection::ThrowIfFailed(SQLRETURN ret,
     const std::wstring& errorMessage,
     SQLSMALLINT handleType,

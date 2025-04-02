@@ -23,6 +23,7 @@ public:
 	static DummyChef* getApp(Administrator* administrator);
 	static void destroyApp();
 	void RunDatabaseTest();
+	void InsertNewClient();
 	void connectToClient();
 	void closeSocket();
 	void run();

@@ -23,6 +23,10 @@ public:
     void ExecuteNonQuery(const std::wstring& sqlQuery);
     std::vector<std::vector<std::wstring>> ExecuteQuery(const std::wstring& sqlQuery);
     void InsertProduct(const std::wstring& nume, float pret, int stoc);
+    void InsertClient(const std::wstring& nume, const std::wstring& prenume,
+        const std::wstring& nume_utilizator, const std::wstring& parola,
+        const std::wstring& nr_telefon, const std::wstring& data_nasterii,
+        const std::wstring& email, const std::wstring& adresa_livrare);
 
     // Funcții noi pentru login
     bool VerifyCredentials(const std::wstring& email, const std::wstring& password);

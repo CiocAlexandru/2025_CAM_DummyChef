@@ -35,6 +35,7 @@ void DummyChef::run()
    
     try {
         RunDatabaseTest();
+        InsertNewClient();
         connectToClient();
     }
     catch (...) {
@@ -47,6 +48,22 @@ void DummyChef::run()
 
     
     closeSocket();
+}
+
+void DummyChef::InsertNewClient() {
+    try {
+        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+        db.Connect();
+
+        db.InsertClient(L"Popescu", L"Ion", L"ionpopescu", L"parola123",
+            L"0745123456", L"1990-05-15", L"ion.popescu@example.com",
+            L"Strada Mihai Eminescu, nr. 10, Bucuresti");
+
+        db.Disconnect();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error inserting client: " << e.what() << std::endl;
+    }
 }
 
 
