@@ -1,6 +1,7 @@
 ﻿#include "DummyChef.h"
 #include <conio.h>
 #include <iomanip>
+#include <sstream>
 
 
 
@@ -87,42 +88,31 @@ void DummyChef::InsertNewProduct()
 void DummyChef::connectToClient()
 {
     WSADATA wsaData;
-
-    // Initializarea Winsock
     int wsaInitResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (wsaInitResult != 0) 
-    {
-      
-        throw new ExceptieSocket(wsaInitResult, "Eroare la initializarea Winsock, linia: ",86);
+    if (wsaInitResult != 0) {
+        throw new ExceptieSocket(wsaInitResult, "Eroare la initializarea Winsock, linia: ", 86);
     }
 
-    // Crearea unui socket pentru server
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (serverSocket == INVALID_SOCKET) 
-    {
+    if (serverSocket == INVALID_SOCKET) {
         WSACleanup();
         throw new ExceptieSocket(WSAGetLastError(), "Eroare la crearea socketului server, linia: ", 94);
     }
 
-    // Configurarea adresei serverului
     sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_addr.s_addr = INADDR_ANY;  // Accepta conexiuni de la orice adresa IP
-    serverAddr.sin_port = htons(12345); // Portul pe care serverul va asculta
+    serverAddr.sin_addr.s_addr = INADDR_ANY;
+    serverAddr.sin_port = htons(12345);
 
-    // Legarea socketului la adresa si port
     int bindResult = bind(serverSocket, (sockaddr*)&serverAddr, sizeof(serverAddr));
-    if (bindResult == SOCKET_ERROR) 
-    {
+    if (bindResult == SOCKET_ERROR) {
         closesocket(serverSocket);
         WSACleanup();
         throw new ExceptieSocket(WSAGetLastError(), "Eroare la bind, linia: ", 109);
     }
 
-    // Ascultarea pentru conexiuni
     int listenResult = listen(serverSocket, SOMAXCONN);
-    if (listenResult == SOCKET_ERROR) 
-    {
+    if (listenResult == SOCKET_ERROR) {
         closesocket(serverSocket);
         WSACleanup();
         throw new ExceptieSocket(WSAGetLastError(), "Eroare la listen, linia: ", 118);
@@ -130,12 +120,10 @@ void DummyChef::connectToClient()
 
     std::cout << "Serverul asteapta conexiuni...\n";
 
-    // Acceptarea conexiunii clientului
     sockaddr_in clientAddr;
     int clientAddrSize = sizeof(clientAddr);
     clientSocket = accept(serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrSize);
-    if (clientSocket == INVALID_SOCKET) 
-    {
+    if (clientSocket == INVALID_SOCKET) {
         closesocket(serverSocket);
         WSACleanup();
         throw new ExceptieSocket(WSAGetLastError(), "Eroare la acceptarea conexiunii, linia: ", 129);
@@ -144,14 +132,11 @@ void DummyChef::connectToClient()
     std::cout << "Client conectat!\n";
 
     char buffer[1024];
-    while (true) 
-    {
-        memset(buffer, 0, sizeof(buffer));  // Curata buffer-ul
+    while (true) {
+        memset(buffer, 0, sizeof(buffer));
 
-        // Primeste date de la client
         int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
-        if (bytesReceived == SOCKET_ERROR) 
-        {
+        if (bytesReceived == SOCKET_ERROR) {
             throw new ExceptieSocket(WSAGetLastError(), "Eroare la receptionarea datelor, linia: ", 143);
         }
 
@@ -160,18 +145,29 @@ void DummyChef::connectToClient()
             break;
         }
 
-        // Afiseaza mesajul primit de la client
-        std::cout << "Client: " << buffer << std::endl;
+        std::string receivedMessage(buffer);
+        std::cout << "Client: " << receivedMessage << std::endl;
 
-        // Trimite un raspuns catre client
-        std::string response = "Serverul a primit: " + std::string(buffer);
-        int sentBytes = send(clientSocket, response.c_str(), response.length(), 0);
-        if (sentBytes == SOCKET_ERROR) 
-        {
-            throw new ExceptieSocket(WSAGetLastError(), "Eroare la trimiterea mesajului, linia: ", 159);
+        // Verificăm dacă mesajul este o cerere de logare
+        if (receivedMessage.rfind("LOGIN ", 0) == 0) {
+            std::istringstream iss(receivedMessage);
+            std::string command, email, password;
+            iss >> command >> email >> password;
+
+            std::cout << "Se încearcă logarea utilizatorului: " << email << std::endl;
+
+            if (handleLogin(email, password)) {
+                std::string response = "LOGIN_SUCCESS";
+                send(clientSocket, response.c_str(), response.length(), 0);
+            }
+            else {
+                std::string response = "LOGIN_FAILED";
+                send(clientSocket, response.c_str(), response.length(), 0);
+            }
         }
         else {
-            std::cout << "Mesaj trimis clientului: " << response << std::endl;
+            std::string response = "UNKNOWN_COMMAND";
+            send(clientSocket, response.c_str(), response.length(), 0);
         }
     }
 }
@@ -193,7 +189,7 @@ void DummyChef::closeSocket()
 }
 
 
-void DummyChef::handleLogin(const std::string& email, const std::string& password) {
+bool DummyChef::handleLogin(const std::string& email, const std::string& password) {
     try {
         DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
         db.Connect();
@@ -205,24 +201,25 @@ void DummyChef::handleLogin(const std::string& email, const std::string& passwor
         );
 
         if (user) {
-            // If there's already a logged-in user, log them out first
             if (this->utilizator != nullptr) {
                 delete this->utilizator;
                 this->utilizator = nullptr;
             }
 
-            // Set the new user as current
             this->utilizator = user.release();
             std::cout << "Login successful! Welcome " << this->utilizator->getNume() << std::endl;
+            db.Disconnect();
+            return true;
         }
         else {
             std::cout << "Login failed! Invalid credentials." << std::endl;
+            db.Disconnect();
+            return false;
         }
-
-        db.Disconnect();
     }
     catch (const std::exception& e) {
         std::cerr << "Error during login: " << e.what() << std::endl;
+        return false;
     }
 }
 
