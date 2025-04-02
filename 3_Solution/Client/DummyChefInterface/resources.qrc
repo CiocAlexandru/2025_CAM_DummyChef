@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/images">
         <file>DummyChefBackground.jpg</file>
+        <file>LoginnBackground.jpg</file>
+        <file>SignUp.jpg</file>
     </qresource>
 </RCC>

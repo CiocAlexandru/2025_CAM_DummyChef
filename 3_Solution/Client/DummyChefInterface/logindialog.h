@@ -1,25 +1,39 @@
 #ifndef LOGINDIALOG_H
 #define LOGINDIALOG_H
 
-#include <QDialog>
+#include <QWidget>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QPushButton>
 
-namespace Ui {
-class LoginDialog;
-}
-
-class LoginDialog : public QDialog
+class LoginDialog : public QWidget  // Schimbat din QDialog în QWidget
 {
     Q_OBJECT
 
 public:
-    explicit LoginDialog(QWidget *parent = nullptr);  // Constructor
+    explicit LoginDialog(QWidget *parent = nullptr);
     ~LoginDialog();
 
+signals:  // Adăugăm semnale pentru comunicarea cu MainWindow
+    void loginRequested();
+    void signUpRequested();
+    void forgotPasswordRequested();
+
+protected:
+    void resizeEvent(QResizeEvent *event) override;
+
 private slots:
-    void on_loginButton_clicked();  // Slot pentru butonul de login
+    void handleLogin();  // Redenumit din on_loginButton_clicked pentru consistență
 
 private:
-    Ui::LoginDialog *ui;
+    QLabel *backgroundLabel;
+    QPushButton *loginButton;
+    QPushButton *signUpButton;
+    QPushButton *forgotButton;
+    QVBoxLayout *layout;
+
+    void updateBackground();
+    void setupUI();  // Funcție separată pentru inițializarea UI
 };
 
-#endif
+#endif // LOGINDIALOG_H

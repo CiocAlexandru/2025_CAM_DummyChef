@@ -2,6 +2,8 @@
 #include "ui_signupdialog.h"
 #include <QMessageBox>
 #include <QRegularExpression>
+#include <QPixmap>
+#include <QResizeEvent>
 
 SignUpDialog::SignUpDialog(QWidget *parent) :
     QDialog(parent),
@@ -10,6 +12,11 @@ SignUpDialog::SignUpDialog(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("Înregistrare");
 
+    backgroundLabel = new QLabel(this);
+    backgroundLabel->setScaledContents(true);
+    backgroundLabel->lower();  // Trimite în spate pentru a nu acoperi UI-ul
+
+    updateBackground();  // Setează imaginea inițial
     // Conectează schimbările din câmpuri la validare
     //connect(ui->emailLineEdit, &QLineEdit::textChanged, this, &SignUpDialog::validateInputs);
     //connect(ui->passwordLineEdit, &QLineEdit::textChanged, this, &SignUpDialog::validateInputs);
@@ -18,6 +25,20 @@ SignUpDialog::SignUpDialog(QWidget *parent) :
     // Dezactivează butonul inițial
     //ui->signUpButton->setEnabled(false);
 }
+
+void SignUpDialog::updateBackground()
+{
+    QPixmap pixmap(":/images/SignUp.jpg");  // Încarcă imaginea
+    backgroundLabel->setPixmap(pixmap);
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Ocupă întreaga fereastră
+}
+
+void SignUpDialog::resizeEvent(QResizeEvent *event)
+{
+    QDialog::resizeEvent(event);
+    updateBackground();  // Redimensionează fundalul
+}
+
 
 SignUpDialog::~SignUpDialog()
 {
