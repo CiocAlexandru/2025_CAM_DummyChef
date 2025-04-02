@@ -11,6 +11,8 @@ CREATE TABLE Utilizatori (
     DataNasterii DATE NOT NULL,
     Email NVARCHAR(100) UNIQUE NOT NULL,
     AdresaLivrare NVARCHAR(200) ,
+	Experienta INT,
+	LinkDemonstrativ NVARCHAR(50),
     TipUtilizator NVARCHAR(20)  CHECK (TipUtilizator IN ('Client', 'Bucatar'))
 );
 

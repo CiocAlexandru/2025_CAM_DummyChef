@@ -22,19 +22,25 @@ class DummyChef
 public:
 	static DummyChef* getApp(Administrator* administrator);
 	static void destroyApp();
-	void RunDatabaseTest();
+	void InsertNewProduct();
 	void InsertNewClient();
 	void connectToClient();
 	void closeSocket();
 	void run();
 	void handleLogin(const std::string& email, const std::string& password);
+	std::string forgotPassword(const std::string& email);
+	void registerUser(const std::string& userType, const std::string& nume, const std::string& prenume,
+		const std::string& nume_utilizator, const std::string& parola, const std::string& nr_telefon,
+		const std::string& data_nasterii, const std::string& email,
+		const std::string& adresa_livrare = "", int experienta=0, const std::string& link_demonstrativ = "");
+
 private:
 	DummyChef(Administrator* administrator):serverSocket(INVALID_SOCKET),clientSocket(INVALID_SOCKET) 
 	{ this->administrator = administrator; };
 	~DummyChef() { Administrator::destroyInstance(); closeSocket();};
-	std::vector<Utilizator*>utilizatori;
 	std::vector<Ingrediente*>ingrediente;
-	std::vector<Reteta*>retete;
+	Reteta* retete;
+	Utilizator* utilizator;
 	std::vector<Furnizor*>furnizori;
 	Administrator* administrator;
 	static DummyChef* app;

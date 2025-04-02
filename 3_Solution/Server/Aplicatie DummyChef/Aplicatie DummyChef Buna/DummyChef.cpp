@@ -34,19 +34,18 @@ void DummyChef::run()
 {
    
     try {
-        RunDatabaseTest();
-        InsertNewClient();
+
+        InsertNewProduct();
+        registerUser("Client", "Popescu", "Ion", "ionpopescu33546", "parola123",
+            "0745123456", "1990-05-15", "ion.popescu@example.com", "Strada Mihai Eminescu, nr. 10, Bucuresti");
+        registerUser("Bucatar", "Ionescu", "Maria", "mariaionescu", "chef123",
+    "0723123456", "1985-08-20", "maria.ionescu@example.com", "", 5, "https://example.com/chef-demo");
         connectToClient();
     }
     catch (...) {
         closeSocket(); // Asigura-te că socket-urile sunt inchise in caz de eroare
         throw; // Re-arunca exceptia pentru gestionare ulterioara
     }
-
-
-
-
-    
     closeSocket();
 }
 
@@ -67,34 +66,19 @@ void DummyChef::InsertNewClient() {
 }
 
 
-void DummyChef::RunDatabaseTest()
+void DummyChef::InsertNewProduct()
 {
     try {
         DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
         db.Connect();
-
         // Test INSERT
         db.InsertProduct(L"Pizza Margherita", 29.99, 10);
         db.InsertProduct(L"Tiramisu", 15.50, 20);
-
-        // Test SELECT
-        auto results = db.ExecuteQuery(L"SELECT TOP 5 ID, Nume, Pret FROM Produse ORDER BY ID DESC");
-
-        std::wcout << L"Latest products:\n";
-        for (const auto& row : results) {
-            for (const auto& col : row) {
-                std::wcout << col << L" | ";
-            }
-            std::wcout << L"\n";
-        }
-
         db.Disconnect();
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
     }
-
-    std::cout << "\nPress any key to exit...";
     _getch();
 }
 
@@ -209,7 +193,6 @@ void DummyChef::closeSocket()
 }
 
 
-
 void DummyChef::handleLogin(const std::string& email, const std::string& password) {
     try {
         DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
@@ -222,9 +205,15 @@ void DummyChef::handleLogin(const std::string& email, const std::string& passwor
         );
 
         if (user) {
-            std::cout << "Login successful! Welcome " << user->getNume() << std::endl;
-            // Poți adăuga utilizatorul în vectorul de utilizatori
-            utilizatori.push_back(user.release());
+            // If there's already a logged-in user, log them out first
+            if (this->utilizator != nullptr) {
+                delete this->utilizator;
+                this->utilizator = nullptr;
+            }
+
+            // Set the new user as current
+            this->utilizator = user.release();
+            std::cout << "Login successful! Welcome " << this->utilizator->getNume() << std::endl;
         }
         else {
             std::cout << "Login failed! Invalid credentials." << std::endl;
@@ -234,5 +223,77 @@ void DummyChef::handleLogin(const std::string& email, const std::string& passwor
     }
     catch (const std::exception& e) {
         std::cerr << "Error during login: " << e.what() << std::endl;
+    }
+}
+
+void DummyChef::registerUser(const std::string& userType, const std::string& nume, const std::string& prenume,
+    const std::string& nume_utilizator, const std::string& parola, const std::string& nr_telefon,
+    const std::string& data_nasterii, const std::string& email,
+    const std::string& adresa_livrare , int experienta, const std::string& link_demonstrativ )
+{
+    try {
+        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+        db.Connect();
+
+        // Convert strings to wstrings for database compatibility
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        std::wstring wNume = converter.from_bytes(nume);
+        std::wstring wPrenume = converter.from_bytes(prenume);
+        std::wstring wNumeUtilizator = converter.from_bytes(nume_utilizator);
+        std::wstring wParola = converter.from_bytes(parola);
+        std::wstring wNrTelefon = converter.from_bytes(nr_telefon);
+        std::wstring wDataNasterii = converter.from_bytes(data_nasterii);
+        std::wstring wEmail = converter.from_bytes(email);
+        std::wstring wAdresaLivrare = converter.from_bytes(adresa_livrare);
+        std::wstring wLinkDemonstrativ = converter.from_bytes(link_demonstrativ);
+
+        // Check if user already exists
+        if (db.UserExists(wEmail)) {
+            std::cout << "Error: A user with this email already exists!" << std::endl;
+            db.Disconnect();
+            return;
+        }
+
+        if (userType == "Client") {
+            db.InsertClient(wNume, wPrenume, wNumeUtilizator, wParola, wNrTelefon,
+                wDataNasterii, wEmail, wAdresaLivrare);
+            std::cout << "Client registered successfully!" << std::endl;
+        }
+        else if (userType == "Bucatar") {
+            db.InsertChef(wNume, wPrenume, wNumeUtilizator, wParola, wNrTelefon,
+                wDataNasterii, wEmail, experienta, wLinkDemonstrativ);
+            std::cout << "Chef registered successfully!" << std::endl;
+        }
+        else {
+            std::cout << "Error: Invalid user type specified!" << std::endl;
+        }
+
+        db.Disconnect();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error during registration: " << e.what() << std::endl;
+    }
+}
+
+std::string DummyChef::forgotPassword(const std::string& email) {
+    try {
+        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+        db.Connect();
+
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        std::wstring wEmail = converter.from_bytes(email);
+
+        std::wstring password = db.GetPasswordByEmail(wEmail);
+
+        db.Disconnect();
+
+        if (!password.empty()) {
+            return converter.to_bytes(password);
+        }
+        return ""; // Return empty string if not found
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error in forgotPassword: " << e.what() << std::endl;
+        return "";
     }
 }
