@@ -36,7 +36,7 @@ void SignUpDialog::on_bucatarButton_clicked()
 
 void SignUpDialog::updateBackground()
 {
-    QPixmap pixmap(":/images/SignUpBackground.jpg");
+    QPixmap pixmap(":/images/SignUp2.jpg");
     if(!pixmap.isNull()) {
         backgroundLabel->setPixmap(pixmap);
         backgroundLabel->setGeometry(0, 0, width(), height());

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1578</width>
+    <height>987</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,11 +16,48 @@
   <widget class="QPushButton" name="clientButton">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>100</y>
-     <width>93</width>
-     <height>29</height>
+     <x>20</x>
+     <y>280</y>
+     <width>261</width>
+     <height>61</height>
     </rect>
+   </property>
+   <property name="sizeIncrement">
+    <size>
+     <width>2</width>
+     <height>2</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>-1</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    background-color: #4682B4;  /* Albastru metalic */
+    color: white;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    font-family: 'Segoe UI', sans-serif;
+    min-width: 100px;
+    box-shadow: 0 4px 6px rgba(70, 130, 180, 0.3);
+}
+
+QPushButton:hover {
+    background-color: #5A8FBB;
+    box-shadow: 0 6px 8px rgba(70, 130, 180, 0.4);
+}
+
+QPushButton:pressed {
+    background-color: #3A6B99;
+    box-shadow: 0 2px 4px rgba(70, 130, 180, 0.2);
+}</string>
    </property>
    <property name="text">
     <string>Client</string>
@@ -29,11 +66,41 @@
   <widget class="QPushButton" name="bucatarButton">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>190</y>
-     <width>93</width>
-     <height>29</height>
+     <x>1090</x>
+     <y>340</y>
+     <width>261</width>
+     <height>61</height>
     </rect>
+   </property>
+   <property name="sizeIncrement">
+    <size>
+     <width>2</width>
+     <height>2</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    background-color: #FF7A45;  /* Portocaliu aprins */
+    color: white;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    font-family: 'Segoe UI', sans-serif;
+    min-width: 100px;
+    box-shadow: 0 4px 6px rgba(255, 122, 69, 0.3);  /* Umbra colorată */
+}
+
+QPushButton:hover {
+    background-color: #FF8E5C;
+    box-shadow: 0 6px 8px rgba(255, 122, 69, 0.4);
+}
+
+QPushButton:pressed {
+    background-color: #E06B3D;
+    box-shadow: 0 2px 4px rgba(255, 122, 69, 0.2);
+}</string>
    </property>
    <property name="text">
     <string>Bucatar</string>

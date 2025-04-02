@@ -2,6 +2,6 @@
     <qresource prefix="/images">
         <file>DummyChefBackground.jpg</file>
         <file>LoginnBackground.jpg</file>
-        <file>SignUp.jpg</file>
+        <file>SignUp2.jpg</file>
     </qresource>
 </RCC>
