@@ -14,6 +14,9 @@ class SignUpDialog : public QDialog
 {
     Q_OBJECT
 
+signals:
+    void userTypeSelected(const QString &type);
+
 public:
     explicit SignUpDialog(QWidget *parent = nullptr);
     ~SignUpDialog();
@@ -21,6 +24,9 @@ public:
 protected:
     void resizeEvent(QResizeEvent *event) override;  // Suprascriem resizeEvent pentru fundal
 
+private slots:
+    void on_clientButton_clicked();
+    void on_bucatarButton_clicked();
 
 
 private:
