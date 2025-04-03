@@ -165,12 +165,57 @@ void DummyChef::connectToClient()
                 send(clientSocket, response.c_str(), response.length(), 0);
             }
         }
+        // Verificăm dacă mesajul este o cerere de înregistrare
+        else if (receivedMessage.rfind("SIGNUP ", 0) == 0) {
+            std::istringstream iss(receivedMessage);
+            std::string command, userType;
+            iss >> command >> userType;
+
+            if (userType == "CLIENT") {
+                // Format: REGISTER CLIENT nume prenume username parola telefon data_nastere email adresa
+                std::string nume, prenume, username, parola, telefon, data_nastere, email, adresa;
+                iss >> nume >> prenume >> username >> parola >> telefon >> data_nastere >> email >> adresa;
+
+                try {
+                    registerUser("Client", nume, prenume, username, parola, telefon,
+                        data_nastere, email, adresa);
+                    std::string response = "SIGNUP_CLIENT_SUCCESS";
+                    send(clientSocket, response.c_str(), response.length(), 0);
+                }
+                catch (const std::exception& e) {
+                    std::string response = "SIGNUP_CLIENT_FAILED " + std::string(e.what());
+                    send(clientSocket, response.c_str(), response.length(), 0);
+                }
+            }
+            else if (userType == "CHEF") {
+                // Format: REGISTER CHEF nume prenume username parola telefon data_nastere email experienta link_demo
+                std::string nume, prenume, username, parola, telefon, data_nastere, email, link_demo;
+                int experienta;
+                iss >> nume >> prenume >> username >> parola >> telefon >> data_nastere >> email >> experienta >> link_demo;
+
+                try {
+                    registerUser("Bucatar", nume, prenume, username, parola, telefon,
+                        data_nastere, email, "", experienta, link_demo);
+                    std::string response = "SIGNUP_CHEF_SUCCESS";
+                    send(clientSocket, response.c_str(), response.length(), 0);
+                }
+                catch (const std::exception& e) {
+                    std::string response = "SIGNUP_CHEF_FAILED " + std::string(e.what());
+                    send(clientSocket, response.c_str(), response.length(), 0);
+                }
+            }
+            else {
+                std::string response = "REGISTER_INVALID_TYPE";
+                send(clientSocket, response.c_str(), response.length(), 0);
+            }
+        }
         else {
             std::string response = "UNKNOWN_COMMAND";
             send(clientSocket, response.c_str(), response.length(), 0);
         }
     }
 }
+
 
 void DummyChef::closeSocket()
 {

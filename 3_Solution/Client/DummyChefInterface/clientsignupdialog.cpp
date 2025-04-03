@@ -89,7 +89,7 @@ void ClientSignUpDialog::onReadyRead()
 {
     QString response = QString::fromUtf8(socket->readAll()).trimmed();
 
-    if (response == "SIGNUP_SUCCESS") {
+    if (response == "SIGNUP_CLIENT_SUCCESS") {
         QMessageBox::information(this, "Succes", "Cont creat cu succes!");
         accept();
     } else {

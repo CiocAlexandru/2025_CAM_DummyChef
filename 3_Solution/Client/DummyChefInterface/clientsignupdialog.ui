@@ -45,7 +45,7 @@ QPushButton:pressed {
     <string>SignUp</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>90</x>

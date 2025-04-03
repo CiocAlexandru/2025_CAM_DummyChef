@@ -67,7 +67,7 @@ void ChefSignUpDialog::handleSignUp()
 
 void ChefSignUpDialog::onConnected()
 {
-    QString message = QString("SIGNUP_CHEF %1 %2 %3 %4 %5 %6 %7 %8 %9")
+    QString message = QString("SIGNUP CHEF %1 %2 %3 %4 %5 %6 %7 %8 %9")
     .arg(ui->nameLineEdit->text())
         .arg(ui->surnameLineEdit->text())
         .arg(ui->usernameLineEdit->text())
