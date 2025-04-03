@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="loginButton">
    <property name="geometry">
     <rect>
-     <x>710</x>
-     <y>510</y>
+     <x>170</x>
+     <y>470</y>
      <width>161</width>
      <height>51</height>
     </rect>
@@ -43,9 +43,9 @@ QPushButton:hover {
   <widget class="QSplitter" name="splitter">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>380</y>
-     <width>521</width>
+     <x>10</x>
+     <y>360</y>
+     <width>491</width>
      <height>76</height>
     </rect>
    </property>

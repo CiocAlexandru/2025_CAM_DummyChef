@@ -13,98 +13,76 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLineEdit" name="nameLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>260</y>
-     <width>221</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="surnameLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>330</y>
-     <width>221</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="usernameLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>400</y>
-     <width>211</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="passwordLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>470</y>
-     <width>211</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="phoneLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>540</y>
-     <width>201</width>
-     <height>41</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QDateEdit" name="birthDateEdit">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>620</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="emailLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>670</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="adressLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>720</y>
-     <width>181</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QPushButton" name="signupButton">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>330</y>
+     <x>360</x>
+     <y>700</y>
      <width>171</width>
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    background-color: #FF6B6B;  /* Culoare primară */
+    color: white;
+    border-radius: 15px;
+    padding: 10px 20px;
+    border: 2px solid #FF8E8E;
+    font-weight: bold;
+    min-width: 120px;
+}
+
+QPushButton:hover {
+    background-color: #FF8E8E;  /* Culoare la hover */
+}
+
+QPushButton:pressed {
+    background-color: #FF5252;  /* Culoare la click */
+}</string>
+   </property>
    <property name="text">
     <string>SignUp</string>
    </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>310</y>
+     <width>231</width>
+     <height>441</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLineEdit" name="nameLineEdit"/>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="surnameLineEdit"/>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="usernameLineEdit"/>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="passwordLineEdit"/>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="confirmPasswordLineEdit"/>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="phoneLineEdit"/>
+    </item>
+    <item>
+     <widget class="QDateEdit" name="birthDateEdit"/>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="emailLineEdit"/>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="adressLineEdit"/>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

@@ -10,6 +10,9 @@ ClientSignUpDialog::ClientSignUpDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("Înregistrare Client");
+    backgroundLabel = new QLabel(this);
+    backgroundLabel->setScaledContents(true);
+    backgroundLabel->lower();
 
     // Configurare câmpuri
     ui->nameLineEdit->setPlaceholderText("Introduceți numele");
@@ -17,6 +20,8 @@ ClientSignUpDialog::ClientSignUpDialog(QWidget *parent) :
     ui->usernameLineEdit->setPlaceholderText("Introduceți numele de utilizator");
     ui->passwordLineEdit->setPlaceholderText("Introduceți parola");
     ui->passwordLineEdit->setEchoMode(QLineEdit::Password);
+    ui->confirmPasswordLineEdit->setPlaceholderText("Confirmați parola");
+    ui->confirmPasswordLineEdit->setEchoMode(QLineEdit::Password);
     ui->phoneLineEdit->setPlaceholderText("Introduceți numărul de telefon");
     ui->birthDateEdit->setDisplayFormat("dd.MM.yyyy");
     ui->emailLineEdit->setPlaceholderText("Introduceți email");
@@ -26,6 +31,8 @@ ClientSignUpDialog::ClientSignUpDialog(QWidget *parent) :
     connect(socket, &QTcpSocket::connected, this, &ClientSignUpDialog::onConnected);
     connect(socket, &QTcpSocket::errorOccurred, this, &ClientSignUpDialog::onError);
     connect(socket, &QTcpSocket::readyRead, this, &ClientSignUpDialog::onReadyRead);
+
+    updateBackground();
 }
 
 void ClientSignUpDialog::handleSignUp()
@@ -34,13 +41,18 @@ void ClientSignUpDialog::handleSignUp()
     QString surname = ui->surnameLineEdit->text().trimmed();
     QString username = ui->usernameLineEdit->text().trimmed();
     QString password = ui->passwordLineEdit->text();
+    QString confirmPassword = ui->confirmPasswordLineEdit->text();
     QString phone = ui->phoneLineEdit->text().trimmed();
     QString birthDate = ui->birthDateEdit->text();
     QString email = ui->emailLineEdit->text().trimmed();
     QString address = ui->adressLineEdit->text().trimmed();
 
-    if (name.isEmpty() || surname.isEmpty() || username.isEmpty() || password.isEmpty() || phone.isEmpty() || birthDate.isEmpty() || email.isEmpty() || address.isEmpty()) {
+    if (name.isEmpty() || surname.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || phone.isEmpty() || birthDate.isEmpty() || email.isEmpty() || address.isEmpty()) {
         QMessageBox::warning(this, "Eroare", "Completați toate câmpurile!");
+        return;
+    }
+    if (password != confirmPassword) {
+        QMessageBox::warning(this, "Eroare", "Parolele nu coincid!");
         return;
     }
 
@@ -84,6 +96,19 @@ void ClientSignUpDialog::onReadyRead()
         QMessageBox::warning(this, "Eroare", "Înregistrare eșuată!");
     }
 }
+
+void ClientSignUpDialog::updateBackground() {
+    QPixmap pixmap(":/images/LoginClient.jpg");  // Încarcă imaginea din resurse
+    backgroundLabel->setPixmap(pixmap);
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Acoperă întreaga fereastră
+}
+
+void ClientSignUpDialog::resizeEvent(QResizeEvent *event) {
+    QDialog::resizeEvent(event);
+    setWindowState(windowState() | Qt::WindowFullScreen);
+    updateBackground();  // Actualizează dimensiunea fundalului la redimensionare
+}
+
 
 ClientSignUpDialog::~ClientSignUpDialog()
 {

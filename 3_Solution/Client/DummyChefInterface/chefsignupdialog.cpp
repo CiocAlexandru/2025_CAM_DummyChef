@@ -10,6 +10,9 @@ ChefSignUpDialog::ChefSignUpDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("Înregistrare Bucătar");
+    backgroundLabel = new QLabel(this);
+    backgroundLabel->setScaledContents(true);
+    backgroundLabel->lower();
 
     // Configurare câmpuri
     ui->nameLineEdit->setPlaceholderText("Introduceți numele");
@@ -17,6 +20,8 @@ ChefSignUpDialog::ChefSignUpDialog(QWidget *parent) :
     ui->usernameLineEdit->setPlaceholderText("Introduceți numele de utilizator");
     ui->passwordLineEdit->setPlaceholderText("Introduceți parola");
     ui->passwordLineEdit->setEchoMode(QLineEdit::Password);
+    ui->confirmPasswordLineEdit->setPlaceholderText("Confirmați parola");
+    ui->confirmPasswordLineEdit->setEchoMode(QLineEdit::Password);
     ui->phoneLineEdit->setPlaceholderText("Introduceți numărul de telefon");
     ui->birthDateEdit->setDisplayFormat("dd.MM.yyyy");
     ui->emailLineEdit->setPlaceholderText("Introduceți email");
@@ -28,6 +33,8 @@ ChefSignUpDialog::ChefSignUpDialog(QWidget *parent) :
     connect(socket, &QTcpSocket::connected, this, &ChefSignUpDialog::onConnected);
     connect(socket, &QTcpSocket::errorOccurred, this, &ChefSignUpDialog::onError);
     connect(socket, &QTcpSocket::readyRead, this, &ChefSignUpDialog::onReadyRead);
+
+    updateBackground();
 }
 
 void ChefSignUpDialog::handleSignUp()
@@ -36,16 +43,22 @@ void ChefSignUpDialog::handleSignUp()
     QString surname = ui->surnameLineEdit->text().trimmed();
     QString username = ui->usernameLineEdit->text().trimmed();
     QString password = ui->passwordLineEdit->text();
+    QString confirmPassword = ui->confirmPasswordLineEdit->text();
     QString phone = ui->phoneLineEdit->text().trimmed();
     QString birthDate = ui->birthDateEdit->text();
     QString email = ui->emailLineEdit->text().trimmed();
     QString experienceYears = ui->experienceYearsLineEdit->text().trimmed();
     QString experienceLink = ui->experienceLinkLineEdit->text().trimmed();
 
-    if (name.isEmpty() || surname.isEmpty() || username.isEmpty() || password.isEmpty() ||
+    if (name.isEmpty() || surname.isEmpty() || username.isEmpty() || password.isEmpty() ||confirmPassword.isEmpty() ||
         phone.isEmpty() || birthDate.isEmpty() || email.isEmpty() ||
         experienceYears.isEmpty() || experienceLink.isEmpty()) {
         QMessageBox::warning(this, "Eroare", "Completați toate câmpurile!");
+        return;
+    }
+
+    if (password != confirmPassword) {
+        QMessageBox::warning(this, "Eroare", "Parolele nu coincid!");
         return;
     }
 
@@ -84,6 +97,18 @@ void ChefSignUpDialog::onReadyRead()
     } else {
         QMessageBox::warning(this, "Eroare", "Înregistrare eșuată!");
     }
+}
+
+void ChefSignUpDialog::updateBackground() {
+    QPixmap pixmap(":/images/LoginBucatar.jpg");  // Încarcă imaginea din resurse
+    backgroundLabel->setPixmap(pixmap);
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Acoperă întreaga fereastră
+}
+
+void ChefSignUpDialog::resizeEvent(QResizeEvent *event) {
+    QDialog::resizeEvent(event);
+    setWindowState(windowState() | Qt::WindowFullScreen);
+    updateBackground();  // Actualizează dimensiunea fundalului la redimensionare
 }
 
 ChefSignUpDialog::~ChefSignUpDialog()

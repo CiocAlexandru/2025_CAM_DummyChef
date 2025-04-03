@@ -43,7 +43,7 @@ void LoginDialog::handleLogin()  // Nume modificat
 
 void LoginDialog::updateBackground()
 {
-    QPixmap pixmap(":/images/LoginnBackground.jpg");  // Încarcă imaginea
+    QPixmap pixmap(":/images/LoginBuna.jpg");  // Încarcă imaginea
     backgroundLabel->setPixmap(pixmap);
     backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Ocupă întreaga fereastră
 }

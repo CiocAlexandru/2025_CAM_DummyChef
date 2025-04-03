@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QTcpSocket>
+#include <QLabel>
 
 namespace Ui {
 class ChefSignUpDialog;
@@ -22,9 +23,14 @@ private slots:
     void onError(QAbstractSocket::SocketError socketError);
     void onReadyRead();
 
+protected:
+     void resizeEvent(QResizeEvent *event) override;
+
 private:
     Ui::ChefSignUpDialog *ui;
     QTcpSocket *socket;
+    QLabel *backgroundLabel;
+    void updateBackground();
 };
 
 #endif // CHEFSIGNUPDIALOG_H

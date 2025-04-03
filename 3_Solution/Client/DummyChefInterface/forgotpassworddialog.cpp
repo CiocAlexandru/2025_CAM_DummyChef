@@ -21,7 +21,7 @@ ForgotPasswordDialog::ForgotPasswordDialog(QWidget *parent) :
 }
 
 void ForgotPasswordDialog::updateBackground() {
-    QPixmap pixmap(":/images/SignUp.jpg");  // Încarcă imaginea din resurse
+    QPixmap pixmap(":/images/ForgotPassword.jpg");  // Încarcă imaginea din resurse
     backgroundLabel->setPixmap(pixmap);
     backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Acoperă întreaga fereastră
 }
