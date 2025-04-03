@@ -24,15 +24,18 @@ SignUpDialog::SignUpDialog(QWidget *parent) :
 
 void SignUpDialog::on_clientButton_clicked()
 {
-    emit userTypeSelected("CLIENT");
-    accept();
+    ClientSignUpDialog *clientDialog = new ClientSignUpDialog(this);
+    clientDialog->exec();
+    delete clientDialog;  // Eliberăm memoria după închidere
 }
+
 
 void SignUpDialog::on_bucatarButton_clicked()
 {
-    emit userTypeSelected("BUCATAR");
-    accept();
-}
+    ChefSignUpDialog *chefDialog = new ChefSignUpDialog(this);
+    chefDialog->exec();
+    delete chefDialog;  // Eliberăm memoria după închidere
+ }
 
 void SignUpDialog::updateBackground()
 {
@@ -54,3 +57,5 @@ SignUpDialog::~SignUpDialog()
 {
     delete ui;
 }
+
+

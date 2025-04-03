@@ -2,9 +2,10 @@
 #define SIGNUPDIALOG_H
 
 #include <QDialog>
-
+#include <QTcpSocket>
 #include <QLabel>
-
+#include "clientsignupdialog.h"  // Fereastra pentru client
+#include "chefsignupdialog.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {class SignUpDialog;}
 QT_END_NAMESPACE
@@ -28,11 +29,10 @@ private slots:
     void on_clientButton_clicked();
     void on_bucatarButton_clicked();
 
-
 private:
     Ui::SignUpDialog *ui;
     QLabel *backgroundLabel;  // Adăugăm QLabel pentru fundal
-
+    QTcpSocket *socket;
     void updateBackground();
 };
 
