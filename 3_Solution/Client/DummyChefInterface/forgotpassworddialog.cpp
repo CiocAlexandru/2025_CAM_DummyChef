@@ -5,20 +5,25 @@
 
 ForgotPasswordDialog::ForgotPasswordDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ForgotPasswordDialog)
+    ui(new Ui::ForgotPasswordDialog),
+    socket(new QTcpSocket(this))  // Inițializează socket-ul aici!
 {
     ui->setupUi(this);
     setWindowTitle("Recuperare parolă");
+
     backgroundLabel = new QLabel(this);
     backgroundLabel->setScaledContents(true);
     backgroundLabel->lower();
-    // Conectează modificarea emailului la validare
-    //connect(ui->emailLineEdit, &QLineEdit::textChanged, this, &ForgotPasswordDialog::validateEmail);
+    ui->emailLineEdit->setPlaceholderText("Introduceți email-ul pentru resetare");
 
-    // Dezactivează butonul inițial
-    //ui->resetButton->setEnabled(false);
+    connect(ui->sendButton, &QPushButton::clicked, this, &ForgotPasswordDialog::handleSendRequest);
+    connect(socket, &QTcpSocket::connected, this, &ForgotPasswordDialog::onConnected);
+    connect(socket, &QTcpSocket::errorOccurred, this, &ForgotPasswordDialog::onError);
+    connect(socket, &QTcpSocket::readyRead, this, &ForgotPasswordDialog::onReadyRead);
+
     updateBackground();
 }
+
 
 void ForgotPasswordDialog::updateBackground() {
     QPixmap pixmap(":/images/ForgotPassword.jpg");  // Încarcă imaginea din resurse
@@ -32,29 +37,48 @@ void ForgotPasswordDialog::resizeEvent(QResizeEvent *event) {
     updateBackground();  // Actualizează dimensiunea fundalului la redimensionare
 }
 
+void ForgotPasswordDialog::handleSendRequest()
+{
+    QString email = ui->emailLineEdit->text().trimmed();
+
+    if (email.isEmpty()) {
+        QMessageBox::warning(this, "Eroare", "Introduceți un email valabil!");
+        return;
+    }
+
+    socket->connectToHost("127.0.0.1", 12345);
+}
+
+void ForgotPasswordDialog::onConnected()
+{
+    QString message = QString("FORGOT_PASSWORD %1").arg(ui->emailLineEdit->text());
+    socket->write(message.toUtf8());
+}
+
+void ForgotPasswordDialog::onReadyRead()
+{
+    QString response = QString::fromUtf8(socket->readAll()).trimmed();
+
+    if (response == "EMAIL_FOUND") {
+        QMessageBox::information(this, "Succes", "Un cod de resetare a fost trimis la email!");
+        this->close();
+
+       // ResetPasswordDialog resetDialog;
+       // resetDialog.exec();
+    } else {
+        QMessageBox::warning(this, "Eroare", "Email-ul nu există în baza de date!");
+    }
+}
+
+void ForgotPasswordDialog::onError(QAbstractSocket::SocketError socketError)
+{
+    Q_UNUSED(socketError)
+    QMessageBox::critical(this, "Eroare", "Eroare conexiune: " + socket->errorString());
+}
+
 ForgotPasswordDialog::~ForgotPasswordDialog()
 {
     delete ui;
 }
 
-void ForgotPasswordDialog::validateEmail()
-{
-    //const QString email = ui->emailLineEdit->text();
-    //bool isValid = QRegularExpression("^[^@]+@[^@]+\\.[^@]+$").match(email).hasMatch();
 
-    //ui->resetButton->setEnabled(isValid);
-   // ui->emailLineEdit->setStyleSheet(isValid ? "" : "border: 1px solid red;");
-}
-
-void ForgotPasswordDialog::on_resetButton_clicked()
-{
-   // const QString email = ui->emailLineEdit->text();
-
-    // Emite semnalul cu emailul
-    //emit passwordResetRequested(email);
-
-    // Afișează confirmare
-    QMessageBox::information(this, "Link trimis", "Un link de resetare a fost trimis la adresa de email.");
-
-    accept(); // Închide dialogul
-}

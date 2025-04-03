@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QLabel>
+#include <QTcpSocket>
 
 namespace Ui {
 class ForgotPasswordDialog;
@@ -16,17 +17,17 @@ public:
     explicit ForgotPasswordDialog(QWidget *parent = nullptr);
     ~ForgotPasswordDialog();
 
-signals:
-    void passwordResetRequested(const QString &email); // Semnal pentru resetare parolă
-
 private slots:
-    void on_resetButton_clicked(); // Slot pentru butonul de resetare
-    void validateEmail(); // Validare email în timp real
+    void handleSendRequest();
+    void onConnected();
+    void onError(QAbstractSocket::SocketError socketError);
+    void onReadyRead();
 protected:
     void resizeEvent(QResizeEvent *event) override;
 private:
     void updateBackground();
     QLabel *backgroundLabel;
+    QTcpSocket *socket;
     Ui::ForgotPasswordDialog *ui;
 };
 
