@@ -28,7 +28,7 @@ public:
 	void closeSocket();
 	void run();
 	bool handleLogin(const std::string& email, const std::string& password);
-	std::string forgotPassword(const std::string& email);
+	void handleForgotPassword(const std::string& request);
 	void registerUser(const std::string& userType, const std::string& nume, const std::string& prenume,
 		const std::string& nume_utilizator, const std::string& parola, const std::string& nr_telefon,
 		const std::string& data_nasterii, const std::string& email,

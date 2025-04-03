@@ -209,6 +209,10 @@ void DummyChef::connectToClient()
                 send(clientSocket, response.c_str(), response.length(), 0);
             }
         }
+        else if (receivedMessage.rfind("FORGOT_PASSWORD ", 0) == 0)
+        {
+            handleForgotPassword(receivedMessage);
+        }
         else {
             std::string response = "UNKNOWN_COMMAND";
             send(clientSocket, response.c_str(), response.length(), 0);
@@ -316,8 +320,11 @@ void DummyChef::registerUser(const std::string& userType, const std::string& num
         std::cerr << "Error during registration: " << e.what() << std::endl;
     }
 }
+void DummyChef::handleForgotPassword(const std::string& request) {
+    std::istringstream iss(request);
+    std::string command, email;
+    iss >> command >> email;
 
-std::string DummyChef::forgotPassword(const std::string& email) {
     try {
         DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
         db.Connect();
@@ -325,17 +332,30 @@ std::string DummyChef::forgotPassword(const std::string& email) {
         std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
         std::wstring wEmail = converter.from_bytes(email);
 
-        std::wstring password = db.GetPasswordByEmail(wEmail);
+        if (db.UserExists(wEmail)) {
+            std::string response = "EMAIL_FOUND";
+            send(clientSocket, response.c_str(), response.length(), 0);
+            // Generează cod de 6 cifre (fără stocare)
+            std::srand(std::time(nullptr));
+            int resetCode = 100000 + std::rand() % 900000;
+
+            // Afișează codul în consolă (în loc de trimitere email)
+            std::cout << "[FORGOT_PASSWORD] Cod pentru " << email << ": " << resetCode << std::endl;
+
+            // Răspuns simplu către client (fără cod, doar confirmare)
+            response = "RESET_CODE_GENERATED";
+            send(clientSocket, response.c_str(), response.length(), 0);
+        }
+        else
+        {
+            std::string response = "EMAIL_NOT_FOUND";
+            send(clientSocket, response.c_str(), response.length(), 0);
+        }
 
         db.Disconnect();
-
-        if (!password.empty()) {
-            return converter.to_bytes(password);
-        }
-        return ""; // Return empty string if not found
     }
     catch (const std::exception& e) {
-        std::cerr << "Error in forgotPassword: " << e.what() << std::endl;
-        return "";
+        std::string response = "FORGOT_PASSWORD_ERROR: " + std::string(e.what());
+        send(clientSocket, response.c_str(), response.length(), 0);
     }
 }
