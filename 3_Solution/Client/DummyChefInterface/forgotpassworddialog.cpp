@@ -3,6 +3,8 @@
 #include <QMessageBox>
 #include <QRegularExpression>
 
+#include "resetpassworddialog.h"
+
 ForgotPasswordDialog::ForgotPasswordDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ForgotPasswordDialog),
@@ -45,7 +47,6 @@ void ForgotPasswordDialog::handleSendRequest()
         QMessageBox::warning(this, "Eroare", "Introduceți un email valabil!");
         return;
     }
-
     socket->connectToHost("127.0.0.1", 12345);
 }
 
@@ -61,12 +62,14 @@ void ForgotPasswordDialog::onReadyRead()
 
     if (response == "EMAIL_FOUND") {
         QMessageBox::information(this, "Succes", "Un cod de resetare a fost trimis la email!");
+        ResetPasswordDialog resetDialog(ui->emailLineEdit->text(), this);
+        resetDialog.exec();
         this->close();
 
-       // ResetPasswordDialog resetDialog;
-       // resetDialog.exec();
     } else {
         QMessageBox::warning(this, "Eroare", "Email-ul nu există în baza de date!");
+        ui->emailLineEdit->clear();
+        ui->emailLineEdit->setFocus();
     }
 }
 

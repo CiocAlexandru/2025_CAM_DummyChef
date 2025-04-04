@@ -87,57 +87,74 @@ void DummyChef::InsertNewProduct()
 
 void DummyChef::connectToClient()
 {
+
     WSADATA wsaData;
     int wsaInitResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (wsaInitResult != 0) {
-        throw new ExceptieSocket(wsaInitResult, "Eroare la initializarea Winsock, linia: ", 86);
+        std::cerr << "Eroare Winsock: " << wsaInitResult << std::endl;
+        return;
     }
 
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket == INVALID_SOCKET) {
         WSACleanup();
-        throw new ExceptieSocket(WSAGetLastError(), "Eroare la crearea socketului server, linia: ", 94);
+        std::cerr << "Eroare la crearea socketului server." << std::endl;
+        return;
     }
 
-    sockaddr_in serverAddr;
+    sockaddr_in serverAddr{};
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_addr.s_addr = INADDR_ANY;
     serverAddr.sin_port = htons(12345);
 
-    int bindResult = bind(serverSocket, (sockaddr*)&serverAddr, sizeof(serverAddr));
-    if (bindResult == SOCKET_ERROR) {
+    if (bind(serverSocket, (sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
         closesocket(serverSocket);
         WSACleanup();
-        throw new ExceptieSocket(WSAGetLastError(), "Eroare la bind, linia: ", 109);
+        std::cerr << "Eroare la bind." << std::endl;
+        return;
     }
 
-    int listenResult = listen(serverSocket, SOMAXCONN);
-    if (listenResult == SOCKET_ERROR) {
+    if (listen(serverSocket, SOMAXCONN) == SOCKET_ERROR) {
         closesocket(serverSocket);
         WSACleanup();
-        throw new ExceptieSocket(WSAGetLastError(), "Eroare la listen, linia: ", 118);
+        std::cerr << "Eroare la listen." << std::endl;
+        return;
     }
 
     std::cout << "Serverul asteapta conexiuni...\n";
 
-    sockaddr_in clientAddr;
-    int clientAddrSize = sizeof(clientAddr);
-    clientSocket = accept(serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrSize);
-    if (clientSocket == INVALID_SOCKET) {
-        closesocket(serverSocket);
-        WSACleanup();
-        throw new ExceptieSocket(WSAGetLastError(), "Eroare la acceptarea conexiunii, linia: ", 129);
+    while (true) {
+        sockaddr_in clientAddr;
+        int clientAddrSize = sizeof(clientAddr);
+        clientSocket = accept(serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrSize);
+
+        if (clientSocket == INVALID_SOCKET) {
+            std::cerr << "Eroare la acceptarea conexiunii.\n";
+            continue;
+        }
+
+        std::cout << "Client conectat!\n";
+
+        handleClient(); // Tot fără thread
+
+        closesocket(clientSocket);
     }
 
-    std::cout << "Client conectat!\n";
+    closeSocket();
+}
 
+
+void DummyChef::handleClient()
+{
     char buffer[1024];
+
     while (true) {
         memset(buffer, 0, sizeof(buffer));
-
         int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
+
         if (bytesReceived == SOCKET_ERROR) {
-            throw new ExceptieSocket(WSAGetLastError(), "Eroare la receptionarea datelor, linia: ", 143);
+            std::cerr << "Eroare la receptionare. Inchidem clientul." << std::endl;
+            break;
         }
 
         if (bytesReceived == 0) {
@@ -148,78 +165,67 @@ void DummyChef::connectToClient()
         std::string receivedMessage(buffer);
         std::cout << "Client: " << receivedMessage << std::endl;
 
-        // Verificăm dacă mesajul este o cerere de logare
-        if (receivedMessage.rfind("LOGIN ", 0) == 0) {
-            std::istringstream iss(receivedMessage);
-            std::string command, email, password;
-            iss >> command >> email >> password;
+        try {
+            if (receivedMessage.rfind("LOGIN ", 0) == 0) {
+                std::istringstream iss(receivedMessage);
+                std::string command, email, password;
+                iss >> command >> email >> password;
 
-            std::cout << "Se încearcă logarea utilizatorului: " << email << std::endl;
-
-            if (handleLogin(email, password)) {
-                std::string response = "LOGIN_SUCCESS";
-                send(clientSocket, response.c_str(), response.length(), 0);
+                if (handleLogin(email, password)) {
+                    std::string response = "LOGIN_SUCCESS";
+                    send(clientSocket, response.c_str(), response.length(), 0);
+                }
+                else {
+                    std::string response = "LOGIN_FAILED";
+                    send(clientSocket, response.c_str(), response.length(), 0);
+                }
             }
-            else {
-                std::string response = "LOGIN_FAILED";
-                send(clientSocket, response.c_str(), response.length(), 0);
-            }
-        }
-        // Verificăm dacă mesajul este o cerere de înregistrare
-        else if (receivedMessage.rfind("SIGNUP ", 0) == 0) {
-            std::istringstream iss(receivedMessage);
-            std::string command, userType;
-            iss >> command >> userType;
+            else if (receivedMessage.rfind("SIGNUP ", 0) == 0) {
+                std::istringstream iss(receivedMessage);
+                std::string command, userType;
+                iss >> command >> userType;
 
-            if (userType == "CLIENT") {
-                // Format: REGISTER CLIENT nume prenume username parola telefon data_nastere email adresa
-                std::string nume, prenume, username, parola, telefon, data_nastere, email, adresa;
-                iss >> nume >> prenume >> username >> parola >> telefon >> data_nastere >> email >> adresa;
+                if (userType == "CLIENT") {
+                    std::string nume, prenume, username, parola, telefon, data_nasterii, email, adresa;
+                    iss >> nume >> prenume >> username >> parola >> telefon >> data_nasterii >> email >> adresa;
 
-                try {
-                    registerUser("Client", nume, prenume, username, parola, telefon,
-                        data_nastere, email, adresa);
+                    registerUser("Client", nume, prenume, username, parola, telefon, data_nasterii, email, adresa);
                     std::string response = "SIGNUP_CLIENT_SUCCESS";
-                    send(clientSocket, response.c_str(), response.length(), 0);
+                    send(clientSocket, response.c_str(), response.size(), 0);
                 }
-                catch (const std::exception& e) {
-                    std::string response = "SIGNUP_CLIENT_FAILED " + std::string(e.what());
-                    send(clientSocket, response.c_str(), response.length(), 0);
+                else if (userType == "CHEF") {
+                    std::string nume, prenume, username, parola, telefon, data_nasterii, email, link_demo;
+                    int experienta;
+                    iss >> nume >> prenume >> username >> parola >> telefon >> data_nasterii >> email >> experienta >> link_demo;
+
+                    registerUser("Bucatar", nume, prenume, username, parola, telefon,
+                        data_nasterii, email, "", experienta, link_demo);
+                    std::string response = "SIGNUP_CHEF_SUCCESS";
+                    send(clientSocket, response.c_str(), response.size(), 0);
+                }
+                else {
+                    send(clientSocket, "REGISTER_INVALID_TYPE", 22, 0);
                 }
             }
-            else if (userType == "CHEF") {
-                // Format: REGISTER CHEF nume prenume username parola telefon data_nastere email experienta link_demo
-                std::string nume, prenume, username, parola, telefon, data_nastere, email, link_demo;
-                int experienta;
-                iss >> nume >> prenume >> username >> parola >> telefon >> data_nastere >> email >> experienta >> link_demo;
-
-                try {
-                    registerUser("Bucatar", nume, prenume, username, parola, telefon,
-                        data_nastere, email, "", experienta, link_demo);
-                    std::string response = "SIGNUP_CHEF_SUCCESS";
-                    send(clientSocket, response.c_str(), response.length(), 0);
-                }
-                catch (const std::exception& e) {
-                    std::string response = "SIGNUP_CHEF_FAILED " + std::string(e.what());
-                    send(clientSocket, response.c_str(), response.length(), 0);
-                }
+            else if (receivedMessage.rfind("FORGOT_PASSWORD ", 0) == 0) {
+                handleForgotPassword(receivedMessage);
+            }
+            else if (receivedMessage.rfind("RESET_PASSWORD ", 0) == 0) {
+                handleResetPassword(receivedMessage);
             }
             else {
-                std::string response = "REGISTER_INVALID_TYPE";
-                send(clientSocket, response.c_str(), response.length(), 0);
+                send(clientSocket, "UNKNOWN_COMMAND", 16, 0);
             }
         }
-        else if (receivedMessage.rfind("FORGOT_PASSWORD ", 0) == 0)
-        {
-            handleForgotPassword(receivedMessage);
-        }
-        else {
-            std::string response = "UNKNOWN_COMMAND";
-            send(clientSocket, response.c_str(), response.length(), 0);
+        catch (const std::exception& e) {
+            std::string error = "SERVER_ERROR: " + std::string(e.what());
+            send(clientSocket, error.c_str(), error.length(), 0);
         }
     }
-}
 
+    closesocket(clientSocket);
+    clientSocket = INVALID_SOCKET;
+}
 
 void DummyChef::closeSocket()
 {
@@ -320,6 +326,9 @@ void DummyChef::registerUser(const std::string& userType, const std::string& num
         std::cerr << "Error during registration: " << e.what() << std::endl;
     }
 }
+
+
+
 void DummyChef::handleForgotPassword(const std::string& request) {
     std::istringstream iss(request);
     std::string command, email;
@@ -333,21 +342,18 @@ void DummyChef::handleForgotPassword(const std::string& request) {
         std::wstring wEmail = converter.from_bytes(email);
 
         if (db.UserExists(wEmail)) {
-            std::string response = "EMAIL_FOUND";
-            send(clientSocket, response.c_str(), response.length(), 0);
-            // Generează cod de 6 cifre (fără stocare)
-            std::srand(std::time(nullptr));
-            int resetCode = 100000 + std::rand() % 900000;
+            // Generează și stochează codul de resetare
+            std::srand(static_cast<unsigned>(std::time(nullptr)));
+            resetCode = 100000 + std::rand() % 900000; // Stocăm codul în variabila unică
+            currentEmail = email; // Stocăm email-ul asociat
 
-            // Afișează codul în consolă (în loc de trimitere email)
             std::cout << "[FORGOT_PASSWORD] Cod pentru " << email << ": " << resetCode << std::endl;
 
-            // Răspuns simplu către client (fără cod, doar confirmare)
-            response = "RESET_CODE_GENERATED";
+            // Trimitem doar EMAIL_FOUND, conform așteptărilor clientului
+            std::string response = "EMAIL_FOUND";
             send(clientSocket, response.c_str(), response.length(), 0);
         }
-        else
-        {
+        else {
             std::string response = "EMAIL_NOT_FOUND";
             send(clientSocket, response.c_str(), response.length(), 0);
         }
@@ -355,7 +361,53 @@ void DummyChef::handleForgotPassword(const std::string& request) {
         db.Disconnect();
     }
     catch (const std::exception& e) {
+        std::cerr << "Eroare în handleForgotPassword: " << e.what() << std::endl;
         std::string response = "FORGOT_PASSWORD_ERROR: " + std::string(e.what());
+        send(clientSocket, response.c_str(), response.length(), 0);
+    }
+}
+
+
+void DummyChef::handleResetPassword(const std::string& request) {
+    std::istringstream iss(request);
+    std::string command, email, codeStr, newPassword;
+    iss >> command >> email >> codeStr >> newPassword;
+
+    try {
+        int receivedCode = std::stoi(codeStr);
+
+        // Verificăm dacă codul și email-ul sunt valide
+        if (email == currentEmail && receivedCode == resetCode) {
+            DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+            db.Connect();
+
+            std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+            std::wstring wEmail = converter.from_bytes(email);
+            std::wstring wNewPassword = converter.from_bytes(newPassword);
+
+            // Actualizăm parola în baza de date
+            std::wstring sqlQuery = L"UPDATE Utilizatori SET Parola = N'" + wNewPassword + L"' WHERE Email = N'" + wEmail + L"'";
+            db.ExecuteNonQuery(sqlQuery);
+
+            // Resetăm codul și email-ul
+            resetCode = 0;
+            currentEmail = "";
+
+            std::string response = "RESET_SUCCESS";
+            send(clientSocket, response.c_str(), response.length(), 0);
+
+            std::cout << "[RESET_PASSWORD] Parola pentru " << email << " a fost resetată cu succes!" << std::endl;
+
+            db.Disconnect();
+        }
+        else {
+            std::string response = "RESET_FAILED";
+            send(clientSocket, response.c_str(), response.length(), 0);
+        }
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Eroare în handleResetPassword: " << e.what() << std::endl;
+        std::string response = "RESET_ERROR: " + std::string(e.what());
         send(clientSocket, response.c_str(), response.length(), 0);
     }
 }

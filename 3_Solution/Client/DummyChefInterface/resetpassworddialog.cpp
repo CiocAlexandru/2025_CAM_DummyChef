@@ -2,10 +2,11 @@
 #include "ui_resetpassworddialog.h"
 #include <QMessageBox>
 
-ResetPasswordDialog::ResetPasswordDialog(QWidget *parent) :
+ResetPasswordDialog::ResetPasswordDialog(const QString &email,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ResetPasswordDialog),
-    socket(new QTcpSocket(this))
+    socket(new QTcpSocket(this)),
+    userEmail(email) // Inițializăm email-ul
 {
     ui->setupUi(this);
     setWindowTitle("Resetare Parolă");
@@ -48,8 +49,9 @@ void ResetPasswordDialog::handleResetPassword()
 
 void ResetPasswordDialog::onConnected()
 {
-    QString message = QString("RESET_PASSWORD %1 %2")
-    .arg(ui->codeLineEdit->text())
+    QString message = QString("RESET_PASSWORD %1 %2 %3")
+    .arg(userEmail)
+        .arg(ui->codeLineEdit->text())
         .arg(ui->newPasswordLineEdit->text());
 
     socket->write(message.toUtf8());
