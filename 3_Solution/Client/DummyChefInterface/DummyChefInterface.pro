@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     chefsignupdialog.cpp \
+    clientpreferencesdialog.cpp \
     clientsignupdialog.cpp \
     forgotpassworddialog.cpp \
     logindialog.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
 
 HEADERS += \
     chefsignupdialog.h \
+    clientpreferencesdialog.h \
     clientsignupdialog.h \
     forgotpassworddialog.h \
     logindialog.h \
@@ -29,6 +31,7 @@ HEADERS += \
 
 FORMS += \
     chefsignupdialog.ui \
+    clientpreferencesdialog.ui \
     clientsignupdialog.ui \
     forgotpassworddialog.ui \
     logindialog.ui \

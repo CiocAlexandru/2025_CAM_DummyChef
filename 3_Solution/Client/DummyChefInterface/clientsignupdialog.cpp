@@ -1,5 +1,6 @@
 #include "clientsignupdialog.h"
 #include "ui_clientsignupdialog.h"
+#include "clientpreferencesdialog.h"
 #include <QMessageBox>
 #include <QRegularExpression>
 
@@ -92,6 +93,11 @@ void ClientSignUpDialog::onReadyRead()
     if (response == "SIGNUP_CLIENT_SUCCESS") {
         QMessageBox::information(this, "Succes", "Cont creat cu succes!");
         accept();
+        ClientPreferencesDialog prefDialog;
+        if (prefDialog.exec() == QDialog::Accepted) {
+            // Preferințele au fost salvate
+            // Poți trimite și aici un mesaj la server cu preferințele, dacă vrei
+        }
     } else {
         QMessageBox::warning(this, "Eroare", "Înregistrare eșuată!");
     }

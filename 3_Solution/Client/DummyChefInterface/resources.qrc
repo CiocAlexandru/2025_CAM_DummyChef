@@ -7,5 +7,6 @@
         <file>LoginBucatar.jpg</file>
         <file>LoginClient.jpg</file>
         <file>ResetPassword.jpg</file>
+        <file>ClientPreference.jpg</file>
     </qresource>
 </RCC>
