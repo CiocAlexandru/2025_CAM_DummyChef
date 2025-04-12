@@ -30,6 +30,12 @@ private:
     Ui::ClientPreferencesDialog *ui;
     QLabel *backgroundLabel;
     void updateBackground();
+    QString username;  // Adăugat pentru a stoca username-ul primit în constructor
+    QString foodPreferences;
+    QString allergies;
+    QString deliveryTime;
+    QString pricePreference;
+    QString notes;
     QTcpSocket*socket;
 };
 

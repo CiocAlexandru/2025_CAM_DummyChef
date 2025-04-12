@@ -93,13 +93,14 @@ void ClientSignUpDialog::onReadyRead()
     if (response == "SIGNUP_CLIENT_SUCCESS") {
         QMessageBox::information(this, "Succes", "Cont creat cu succes!");
         accept();
-        ClientPreferencesDialog prefDialog;
+
+        // Trimite username-ul introdus la preferințe
+        QString username = ui->usernameLineEdit->text().trimmed();
+        ClientPreferencesDialog prefDialog(username, this);  // Folosește constructorul cu parametri
+
         if (prefDialog.exec() == QDialog::Accepted) {
             // Preferințele au fost salvate
-            // Poți trimite și aici un mesaj la server cu preferințele, dacă vrei
         }
-    } else {
-        QMessageBox::warning(this, "Eroare", "Înregistrare eșuată!");
     }
 }
 

@@ -2,19 +2,25 @@
 #include "ui_clientpreferencesdialog.h"
 #include <QMessageBox>
 
-ClientPreferencesDialog::ClientPreferencesDialog(const QString& username,QWidget *parent) :
+ClientPreferencesDialog::ClientPreferencesDialog(const QString& username, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ClientPreferencesDialog)
+    ui(new Ui::ClientPreferencesDialog),
+    socket(new QTcpSocket(this)),
+    backgroundLabel(new QLabel(this)),  // Adăugat inițializare
+    username(username)  // Corect - folosește lista de inițializare
 {
     ui->setupUi(this);
-    socket = new QTcpSocket(this);
-    username(username),
+
+    // Configurare backgroundLabel
+    backgroundLabel->setScaledContents(true);
+    backgroundLabel->lower();
+
+    // Conectare semnale
     connect(socket, &QTcpSocket::connected, this, &ClientPreferencesDialog::onConnected);
     connect(socket, &QTcpSocket::readyRead, this, &ClientPreferencesDialog::onReadyRead);
     connect(socket, &QTcpSocket::errorOccurred, this, &ClientPreferencesDialog::onError);
 
     setWindowTitle("Preferințe Client");
-
     connect(ui->saveButton, &QPushButton::clicked, this, &ClientPreferencesDialog::handleSavePreferences);
 
     updateBackground();
