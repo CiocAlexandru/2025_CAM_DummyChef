@@ -1,8 +1,8 @@
-CREATE DATABASE DummyChefDB
+﻿CREATE DATABASE DummyChefDB
 
 
 CREATE TABLE Utilizatori (
-    ID INT IDENTITY(1,1) PRIMARY KEY,  -- Cheie primar� auto-incrementat�
+    ID INT IDENTITY(1,1) PRIMARY KEY,  -- Cheie primară auto-incrementată
     Nume NVARCHAR(50) NOT NULL,
     Prenume NVARCHAR(50) NOT NULL,
     NumeUtilizator NVARCHAR(50) UNIQUE NOT NULL,
@@ -24,3 +24,24 @@ CREATE TABLE Produse (
     DataAdaugarii DATETIME DEFAULT GETDATE()
 );
 
+CREATE TABLE PreferinteClienti (
+    ID INT IDENTITY(1,1) PRIMARY KEY,
+    IDClient INT NOT NULL FOREIGN KEY REFERENCES Utilizatori(ID),
+    PreferinteAlimentare NVARCHAR(500),
+    Alergii NVARCHAR(100),
+    OraLivrare NVARCHAR(20) NOT NULL CHECK (OraLivrare IN (
+        'Orice oră', 
+        'Dimineață (8-12)', 
+        'Prânz (12-15)', 
+        'Seară (15-20)', 
+        'Noapte (20-24)'
+    )),
+    PreferintaPret NVARCHAR(20) NOT NULL CHECK (PreferintaPret IN (
+        'Orice preț', 
+        'Economic', 
+        'Moderat', 
+        'Premium'
+    )),
+    Note NVARCHAR(500),
+    DataInregistrare DATETIME DEFAULT GETDATE()
+);

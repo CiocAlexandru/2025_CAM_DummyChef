@@ -6,14 +6,27 @@ ClientPreferencesDialog::ClientPreferencesDialog(const QString& username, QWidge
     QDialog(parent),
     ui(new Ui::ClientPreferencesDialog),
     socket(new QTcpSocket(this)),
-    backgroundLabel(new QLabel(this)),  // Adăugat inițializare
-    username(username)  // Corect - folosește lista de inițializare
+    backgroundLabel(new QLabel(this)),
+    username(username)
 {
     ui->setupUi(this);
 
     // Configurare backgroundLabel
     backgroundLabel->setScaledContents(true);
     backgroundLabel->lower();
+
+    // Configurare câmpuri și butoane
+    ui->foodPreferencesEdit->setPlaceholderText("Introduceți preferințele alimentare");
+    ui->allergiesEdit->setPlaceholderText("Introduceți alergiile");
+    ui->notesEdit->setPlaceholderText("Introduceți note suplimentare");
+
+    // Configurare butoane
+    ui->saveButton->setText("Salvează Preferințe");
+
+
+    // Populare combobox-uri
+    ui->deliveryTimeCombo->addItems({"Orice oră", "Dimineață (8-12)", "Prânz (12-15)", "Seară (15-20)", "Noapte (20-24)"});
+    ui->pricePreferenceCombo->addItems({"Orice preț", "Economic", "Moderat", "Premium"});
 
     // Conectare semnale
     connect(socket, &QTcpSocket::connected, this, &ClientPreferencesDialog::onConnected);
@@ -22,6 +35,7 @@ ClientPreferencesDialog::ClientPreferencesDialog(const QString& username, QWidge
 
     setWindowTitle("Preferințe Client");
     connect(ui->saveButton, &QPushButton::clicked, this, &ClientPreferencesDialog::handleSavePreferences);
+
 
     updateBackground();
 }
@@ -46,29 +60,34 @@ void ClientPreferencesDialog::onError(QAbstractSocket::SocketError socketError)
 
 void ClientPreferencesDialog::onConnected()
 {
+    foodPreferences = ui->foodPreferencesEdit->toPlainText().trimmed();
+    allergies = ui->allergiesEdit->text().trimmed();
+    deliveryTime = ui->deliveryTimeCombo->currentText();
+    pricePreference = ui->pricePreferenceCombo->currentText();
+    notes = ui->notesEdit->toPlainText().trimmed();
+
     QString message = QString("PREFERINTE_CLIENT %1 %2 %3 %4 %5 %6")
-    .arg(username) // Atenție: trebuie să-l primești în constructor
-        .arg(foodPreferences)
-        .arg(allergies)
-        .arg(deliveryTime)
-        .arg(pricePreference)
-        .arg(notes);
+                          .arg(username)
+                          .arg(foodPreferences)
+                          .arg(allergies)
+                          .arg(deliveryTime)
+                          .arg(pricePreference)
+                          .arg(notes);
 
     socket->write(message.toUtf8());
 }
 
 void ClientPreferencesDialog::handleSavePreferences()
 {
-    QString foodPreferences = ui->foodPreferencesEdit->toPlainText().trimmed();
-    QString allergies = ui->allergiesEdit->text().trimmed();
-    QString deliveryTime = ui->deliveryTimeCombo->currentText();
-    QString pricePreference = ui->pricePreferenceCombo->currentText();
-    QString notes = ui->notesEdit->toPlainText().trimmed();
+    // Validare câmpuri
+    if (ui->foodPreferencesEdit->toPlainText().trimmed().isEmpty()) {
+        QMessageBox::warning(this, "Eroare", "Introduceți preferințele alimentare!");
+        return;
+    }
 
-    // Aici ai putea trimite datele la server sau salva local
+    // Aici ai putea adăuga alte validări dacă este necesar
+
     socket->connectToHost("127.0.0.1", 12345);
-    QMessageBox::information(this, "Preferințe Salvate", "Preferințele au fost salvate cu succes!");
-    accept();
 }
 
 void ClientPreferencesDialog::updateBackground() {

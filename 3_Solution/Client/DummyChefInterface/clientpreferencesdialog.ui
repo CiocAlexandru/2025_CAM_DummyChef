@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="saveButton">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>580</y>
+     <x>110</x>
+     <y>560</y>
      <width>171</width>
      <height>51</height>
     </rect>
@@ -48,8 +48,8 @@ QPushButton:pressed {
   <widget class="QLineEdit" name="allergiesEdit">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>290</y>
+     <x>80</x>
+     <y>270</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -58,8 +58,8 @@ QPushButton:pressed {
   <widget class="QPlainTextEdit" name="foodPreferencesEdit">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>210</y>
+     <x>80</x>
+     <y>190</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -68,8 +68,8 @@ QPushButton:pressed {
   <widget class="QComboBox" name="deliveryTimeCombo">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>350</y>
+     <x>80</x>
+     <y>330</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -78,8 +78,8 @@ QPushButton:pressed {
   <widget class="QPlainTextEdit" name="notesEdit">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>480</y>
+     <x>80</x>
+     <y>460</y>
      <width>221</width>
      <height>71</height>
     </rect>
@@ -88,8 +88,8 @@ QPushButton:pressed {
   <widget class="QComboBox" name="pricePreferenceCombo">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>410</y>
+     <x>80</x>
+     <y>390</y>
      <width>221</width>
      <height>51</height>
     </rect>
