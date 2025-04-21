@@ -420,3 +420,226 @@ std::wstring DatabaseConnection::GetPasswordByEmail(const std::wstring& email) {
     SQLFreeHandle(SQL_HANDLE_STMT, stmt);
     return L""; // Return empty string if not found
 }
+
+void DatabaseConnection::InsertPreferinte(int idClient,
+    const std::wstring& preferinteAlimentare,
+    const std::wstring& alergii,
+    const std::wstring& oraLivrare,
+    const std::wstring& preferintaPret,
+    const std::wstring& notite)
+{
+    if (!isConnected) {
+        throw std::runtime_error("Not connected to database");
+    }
+
+    std::wstring sqlQuery = L"INSERT INTO PreferinteClienti (IDClient, PreferinteAlimentare, Alergii, OraLivrare, PreferintaPret, Notite)VALUES (?, ?, ?, ?, ?, ?)";
+
+    SQLHSTMT stmt;
+    SQLRETURN ret = SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+    ThrowIfFailed(ret, L"Failed to allocate statement handle");
+
+    try {
+        // Bind parameters
+        ret = SQLPrepare(stmt, (SQLWCHAR*)sqlQuery.c_str(), SQL_NTS);
+        ThrowIfFailed(ret, L"Failed to prepare statement", SQL_HANDLE_STMT, stmt);
+
+        // Bind IDClient
+        ret = SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &idClient, 0, NULL);
+        ThrowIfFailed(ret, L"Failed to bind IDClient parameter", SQL_HANDLE_STMT, stmt);
+
+        // Bind PreferinteAlimentare
+        SQLWCHAR* prefAlim = const_cast<SQLWCHAR*>(preferinteAlimentare.c_str());
+        ret = SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+            preferinteAlimentare.length(), 0, prefAlim, 0, NULL);
+        ThrowIfFailed(ret, L"Failed to bind PreferinteAlimentare parameter", SQL_HANDLE_STMT, stmt);
+
+        // Bind Alergii
+        SQLWCHAR* alerg = const_cast<SQLWCHAR*>(alergii.c_str());
+        ret = SQLBindParameter(stmt, 3, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+            alergii.length(), 0, alerg, 0, NULL);
+        ThrowIfFailed(ret, L"Failed to bind Alergii parameter", SQL_HANDLE_STMT, stmt);
+
+        // Bind OraLivrare
+        SQLWCHAR* ora = const_cast<SQLWCHAR*>(oraLivrare.c_str());
+        ret = SQLBindParameter(stmt, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+            oraLivrare.length(), 0, ora, 0, NULL);
+        ThrowIfFailed(ret, L"Failed to bind OraLivrare parameter", SQL_HANDLE_STMT, stmt);
+
+        // Bind PreferintaPret
+        SQLWCHAR* pret = const_cast<SQLWCHAR*>(preferintaPret.c_str());
+        ret = SQLBindParameter(stmt, 5, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+            preferintaPret.length(), 0, pret, 0, NULL);
+        ThrowIfFailed(ret, L"Failed to bind PreferintaPret parameter", SQL_HANDLE_STMT, stmt);
+
+        // Bind Notite
+        SQLWCHAR* note = const_cast<SQLWCHAR*>(notite.c_str());
+        ret = SQLBindParameter(stmt, 6, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+            notite.length(), 0, note, 0, NULL);
+        ThrowIfFailed(ret, L"Failed to bind Notite parameter", SQL_HANDLE_STMT, stmt);
+
+        // Execute the statement
+        ret = SQLExecute(stmt);
+        ThrowIfFailed(ret, L"Failed to execute statement", SQL_HANDLE_STMT, stmt);
+    }
+    catch (...) {
+        SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+        throw;
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+}
+
+
+bool DatabaseConnection::UserExistsByUsername(const std::wstring& username) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    try {
+        std::wstring query = L"SELECT COUNT(*) FROM Utilizatori WHERE NumeUtilizator = ?";
+        SQLRETURN ret = SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+        ThrowIfFailed(ret, L"Error preparing SQL query", SQL_HANDLE_STMT, stmt);
+
+        ret = SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
+            username.length(), 0, (SQLPOINTER)username.c_str(), 0, nullptr);
+        ThrowIfFailed(ret, L"Error binding username parameter", SQL_HANDLE_STMT, stmt);
+
+        ret = SQLExecute(stmt);
+        ThrowIfFailed(ret, L"Error executing SQL query", SQL_HANDLE_STMT, stmt);
+
+        int count = 0;
+        if (SQLFetch(stmt) == SQL_SUCCESS) {
+            SQLGetData(stmt, 1, SQL_C_LONG, &count, 0, nullptr);
+        }
+
+        SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+        return count > 0;
+    }
+    catch (...) {
+        SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+        throw;
+    }
+}
+
+int DatabaseConnection::GetUserIdByUsername(const std::wstring& username) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    try {
+        std::wstring query = L"SELECT ID FROM Utilizatori WHERE NumeUtilizator = ?";
+        SQLRETURN ret = SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+        ThrowIfFailed(ret, L"Error preparing SQL query", SQL_HANDLE_STMT, stmt);
+
+        ret = SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
+            username.length(), 0, (SQLPOINTER)username.c_str(), 0, nullptr);
+        ThrowIfFailed(ret, L"Error binding username parameter", SQL_HANDLE_STMT, stmt);
+
+        ret = SQLExecute(stmt);
+        ThrowIfFailed(ret, L"Error executing SQL query", SQL_HANDLE_STMT, stmt);
+
+        int id = -1;
+        if (SQLFetch(stmt) == SQL_SUCCESS) {
+            SQLGetData(stmt, 1, SQL_C_LONG, &id, 0, nullptr);
+        }
+
+        SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+        return id;
+    }
+    catch (...) {
+        SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+        throw;
+    }
+}
+
+bool DatabaseConnection::PreferencesExist(int clientId) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    try {
+        std::wstring query = L"SELECT COUNT(*) FROM PreferinteClienti WHERE IDClient = ?";
+        SQLRETURN ret = SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+        ThrowIfFailed(ret, L"Error preparing SQL query", SQL_HANDLE_STMT, stmt);
+
+        ret = SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER,
+            0, 0, (SQLPOINTER)&clientId, 0, nullptr);
+        ThrowIfFailed(ret, L"Error binding clientId parameter", SQL_HANDLE_STMT, stmt);
+
+        ret = SQLExecute(stmt);
+        ThrowIfFailed(ret, L"Error executing SQL query", SQL_HANDLE_STMT, stmt);
+
+        int count = 0;
+        if (SQLFetch(stmt) == SQL_SUCCESS) {
+            SQLGetData(stmt, 1, SQL_C_LONG, &count, 0, nullptr);
+        }
+
+        SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+        return count > 0;
+    }
+    catch (...) {
+        SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+        throw;
+    }
+}
+
+void DatabaseConnection::UpdateClientPreferences(int clientId, const std::wstring& preferinteAlimentare,
+    const std::wstring& alergii, const std::wstring& oraLivrare,
+    const std::wstring& preferintaPret, const std::wstring& notite) 
+{
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmt;
+    SQLRETURN ret = SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+    ThrowIfFailed(ret, L"Failed to allocate statement handle");
+
+    try {
+        std::wstring sqlQuery = L"UPDATE PreferinteClienti SET PreferinteAlimentare = ?, Alergii = ?, "
+            L"OraLivrare = ?, PreferintaPret = ?, Notite = ? WHERE IDClient = ?";
+        ret = SQLPrepareW(stmt, (SQLWCHAR*)sqlQuery.c_str(), SQL_NTS);
+        ThrowIfFailed(ret, L"Failed to prepare statement", SQL_HANDLE_STMT, stmt);
+
+        // Bind PreferinteAlimentare
+        ret = SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+            preferinteAlimentare.length(), 0, (SQLPOINTER)preferinteAlimentare.c_str(), 0, nullptr);
+        ThrowIfFailed(ret, L"Failed to bind PreferinteAlimentare parameter", SQL_HANDLE_STMT, stmt);
+
+        // Bind Alergii
+        ret = SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+            alergii.length(), 0, (SQLPOINTER)alergii.c_str(), 0, nullptr);
+        ThrowIfFailed(ret, L"Failed to bind Alergii parameter", SQL_HANDLE_STMT, stmt);
+
+        // Bind OraLivrare
+        ret = SQLBindParameter(stmt, 3, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+            oraLivrare.length(), 0, (SQLPOINTER)oraLivrare.c_str(), 0, nullptr);
+        ThrowIfFailed(ret, L"Failed to bind OraLivrare parameter", SQL_HANDLE_STMT, stmt);
+
+        // Bind PreferintaPret
+        ret = SQLBindParameter(stmt, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+            preferintaPret.length(), 0, (SQLPOINTER)preferintaPret.c_str(), 0, nullptr);
+        ThrowIfFailed(ret, L"Failed to bind PreferintaPret parameter", SQL_HANDLE_STMT, stmt);
+
+        // Bind Notite
+        ret = SQLBindParameter(stmt, 5, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+            notite.length(), 0, (SQLPOINTER)notite.c_str(), 0, nullptr);
+        ThrowIfFailed(ret, L"Failed to bind Notite parameter", SQL_HANDLE_STMT, stmt);
+
+        // Bind IDClient
+        ret = SQLBindParameter(stmt, 6, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER,
+            0, 0, (SQLPOINTER)&clientId, 0, nullptr);
+        ThrowIfFailed(ret, L"Failed to bind IDClient parameter", SQL_HANDLE_STMT, stmt);
+
+        // Execute the statement
+        ret = SQLExecute(stmt);
+        ThrowIfFailed(ret, L"Failed to execute statement", SQL_HANDLE_STMT, stmt);
+
+        SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    }
+    catch (...) {
+        SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+        throw;
+    }
+}

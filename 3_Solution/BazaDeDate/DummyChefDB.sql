@@ -42,6 +42,6 @@ CREATE TABLE PreferinteClienti (
         'Moderat', 
         'Premium'
     )),
-    Note NVARCHAR(500),
+    Notite NVARCHAR(500),
     DataInregistrare DATETIME DEFAULT GETDATE()
 );

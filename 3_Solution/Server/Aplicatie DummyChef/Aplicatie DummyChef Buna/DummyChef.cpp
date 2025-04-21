@@ -2,6 +2,8 @@
 #include <conio.h>
 #include <iomanip>
 #include <sstream>
+#include "Client.h"
+#include "Bucatar.h"
 
 
 
@@ -35,12 +37,6 @@ void DummyChef::run()
 {
    
     try {
-
-        InsertNewProduct();
-        registerUser("Client", "Popescu", "Ion", "ionpopescu33546", "parola123",
-            "0745123456", "1990-05-15", "ion.popescu@example.com", "Strada Mihai Eminescu, nr. 10, Bucuresti");
-        registerUser("Bucatar", "Ionescu", "Maria", "mariaionescu", "chef123",
-    "0723123456", "1985-08-20", "maria.ionescu@example.com", "", 5, "https://example.com/chef-demo");
         connectToClient();
     }
     catch (...) {
@@ -80,7 +76,6 @@ void DummyChef::InsertNewProduct()
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
     }
-    _getch();
 }
 
 
@@ -213,9 +208,14 @@ void DummyChef::handleClient()
             else if (receivedMessage.rfind("RESET_PASSWORD ", 0) == 0) {
                 handleResetPassword(receivedMessage);
             }
+            else if (receivedMessage.rfind("PREFERINTE_CLIENT ", 0) == 0)
+            {
+                handleClientPreferences(receivedMessage);
+            }
             else {
                 send(clientSocket, "UNKNOWN_COMMAND", 16, 0);
             }
+            
         }
         catch (const std::exception& e) {
             std::string error = "SERVER_ERROR: " + std::string(e.what());
@@ -310,11 +310,13 @@ void DummyChef::registerUser(const std::string& userType, const std::string& num
             db.InsertClient(wNume, wPrenume, wNumeUtilizator, wParola, wNrTelefon,
                 wDataNasterii, wEmail, wAdresaLivrare);
             std::cout << "Client registered successfully!" << std::endl;
+            utilizator = new Client(nume, prenume, nume_utilizator, parola, nr_telefon, data_nasterii, email, adresa_livrare);
         }
         else if (userType == "Bucatar") {
             db.InsertChef(wNume, wPrenume, wNumeUtilizator, wParola, wNrTelefon,
                 wDataNasterii, wEmail, experienta, wLinkDemonstrativ);
             std::cout << "Chef registered successfully!" << std::endl;
+            utilizator = new Bucatar(nume, prenume, nume_utilizator, parola, nr_telefon, data_nasterii, email,experienta,link_demonstrativ);
         }
         else {
             std::cout << "Error: Invalid user type specified!" << std::endl;
@@ -408,6 +410,75 @@ void DummyChef::handleResetPassword(const std::string& request) {
     catch (const std::exception& e) {
         std::cerr << "Eroare în handleResetPassword: " << e.what() << std::endl;
         std::string response = "RESET_ERROR: " + std::string(e.what());
+        send(clientSocket, response.c_str(), response.length(), 0);
+    }
+}
+
+
+
+void DummyChef::handleClientPreferences(const std::string& request) {
+    std::istringstream iss(request);
+    std::string command, username, foodPreferences, allergies, deliveryTime, pricePreference, notes;
+    iss >> command >> username >> std::quoted(foodPreferences) >> std::quoted(allergies) >>
+        std::quoted(deliveryTime) >> std::quoted(pricePreference) >> std::quoted(notes);
+
+    // Log the received values for debugging
+    std::cout << "Received deliveryTime: " << deliveryTime << std::endl;
+
+    try {
+        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+        db.Connect();
+
+        // Convert strings to wstrings for database compatibility
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        std::wstring wUsername = converter.from_bytes(username);
+        std::wstring wFoodPreferences = converter.from_bytes(foodPreferences);
+        std::wstring wAllergies = converter.from_bytes(allergies);
+        std::wstring wDeliveryTime = converter.from_bytes(deliveryTime);
+        std::wstring wPricePreference = converter.from_bytes(pricePreference);
+        std::wstring wNotes = converter.from_bytes(notes);
+
+        // Log the converted deliveryTime for debugging
+        std::wcout << L"Converted wDeliveryTime: " << wDeliveryTime << std::endl;
+
+        // Check if user exists
+        if (!db.UserExistsByUsername(wUsername)) {
+            std::string response = "PREFERINTE_CLIENT_FAILED: User not found";
+            send(clientSocket, response.c_str(), response.length(), 0);
+            db.Disconnect();
+            return;
+        }
+
+        // Get client ID
+        int clientId = db.GetUserIdByUsername(wUsername);
+        if (clientId == -1) {
+            std::string response = "PREFERINTE_CLIENT_FAILED: User not found";
+            send(clientSocket, response.c_str(), response.length(), 0);
+            db.Disconnect();
+            return;
+        }
+
+        // Check if preferences already exist for this client
+        bool preferencesExist = db.PreferencesExist(clientId);
+
+        if (preferencesExist) {
+            // Update existing preferences
+            db.UpdateClientPreferences(clientId, wFoodPreferences, wAllergies, wDeliveryTime, wPricePreference, wNotes);
+        }
+        else {
+            // Insert new preferences
+            db.InsertPreferinte(clientId, wFoodPreferences, wAllergies, wDeliveryTime, wPricePreference, wNotes);
+        }
+
+        std::string response = "PREFERINTE_CLIENT_SUCCESS";
+        send(clientSocket, response.c_str(), response.length(), 0);
+        std::cout << "Client preferences saved for username: " << username << std::endl;
+
+        db.Disconnect();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error in handleClientPreferences: " << e.what() << std::endl;
+        std::string response = "PREFERINTE_CLIENT_ERROR: " + std::string(e.what());
         send(clientSocket, response.c_str(), response.length(), 0);
     }
 }

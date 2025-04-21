@@ -40,7 +40,14 @@ public:
 
     std::string forgotPassword(const std::string& email);
     std::wstring GetPasswordByEmail(const std::wstring& email);
-
+    void InsertPreferinte(int idClient,const std::wstring& preferinteAlimentare,const std::wstring& alergii,
+        const std::wstring& oraLivrare,const std::wstring& preferintaPret,const std::wstring& notite);
+    bool UserExistsByUsername(const std::wstring& username);
+    int GetUserIdByUsername(const std::wstring& username);
+    bool PreferencesExist(int clientId);
+    void UpdateClientPreferences(int clientId, const std::wstring& preferinteAlimentare,
+        const std::wstring& alergii, const std::wstring& oraLivrare,
+        const std::wstring& preferintaPret, const std::wstring& notite);
 private:
     std::wstring server, database, username, password;
     SQLHENV env;

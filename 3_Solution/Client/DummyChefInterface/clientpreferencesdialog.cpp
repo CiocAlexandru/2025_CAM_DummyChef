@@ -2,10 +2,10 @@
 #include "ui_clientpreferencesdialog.h"
 #include <QMessageBox>
 
-ClientPreferencesDialog::ClientPreferencesDialog(const QString& username, QWidget *parent) :
+ClientPreferencesDialog::ClientPreferencesDialog(const QString& username, QTcpSocket* existingSocket, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ClientPreferencesDialog),
-    socket(new QTcpSocket(this)),
+    socket(existingSocket),  // Use the passed socket instead of creating a new one
     backgroundLabel(new QLabel(this)),
     username(username)
 {
@@ -23,10 +23,9 @@ ClientPreferencesDialog::ClientPreferencesDialog(const QString& username, QWidge
     // Configurare butoane
     ui->saveButton->setText("Salvează Preferințe");
 
-
     // Populare combobox-uri
-    ui->deliveryTimeCombo->addItems({"Orice oră", "Dimineață (8-12)", "Prânz (12-15)", "Seară (15-20)", "Noapte (20-24)"});
-    ui->pricePreferenceCombo->addItems({"Orice preț", "Economic", "Moderat", "Premium"});
+    ui->deliveryTimeCombo->addItems({"Orice ora", "Dimineata (8-12)", "Pranz (12-15)", "Seara (15-20)", "Noapte (20-24)"});
+    ui->pricePreferenceCombo->addItems({"Orice pret", "Economic", "Moderat", "Premium"});
 
     // Conectare semnale
     connect(socket, &QTcpSocket::connected, this, &ClientPreferencesDialog::onConnected);
@@ -35,7 +34,6 @@ ClientPreferencesDialog::ClientPreferencesDialog(const QString& username, QWidge
 
     setWindowTitle("Preferințe Client");
     connect(ui->saveButton, &QPushButton::clicked, this, &ClientPreferencesDialog::handleSavePreferences);
-
 
     updateBackground();
 }
@@ -85,9 +83,13 @@ void ClientPreferencesDialog::handleSavePreferences()
         return;
     }
 
-    // Aici ai putea adăuga alte validări dacă este necesar
-
-    socket->connectToHost("127.0.0.1", 12345);
+    // If the socket is already connected, send the message directly
+    if (socket->state() == QAbstractSocket::ConnectedState) {
+        onConnected();
+    } else {
+        // If not connected, attempt to connect
+        socket->connectToHost("127.0.0.1", 12345);
+    }
 }
 
 void ClientPreferencesDialog::updateBackground() {
@@ -105,4 +107,5 @@ void ClientPreferencesDialog::resizeEvent(QResizeEvent *event) {
 ClientPreferencesDialog::~ClientPreferencesDialog()
 {
     delete ui;
+    // Do not delete the socket here since it's owned by ClientSignUpDialog
 }

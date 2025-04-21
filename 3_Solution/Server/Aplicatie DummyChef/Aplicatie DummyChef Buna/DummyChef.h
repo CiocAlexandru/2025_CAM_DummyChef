@@ -34,12 +34,15 @@ public:
 	void registerUser(const std::string& userType, const std::string& nume, const std::string& prenume,
 		const std::string& nume_utilizator, const std::string& parola, const std::string& nr_telefon,
 		const std::string& data_nasterii, const std::string& email,
-		const std::string& adresa_livrare = "", int experienta=0, const std::string& link_demonstrativ = "");
+		const std::string& adresa_livrare = "", int experienta = 0, const std::string& link_demonstrativ = "");
+	void handleClientPreferences(const std::string& request);
 
 private:
-	DummyChef(Administrator* administrator):serverSocket(INVALID_SOCKET),clientSocket(INVALID_SOCKET), resetCode(0),
-		currentEmail(""){ this->administrator = administrator; };
-	~DummyChef() { Administrator::destroyInstance(); closeSocket();};
+	DummyChef(Administrator* administrator) :serverSocket(INVALID_SOCKET), clientSocket(INVALID_SOCKET), resetCode(0),
+		currentEmail("") {
+		this->administrator = administrator;
+	};
+	~DummyChef() { Administrator::destroyInstance(); closeSocket(); };
 	std::vector<Ingrediente*>ingrediente;
 	Reteta* retete;
 	Utilizator* utilizator;

@@ -1,9 +1,9 @@
-#ifndef CLIENTPREFERENCEDIALOG_H
-#define CLIENTPREFERENCEDIALOG_H
+#ifndef CLIENTPREFERENCESDIALOG_H
+#define CLIENTPREFERENCESDIALOG_H
 
 #include <QDialog>
-#include <QLabel>
 #include <QTcpSocket>
+#include <QLabel>
 
 namespace Ui {
 class ClientPreferencesDialog;
@@ -14,29 +14,28 @@ class ClientPreferencesDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ClientPreferencesDialog(const QString& username,QWidget *parent = nullptr);
+    explicit ClientPreferencesDialog(const QString& username, QTcpSocket* existingSocket, QWidget *parent = nullptr);
     ~ClientPreferencesDialog();
 
 private slots:
-    void handleSavePreferences();
-    void onReadyRead();
     void onConnected();
+    void onReadyRead();
     void onError(QAbstractSocket::SocketError socketError);
-
-protected:
-    void resizeEvent(QResizeEvent *event) override;
+    void handleSavePreferences();
 
 private:
-    Ui::ClientPreferencesDialog *ui;
-    QLabel *backgroundLabel;
     void updateBackground();
-    QString username;  // Adăugat pentru a stoca username-ul primit în constructor
+    void resizeEvent(QResizeEvent *event) override;
+
+    Ui::ClientPreferencesDialog *ui;
+    QTcpSocket *socket;
+    QLabel *backgroundLabel;
+    QString username;
     QString foodPreferences;
     QString allergies;
     QString deliveryTime;
     QString pricePreference;
     QString notes;
-    QTcpSocket*socket;
 };
 
-#endif // CLIENTPREFERENCEDIALOG_H
+#endif // CLIENTPREFERENCESDIALOG_H

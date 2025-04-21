@@ -94,9 +94,9 @@ void ClientSignUpDialog::onReadyRead()
         QMessageBox::information(this, "Succes", "Cont creat cu succes!");
         accept();
 
-        // Trimite username-ul introdus la preferințe
+        // Trimite username-ul introdus și socket-ul existent la preferințe
         QString username = ui->usernameLineEdit->text().trimmed();
-        ClientPreferencesDialog prefDialog(username, this);  // Folosește constructorul cu parametri
+        ClientPreferencesDialog prefDialog(username, socket, this);  // Trece socket-ul existent
 
         if (prefDialog.exec() == QDialog::Accepted) {
             // Preferințele au fost salvate
@@ -115,7 +115,6 @@ void ClientSignUpDialog::resizeEvent(QResizeEvent *event) {
     setWindowState(windowState() | Qt::WindowFullScreen);
     updateBackground();  // Actualizează dimensiunea fundalului la redimensionare
 }
-
 
 ClientSignUpDialog::~ClientSignUpDialog()
 {
