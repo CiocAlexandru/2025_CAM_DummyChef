@@ -24,8 +24,8 @@ ClientPreferencesDialog::ClientPreferencesDialog(const QString& username, QTcpSo
     ui->saveButton->setText("Salvează Preferințe");
 
     // Populare combobox-uri
-    ui->deliveryTimeCombo->addItems({"Orice ora", "Dimineata (8-12)", "Pranz (12-15)", "Seara (15-20)", "Noapte (20-24)"});
-    ui->pricePreferenceCombo->addItems({"Orice pret", "Economic", "Moderat", "Premium"});
+    ui->deliveryTimeCombo->addItems({"Orice_ora", "Dimineata(8-12)", "Pranz(12-15)", "Seara(15-20)", "Noapte(20-24)"});
+    ui->pricePreferenceCombo->addItems({"Orice_pret", "Economic", "Moderat", "Premium"});
 
     // Conectare semnale
     connect(socket, &QTcpSocket::connected, this, &ClientPreferencesDialog::onConnected);

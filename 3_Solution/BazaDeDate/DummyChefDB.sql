@@ -30,14 +30,14 @@ CREATE TABLE PreferinteClienti (
     PreferinteAlimentare NVARCHAR(500),
     Alergii NVARCHAR(100),
     OraLivrare NVARCHAR(20) NOT NULL CHECK (OraLivrare IN (
-        'Orice oră', 
-        'Dimineață (8-12)', 
-        'Prânz (12-15)', 
-        'Seară (15-20)', 
-        'Noapte (20-24)'
+        'Orice_ora', 
+        'Dimineata(8-12)', 
+        'Pranz(12-15)', 
+        'Seara(15-20)', 
+        'Noapte(20-24)'
     )),
     PreferintaPret NVARCHAR(20) NOT NULL CHECK (PreferintaPret IN (
-        'Orice preț', 
+        'Orice_pret', 
         'Economic', 
         'Moderat', 
         'Premium'
