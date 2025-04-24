@@ -112,6 +112,7 @@ void LoginDialog::onReadyRead()
         QMessageBox::information(this, "Succes", "Autentificare reușită ca CLIENT!");
 
         // ✅ Aici e ce ne interesează acum:
+        socket->setParent(nullptr);
         ClientMainWindow *clientWindow = new ClientMainWindow(email, socket);
         clientWindow->show();
         this->accept();  // închide dialogul de login

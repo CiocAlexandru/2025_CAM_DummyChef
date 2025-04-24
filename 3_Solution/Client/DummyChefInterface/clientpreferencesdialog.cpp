@@ -41,8 +41,7 @@ ClientPreferencesDialog::ClientPreferencesDialog(const QString& username, QTcpSo
 void ClientPreferencesDialog::onReadyRead()
 {
     QString response = QString::fromUtf8(socket->readAll()).trimmed();
-
-    if (response == "PREFERINTE_CLIENT_SUCCESS") {
+    if (response == "PreferinteSucces") {
         QMessageBox::information(this, "Succes", "Preferințele au fost salvate cu succes!");
         accept();
     } else {
@@ -82,14 +81,7 @@ void ClientPreferencesDialog::handleSavePreferences()
         QMessageBox::warning(this, "Eroare", "Introduceți preferințele alimentare!");
         return;
     }
-
-    // If the socket is already connected, send the message directly
-    if (socket->state() == QAbstractSocket::ConnectedState) {
-        onConnected();
-    } else {
-        // If not connected, attempt to connect
-        socket->connectToHost("127.0.0.1", 12345);
-    }
+    onConnected();
 }
 
 void ClientPreferencesDialog::updateBackground() {

@@ -18,6 +18,8 @@ ClientMainWindow::ClientMainWindow(const QString& username, QTcpSocket* socket, 
     connect(ui->searchRecipesButton, &QPushButton::clicked, this, &ClientMainWindow::openSearchRecipes);
     connect(ui->shoppingListButton, &QPushButton::clicked, this, &ClientMainWindow::openShoppingList);
     connect(ui->modifyProfileButton, &QPushButton::clicked, this, &ClientMainWindow::openModifyProfile);
+
+
 }
 
 ClientMainWindow::~ClientMainWindow()
@@ -39,6 +41,7 @@ void ClientMainWindow::openShoppingList()
 
 void ClientMainWindow::openModifyProfile()
 {
+
     ClientPreferencesDialog dialog(username, socket, this);
     dialog.exec(); // deschide modal
 }

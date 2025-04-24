@@ -486,7 +486,7 @@ void DummyChef::handleClientPreferences(const std::string& request) {
             db.InsertPreferinte(clientId, wFoodPreferences, wAllergies, wDeliveryTime, wPricePreference, wNotes);
         }
 
-        std::string response = "PREFERINTE_CLIENT_SUCCESS";
+        std::string response = "PreferinteSucces";
         send(clientSocket, response.c_str(), response.length(), 0);
         std::cout << "Client preferences saved for username: " << username << std::endl;
 
