@@ -18,6 +18,7 @@ SOURCES += \
     logindialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    recipesearchdialog.cpp \
     resetpassworddialog.cpp \
     signupdialog.cpp
 
@@ -30,6 +31,7 @@ HEADERS += \
     forgotpassworddialog.h \
     logindialog.h \
     mainwindow.h \
+    recipesearchdialog.h \
     resetpassworddialog.h \
     signupdialog.h
 
@@ -42,6 +44,7 @@ FORMS += \
     forgotpassworddialog.ui \
     logindialog.ui \
     mainwindow.ui \
+    recipesearchdialog.ui \
     resetpassworddialog.ui \
     signupdialog.ui
 
