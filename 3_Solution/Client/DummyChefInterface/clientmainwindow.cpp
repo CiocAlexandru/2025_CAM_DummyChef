@@ -1,5 +1,6 @@
 #include "clientmainwindow.h"
 #include "ui_clientmainwindow.h"
+#include "recipesearchdialog.h"
 #include <QMessageBox>
 
 ClientMainWindow::ClientMainWindow(const QString& username, QTcpSocket* socket, QWidget *parent) :
@@ -25,8 +26,8 @@ ClientMainWindow::~ClientMainWindow()
 
 void ClientMainWindow::openSearchRecipes()
 {
-    QMessageBox::information(this, "Căutare", "Aici vei implementa căutarea rețetelor.");
-    // TODO: Deschide fereastra reală pentru căutare
+    RecipeSearchDialog dialog (username,socket,this);
+    dialog.exec();
 }
 
 void ClientMainWindow::openShoppingList()
@@ -42,7 +43,7 @@ void ClientMainWindow::openModifyProfile()
 }
 
 void ClientMainWindow::updateBackground() {
-    QPixmap pixmap(":/images/ClientMainWindow.jpg");  // Încarcă imaginea din resurse
+    QPixmap pixmap(":/images/MainWindowClient.jpg");  // Încarcă imaginea din resurse
     backgroundLabel->setPixmap(pixmap);
     backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Acoperă întreaga fereastră
 }
