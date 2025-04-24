@@ -1,5 +1,7 @@
 #include "logindialog.h"
 #include "ui_logindialog.h"
+#include "clientmainwindow.h"
+#include "chefmainwindow.h"
 #include <QMessageBox>
 #include <QRegularExpression>
 
@@ -94,14 +96,32 @@ void LoginDialog::onError(QAbstractSocket::SocketError socketError)
 void LoginDialog::onReadyRead()
 {
     QString response = QString::fromUtf8(socket->readAll()).trimmed();
+    QString email = ui->emailLineEdit->text().trimmed();
 
-    if(response == "LOGIN_SUCCESS") {
-        QMessageBox::information(this, "Succes", "Bun venit!");
-        accept(); // Închide dialogul cu cod de succes
+    if (response == "LOGIN_SUCCESS_CHEF") {
+        QMessageBox::information(this, "Succes", "Autentificare reușită ca BUCĂTAR!");
+
+        // Deschide fereastra pentru bucătar (doar dacă o ai implementată)
+        // ChefMainWindow *chefWindow = new ChefMainWindow(email, socket);
+        // chefWindow->show();
+        // this->accept();
+
+        QMessageBox::information(this, "Notă", "Fereastra pentru bucătar nu este încă implementată.");
+
+    } else if (response == "LOGIN_SUCCESS_CLIENT") {
+        QMessageBox::information(this, "Succes", "Autentificare reușită ca CLIENT!");
+
+        // ✅ Aici e ce ne interesează acum:
+        ClientMainWindow *clientWindow = new ClientMainWindow(email, socket);
+        clientWindow->show();
+        this->accept();  // închide dialogul de login
+
     } else {
-        QMessageBox::warning(this, "Eroare", "Autentificare eșuată!");
+        QMessageBox::warning(this, "Eroare", "Email sau parolă incorecte!");
     }
 }
+
+
 
 LoginDialog::~LoginDialog()
 {

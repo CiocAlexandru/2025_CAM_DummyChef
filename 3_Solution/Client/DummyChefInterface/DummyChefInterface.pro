@@ -9,7 +9,9 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    chefmainwindow.cpp \
     chefsignupdialog.cpp \
+    clientmainwindow.cpp \
     clientpreferencesdialog.cpp \
     clientsignupdialog.cpp \
     forgotpassworddialog.cpp \
@@ -20,7 +22,9 @@ SOURCES += \
     signupdialog.cpp
 
 HEADERS += \
+    chefmainwindow.h \
     chefsignupdialog.h \
+    clientmainwindow.h \
     clientpreferencesdialog.h \
     clientsignupdialog.h \
     forgotpassworddialog.h \
@@ -30,7 +34,9 @@ HEADERS += \
     signupdialog.h
 
 FORMS += \
+    chefmainwindow.ui \
     chefsignupdialog.ui \
+    clientmainwindow.ui \
     clientpreferencesdialog.ui \
     clientsignupdialog.ui \
     forgotpassworddialog.ui \
