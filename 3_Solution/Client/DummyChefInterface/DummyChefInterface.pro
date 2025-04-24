@@ -20,6 +20,7 @@ SOURCES += \
     mainwindow.cpp \
     recipesearchdialog.cpp \
     resetpassworddialog.cpp \
+    shoppinglistdialog.cpp \
     signupdialog.cpp
 
 HEADERS += \
@@ -33,6 +34,7 @@ HEADERS += \
     mainwindow.h \
     recipesearchdialog.h \
     resetpassworddialog.h \
+    shoppinglistdialog.h \
     signupdialog.h
 
 FORMS += \
@@ -46,6 +48,7 @@ FORMS += \
     mainwindow.ui \
     recipesearchdialog.ui \
     resetpassworddialog.ui \
+    shoppinglistdialog.ui \
     signupdialog.ui
 
 # Default rules for deployment.

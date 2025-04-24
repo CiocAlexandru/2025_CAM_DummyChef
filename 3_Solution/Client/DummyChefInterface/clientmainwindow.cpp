@@ -1,6 +1,7 @@
 #include "clientmainwindow.h"
 #include "ui_clientmainwindow.h"
 #include "recipesearchdialog.h"
+#include "shoppinglistdialog.h"
 #include <QMessageBox>
 
 ClientMainWindow::ClientMainWindow(const QString& username, QTcpSocket* socket, QWidget *parent) :
@@ -32,8 +33,8 @@ void ClientMainWindow::openSearchRecipes()
 
 void ClientMainWindow::openShoppingList()
 {
-    QMessageBox::information(this, "Listă Cumpărături", "Aici vei genera lista de cumpărături.");
-    // TODO: Deschide fereastra reală pentru lista de cumpărături
+    ShoppingListDialog* dialog=new ShoppingListDialog(username,socket,this);
+    dialog->exec();
 }
 
 void ClientMainWindow::openModifyProfile()
