@@ -263,11 +263,27 @@ bool DummyChef::handleLogin(const std::string& email, const std::string& passwor
 
             this->utilizator = user.release();
             std::cout << "Login successful! Welcome " << this->utilizator->getNume() << std::endl;
+
+            // Determină tipul utilizatorului prin dynamic_cast
+            std::string response;
+            if (dynamic_cast<Client*>(this->utilizator)) {
+                response = "LOGIN_SUCCESS_CLIENT";
+            }
+            else if (dynamic_cast<Bucatar*>(this->utilizator)) {
+                response = "LOGIN_SUCCESS_CHEF";
+            }
+            else {
+                response = "LOGIN_FAILED";
+            }
+
+            send(clientSocket, response.c_str(), response.length(), 0);
             db.Disconnect();
             return true;
         }
         else {
             std::cout << "Login failed! Invalid credentials." << std::endl;
+            std::string response = "LOGIN_FAILED";
+            send(clientSocket, response.c_str(), response.length(), 0);
             db.Disconnect();
             return false;
         }

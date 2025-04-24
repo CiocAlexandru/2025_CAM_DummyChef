@@ -643,3 +643,5 @@ void DatabaseConnection::UpdateClientPreferences(int clientId, const std::wstrin
         throw;
     }
 }
+
+

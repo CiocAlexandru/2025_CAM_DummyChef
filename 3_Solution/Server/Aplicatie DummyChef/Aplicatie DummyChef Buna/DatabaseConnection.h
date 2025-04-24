@@ -48,6 +48,7 @@ public:
     void UpdateClientPreferences(int clientId, const std::wstring& preferinteAlimentare,
         const std::wstring& alergii, const std::wstring& oraLivrare,
         const std::wstring& preferintaPret, const std::wstring& notite);
+
 private:
     std::wstring server, database, username, password;
     SQLHENV env;
