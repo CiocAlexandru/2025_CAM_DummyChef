@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1344</width>
+    <height>749</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="searchRecipesButton">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>200</y>
+      <x>990</x>
+      <y>240</y>
       <width>251</width>
       <height>41</height>
      </rect>
@@ -53,8 +53,8 @@ QPushButton:pressed {
    <widget class="QPushButton" name="shoppingListButton">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>270</y>
+      <x>990</x>
+      <y>310</y>
       <width>251</width>
       <height>41</height>
      </rect>
@@ -89,9 +89,9 @@ QPushButton:pressed {
    <widget class="QPushButton" name="modifyProfileButton">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>340</y>
-      <width>241</width>
+      <x>990</x>
+      <y>380</y>
+      <width>251</width>
       <height>41</height>
      </rect>
     </property>
@@ -128,7 +128,7 @@ QPushButton:pressed {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1344</width>
      <height>26</height>
     </rect>
    </property>
