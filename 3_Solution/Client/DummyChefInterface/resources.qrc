@@ -10,5 +10,8 @@
         <file>ClientPreference.jpg</file>
         <file>ClientMainWindow.jpg</file>
         <file>MainWindowClient.jpg</file>
+        <file>ChefMainWindow.jpg</file>
+        <file>AddRecipe.jpg</file>
+        <file>AddIngredient.jpg</file>
     </qresource>
 </RCC>

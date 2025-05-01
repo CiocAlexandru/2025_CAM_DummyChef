@@ -122,8 +122,17 @@ void LoginDialog::onReadyRead()
         clientWindow->show();
         socket->readAll();  // ✅ Golește bufferul imediat după răspuns
         this->accept();  // închide dialogul de login
+    } else if (response == "LOGIN_SUCCESS_CHEF") {
+        QMessageBox::information(this, "Succes", "Autentificare reușită ca BUCĂTAR!");
 
-    } else {
+        socket->setParent(nullptr);
+        ChefMainWindow *chefWindow = new ChefMainWindow(email, socket);
+        socket->setParent(chefWindow);
+        chefWindow->show();
+        socket->readAll();
+        this->accept();
+    }
+    else {
         QMessageBox::warning(this, "Eroare", "Email sau parolă incorecte!");
     }
 }
