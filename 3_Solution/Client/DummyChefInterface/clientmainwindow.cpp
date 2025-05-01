@@ -3,11 +3,14 @@
 #include "recipesearchdialog.h"
 #include "shoppinglistdialog.h"
 #include <QMessageBox>
+#include <QResizeEvent>
 
-ClientMainWindow::ClientMainWindow(const QString& username, QTcpSocket* socket, QWidget *parent) :
+
+ClientMainWindow::ClientMainWindow(const QString& username,const QString& email, QTcpSocket* socket, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ClientMainWindow),
     username(username),
+    email(email),
     socket(socket)
 {
     ui->setupUi(this);
@@ -17,7 +20,7 @@ ClientMainWindow::ClientMainWindow(const QString& username, QTcpSocket* socket, 
 
     connect(ui->searchRecipesButton, &QPushButton::clicked, this, &ClientMainWindow::openSearchRecipes);
     connect(ui->shoppingListButton, &QPushButton::clicked, this, &ClientMainWindow::openShoppingList);
-    connect(ui->modifyProfileButton, &QPushButton::clicked, this, &ClientMainWindow::openModifyProfile);
+    connect(ui->modifyPrefrencesButton, &QPushButton::clicked, this, &ClientMainWindow::openModifyPrefrences);
 
 
 }
@@ -39,8 +42,11 @@ void ClientMainWindow::openShoppingList()
     dialog->exec();
 }
 
-void ClientMainWindow::openModifyProfile()
+void ClientMainWindow::openModifyPrefrences()
 {
+    qDebug() << "[DEBUG] Deschidem ClientPreferencesDialog";
+    qDebug() << "[DEBUG] Socket valid?" << (socket != nullptr);
+    qDebug() << "[DEBUG] Username:" << username;
 
     ClientPreferencesDialog dialog(username, socket, this);
     dialog.exec(); // deschide modal
@@ -54,7 +60,6 @@ void ClientMainWindow::updateBackground() {
 
 void ClientMainWindow::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
-    setWindowState(windowState() | Qt::WindowFullScreen);
-    updateBackground();
+    updateBackground();  // Redimensionează fundalul
 }
 

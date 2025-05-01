@@ -2,10 +2,10 @@
 #include "ui_resetpassworddialog.h"
 #include <QMessageBox>
 
-ResetPasswordDialog::ResetPasswordDialog(const QString &email,QWidget *parent) :
+ResetPasswordDialog::ResetPasswordDialog(const QString &email, QTcpSocket* existingSocket,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ResetPasswordDialog),
-    socket(new QTcpSocket(this)),
+    socket(existingSocket),
     userEmail(email) // Inițializăm email-ul
 {
     ui->setupUi(this);
@@ -43,8 +43,7 @@ void ResetPasswordDialog::handleResetPassword()
         QMessageBox::warning(this, "Eroare", "Parolele nu coincid!");
         return;
     }
-
-    socket->connectToHost("127.0.0.1", 12345);
+    onConnected();
 }
 
 void ResetPasswordDialog::onConnected()
@@ -55,6 +54,16 @@ void ResetPasswordDialog::onConnected()
         .arg(ui->newPasswordLineEdit->text());
 
     socket->write(message.toUtf8());
+    socket->flush();  // Ne asigurăm că mesajul este trimis imediat
+
+    socket->waitForBytesWritten(3000); // Așteaptă trimiterea completă
+
+    // Acum așteptăm și răspunsul (doar 1 dată, max 3 secunde)
+    if (!socket->waitForReadyRead(3000)) {
+        QMessageBox::critical(this, "Eroare", "Serverul nu a răspuns în timp util.");
+        return;
+    }
+    onReadyRead();
 }
 
 void ResetPasswordDialog::onReadyRead()

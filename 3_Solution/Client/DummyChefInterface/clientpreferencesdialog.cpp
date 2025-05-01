@@ -1,61 +1,51 @@
 #include "clientpreferencesdialog.h"
 #include "ui_clientpreferencesdialog.h"
 #include <QMessageBox>
+#include <QDebug>
 
 ClientPreferencesDialog::ClientPreferencesDialog(const QString& username, QTcpSocket* existingSocket, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ClientPreferencesDialog),
-    socket(existingSocket),  // Use the passed socket instead of creating a new one
+    socket(existingSocket),
     backgroundLabel(new QLabel(this)),
-    username(username)
+    username(username),
+    raspunsPrimit(false)
 {
     ui->setupUi(this);
-
-    // Configurare backgroundLabel
     backgroundLabel->setScaledContents(true);
     backgroundLabel->lower();
 
-    // Configurare câmpuri și butoane
     ui->foodPreferencesEdit->setPlaceholderText("Introduceți preferințele alimentare");
     ui->allergiesEdit->setPlaceholderText("Introduceți alergiile");
     ui->notesEdit->setPlaceholderText("Introduceți note suplimentare");
 
-    // Configurare butoane
     ui->saveButton->setText("Salvează Preferințe");
 
-    // Populare combobox-uri
     ui->deliveryTimeCombo->addItems({"Orice_ora", "Dimineata(8-12)", "Pranz(12-15)", "Seara(15-20)", "Noapte(20-24)"});
     ui->pricePreferenceCombo->addItems({"Orice_pret", "Economic", "Moderat", "Premium"});
 
-    // Conectare semnale
-    connect(socket, &QTcpSocket::connected, this, &ClientPreferencesDialog::onConnected);
+    // Conectăm semnalele socket-ului
     connect(socket, &QTcpSocket::readyRead, this, &ClientPreferencesDialog::onReadyRead);
     connect(socket, &QTcpSocket::errorOccurred, this, &ClientPreferencesDialog::onError);
 
     setWindowTitle("Preferințe Client");
+
     connect(ui->saveButton, &QPushButton::clicked, this, &ClientPreferencesDialog::handleSavePreferences);
 
     updateBackground();
 }
 
-void ClientPreferencesDialog::onReadyRead()
+void ClientPreferencesDialog::handleSavePreferences()
 {
-    QString response = QString::fromUtf8(socket->readAll()).trimmed();
-    if (response == "PreferinteSucces") {
-        QMessageBox::information(this, "Succes", "Preferințele au fost salvate cu succes!");
-        accept();
-    } else {
-        QMessageBox::warning(this, "Eroare", "Salvarea preferințelor a eșuat!");
+    if (ui->foodPreferencesEdit->toPlainText().trimmed().isEmpty()) {
+        QMessageBox::warning(this, "Eroare", "Introduceți preferințele alimentare!");
+        return;
     }
+
+    sendPreferences();
 }
 
-void ClientPreferencesDialog::onError(QAbstractSocket::SocketError socketError)
-{
-    Q_UNUSED(socketError);
-    QMessageBox::critical(this, "Eroare conexiune", socket->errorString());
-}
-
-void ClientPreferencesDialog::onConnected()
+void ClientPreferencesDialog::sendPreferences()
 {
     foodPreferences = ui->foodPreferencesEdit->toPlainText().trimmed();
     allergies = ui->allergiesEdit->text().trimmed();
@@ -71,33 +61,62 @@ void ClientPreferencesDialog::onConnected()
                           .arg(pricePreference)
                           .arg(notes);
 
-    socket->write(message.toUtf8());
-}
+    qDebug() << "Trimitem la server:" << message;
 
-void ClientPreferencesDialog::handleSavePreferences()
-{
-    // Validare câmpuri
-    if (ui->foodPreferencesEdit->toPlainText().trimmed().isEmpty()) {
-        QMessageBox::warning(this, "Eroare", "Introduceți preferințele alimentare!");
+    socket->write(message.toUtf8());
+    socket->flush();  // Ne asigurăm că mesajul este trimis imediat
+
+    socket->waitForBytesWritten(3000); // Așteaptă trimiterea completă
+
+
+    // Acum așteptăm și răspunsul (doar 1 dată, max 3 secunde)
+    if (!socket->waitForReadyRead(3000)) {
+        QMessageBox::critical(this, "Eroare", "Serverul nu a răspuns în timp util.");
         return;
     }
-    onConnected();
+
+    if(raspunsPrimit==false)
+    {
+        onReadyRead();
+    }
 }
 
-void ClientPreferencesDialog::updateBackground() {
-    QPixmap pixmap(":/images/ClientPreference.jpg");  // Încarcă imaginea din resurse
+void ClientPreferencesDialog::onReadyRead()
+{
+    QString response = QString::fromUtf8(socket->readAll()).trimmed();
+    qDebug() << "Răspuns de la server:" << response;
+
+    if (response == "PreferinteSucces") {
+        QMessageBox::information(this, "Succes", "Preferințele au fost salvate cu succes!");
+        raspunsPrimit=true;
+        accept();
+    } else {
+        QMessageBox::warning(this, "Eroare", "Salvarea preferințelor a eșuat!");
+    }
+}
+
+void ClientPreferencesDialog::onError(QAbstractSocket::SocketError socketError)
+{
+    Q_UNUSED(socketError);
+    QMessageBox::critical(this, "Eroare conexiune", socket->errorString());
+}
+
+void ClientPreferencesDialog::updateBackground()
+{
+    QPixmap pixmap(":/images/ClientPreference.jpg");
     backgroundLabel->setPixmap(pixmap);
-    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Acoperă întreaga fereastră
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());
 }
 
-void ClientPreferencesDialog::resizeEvent(QResizeEvent *event) {
+void ClientPreferencesDialog::resizeEvent(QResizeEvent *event)
+{
     QDialog::resizeEvent(event);
     setWindowState(windowState() | Qt::WindowFullScreen);
-    updateBackground();  // Actualizează dimensiunea fundalului la redimensionare
+    updateBackground();
 }
 
 ClientPreferencesDialog::~ClientPreferencesDialog()
 {
     delete ui;
-    // Do not delete the socket here since it's owned by ClientSignUpDialog
+    // NU ștergem socket-ul aici, e deținut de ClientSignUpDialog
 }

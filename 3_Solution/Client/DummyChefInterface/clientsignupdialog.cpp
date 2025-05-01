@@ -97,10 +97,7 @@ void ClientSignUpDialog::onReadyRead()
         // Trimite username-ul introdus și socket-ul existent la preferințe
         QString username = ui->usernameLineEdit->text().trimmed();
         ClientPreferencesDialog prefDialog(username, socket, this);  // Trece socket-ul existent
-
-        if (prefDialog.exec() == QDialog::Accepted) {
-            // Preferințele au fost salvate
-        }
+        prefDialog.exec();
     }
 }
 

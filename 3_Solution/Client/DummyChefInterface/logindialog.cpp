@@ -33,6 +33,7 @@ LoginDialog::LoginDialog(QWidget *parent) :
             this, &LoginDialog::onReadyRead);
 
     // Configurare opțională câmpuri
+    ui->usernameLineEdit->setPlaceholderText("Introduceți username");
     ui->emailLineEdit->setPlaceholderText("Introduceți email");
     ui->passwordLineEdit->setPlaceholderText("Introduceți parola");
     ui->passwordLineEdit->setEchoMode(QLineEdit::Password);
@@ -61,11 +62,12 @@ void LoginDialog::resizeEvent(QResizeEvent *event)
 
 void LoginDialog::sendLoginRequest()
 {
+    QString username = ui->usernameLineEdit->text().trimmed();
     QString email = ui->emailLineEdit->text().trimmed();
     QString password = ui->passwordLineEdit->text();
 
     // Validare
-    if(email.isEmpty() || password.isEmpty()) {
+    if(username. isEmpty() || email.isEmpty() || password.isEmpty()) {
         QMessageBox::warning(this, "Eroare", "Completați ambele câmpuri!");
         return;
     }
@@ -96,7 +98,9 @@ void LoginDialog::onError(QAbstractSocket::SocketError socketError)
 void LoginDialog::onReadyRead()
 {
     QString response = QString::fromUtf8(socket->readAll()).trimmed();
+    QString username = ui->usernameLineEdit->text().trimmed();
     QString email = ui->emailLineEdit->text().trimmed();
+
 
     if (response == "LOGIN_SUCCESS_CHEF") {
         QMessageBox::information(this, "Succes", "Autentificare reușită ca BUCĂTAR!");
@@ -113,8 +117,10 @@ void LoginDialog::onReadyRead()
 
         // ✅ Aici e ce ne interesează acum:
         socket->setParent(nullptr);
-        ClientMainWindow *clientWindow = new ClientMainWindow(email, socket);
+        ClientMainWindow *clientWindow = new ClientMainWindow(username,email, socket);
+        socket->setParent(clientWindow);
         clientWindow->show();
+        socket->readAll();  // ✅ Golește bufferul imediat după răspuns
         this->accept();  // închide dialogul de login
 
     } else {
@@ -127,5 +133,5 @@ void LoginDialog::onReadyRead()
 LoginDialog::~LoginDialog()
 {
     delete ui;
-    socket->deleteLater();
+  //  socket->deleteLater();
 }

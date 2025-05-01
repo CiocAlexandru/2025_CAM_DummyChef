@@ -18,7 +18,7 @@ public:
     ~ClientPreferencesDialog();
 
 private slots:
-    void onConnected();
+    void sendPreferences();  // înlocuiește onConnected
     void onReadyRead();
     void onError(QAbstractSocket::SocketError socketError);
     void handleSavePreferences();
@@ -29,6 +29,7 @@ private:
 
     Ui::ClientPreferencesDialog *ui;
     QTcpSocket *socket;
+    bool raspunsPrimit;
     QLabel *backgroundLabel;
     QString username;
     QString foodPreferences;

@@ -62,7 +62,7 @@ void ForgotPasswordDialog::onReadyRead()
 
     if (response == "EMAIL_FOUND") {
         QMessageBox::information(this, "Succes", "Un cod de resetare a fost trimis la email!");
-        ResetPasswordDialog resetDialog(ui->emailLineEdit->text(), this);
+        ResetPasswordDialog resetDialog(ui->emailLineEdit->text(),socket, this);
         resetDialog.exec();
         this->close();
 

@@ -12,7 +12,7 @@ class ResetPasswordDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ResetPasswordDialog(const QString &email, QWidget *parent = nullptr);
+    explicit ResetPasswordDialog(const QString &email,QTcpSocket* existingSocket, QWidget *parent = nullptr);
     ~ResetPasswordDialog();
 
 private slots:

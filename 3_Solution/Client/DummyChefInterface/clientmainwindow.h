@@ -15,13 +15,13 @@ class ClientMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit ClientMainWindow(const QString& username, QTcpSocket* socket, QWidget *parent = nullptr);
+    explicit ClientMainWindow(const QString& username,const QString& email, QTcpSocket* socket, QWidget *parent = nullptr);
     ~ClientMainWindow();
 
 private slots:
     void openSearchRecipes();
     void openShoppingList();
-    void openModifyProfile();
+    void openModifyPrefrences();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -29,6 +29,7 @@ protected:
 private:
     Ui::ClientMainWindow *ui;
     QString username;
+    QString email;
     QTcpSocket *socket;
     QLabel *backgroundLabel;
     void updateBackground();

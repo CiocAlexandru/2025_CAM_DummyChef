@@ -487,7 +487,8 @@ void DummyChef::handleClientPreferences(const std::string& request) {
         }
 
         std::string response = "PreferinteSucces";
-        send(clientSocket, response.c_str(), response.length(), 0);
+        int bytesSent = send(clientSocket, response.c_str(), response.length(), 0);
+        std::cout << "Trimis catre client: " << response << " (" << bytesSent << " bytes)" << std::endl;
         std::cout << "Client preferences saved for username: " << username << std::endl;
 
         db.Disconnect();
