@@ -1,6 +1,9 @@
 ﻿#include "DatabaseConnection.h"
 #include <iostream>
 #include "Utilizator.h"
+#include "Client.h"
+#include "Administrator.h"
+#include "Bucatar.h"
 
 DatabaseConnection::DatabaseConnection(const std::wstring& server,
     const std::wstring& database,
@@ -307,8 +310,7 @@ std::wstring DatabaseConnection::GetUserType(const std::wstring& email) {
 
 
 
-#include "Client.h"  // Asigură-te că includeți header-ul Client
-#include "Administrator.h"  // Și header-ul Administrator
+
 
 // Verifică dacă un utilizator există
 bool DatabaseConnection::UserExists(const std::wstring& email) {
@@ -375,6 +377,20 @@ std::unique_ptr<Utilizator> DatabaseConnection::GetUserByCredentials(const std::
                 "", // data_nasterii
                 converter.to_bytes(userEmail),
                 ""  // adresa_livrare
+            );
+        }
+
+        else if (typeStr == "Bucatar") {  // Adaugă acest caz
+            return std::make_unique<Bucatar>(
+                converter.to_bytes(nume),
+                converter.to_bytes(prenume),
+                "", // nume_utilizator
+                "", // parola
+                "", // nr_telefon
+                "", // data_nasterii
+                converter.to_bytes(userEmail),
+                0,//experienta
+                "" //linkdemo
             );
         }
         // Poți adăuga și alte tipuri de utilizatori aici

@@ -4,6 +4,7 @@
 #include "chefmainwindow.h"
 #include <QMessageBox>
 #include <QRegularExpression>
+#include <QDebug>
 
 LoginDialog::LoginDialog(QWidget *parent) :
     QDialog(parent),
@@ -98,21 +99,12 @@ void LoginDialog::onError(QAbstractSocket::SocketError socketError)
 void LoginDialog::onReadyRead()
 {
     QString response = QString::fromUtf8(socket->readAll()).trimmed();
+    qDebug() << "Răspuns de la server:" << response;
     QString username = ui->usernameLineEdit->text().trimmed();
     QString email = ui->emailLineEdit->text().trimmed();
 
 
-    if (response == "LOGIN_SUCCESS_CHEF") {
-        QMessageBox::information(this, "Succes", "Autentificare reușită ca BUCĂTAR!");
-
-        // Deschide fereastra pentru bucătar (doar dacă o ai implementată)
-        // ChefMainWindow *chefWindow = new ChefMainWindow(email, socket);
-        // chefWindow->show();
-        // this->accept();
-
-        QMessageBox::information(this, "Notă", "Fereastra pentru bucătar nu este încă implementată.");
-
-    } else if (response == "LOGIN_SUCCESS_CLIENT") {
+   if (response == "LOGIN_SUCCESS_CLIENT") {
         QMessageBox::information(this, "Succes", "Autentificare reușită ca CLIENT!");
 
         // ✅ Aici e ce ne interesează acum:

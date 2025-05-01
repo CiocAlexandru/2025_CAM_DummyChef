@@ -30,33 +30,32 @@
    </property>
    <property name="font">
     <font>
-     <family>Segoe UI</family>
-     <pointsize>-1</pointsize>
-     <bold>true</bold>
+     <family>Poppins</family>
+     <pointsize>16</pointsize>
+     <fontweight>DemiBold</fontweight>
     </font>
    </property>
    <property name="styleSheet">
     <string notr="true">QPushButton {
-    background-color: #4682B4;  /* Albastru metalic */
-    color: white;
-    border-radius: 12px;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: bold;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FF6200, stop:1 #00CC66);
+    color: #FFFFFF;
+    border-radius: 10px;
     border: none;
-    font-family: 'Segoe UI', sans-serif;
-    min-width: 100px;
-    box-shadow: 0 4px 6px rgba(70, 130, 180, 0.3);
+    padding: 5px;
+    font-family: &quot;Poppins&quot;;
+    font-size: 16pt;
+    font-weight: 600;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 QPushButton:hover {
-    background-color: #5A8FBB;
-    box-shadow: 0 6px 8px rgba(70, 130, 180, 0.4);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #00CC66, stop:1 #FF6200);
+    border: 2px solid #535AEF;
 }
 
 QPushButton:pressed {
-    background-color: #3A6B99;
-    box-shadow: 0 2px 4px rgba(70, 130, 180, 0.2);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #CC4E00, stop:1 #00994C);
+    border: 2px solid #4488CC;
 }</string>
    </property>
    <property name="text">
@@ -80,26 +79,25 @@ QPushButton:pressed {
    </property>
    <property name="styleSheet">
     <string notr="true">QPushButton {
-    background-color: #FF7A45;  /* Portocaliu aprins */
-    color: white;
-    border-radius: 12px;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: bold;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FF6200, stop:1 #00CC66);
+    color: #FFFFFF;
+    border-radius: 10px;
     border: none;
-    font-family: 'Segoe UI', sans-serif;
-    min-width: 100px;
-    box-shadow: 0 4px 6px rgba(255, 122, 69, 0.3);  /* Umbra colorată */
+    padding: 5px;
+    font-family: &quot;Poppins&quot;;
+    font-size: 16pt;
+    font-weight: 600;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 QPushButton:hover {
-    background-color: #FF8E5C;
-    box-shadow: 0 6px 8px rgba(255, 122, 69, 0.4);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #00CC66, stop:1 #FF6200);
+    border: 2px solid #535AEF;
 }
 
 QPushButton:pressed {
-    background-color: #E06B3D;
-    box-shadow: 0 2px 4px rgba(255, 122, 69, 0.2);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #CC4E00, stop:1 #00994C);
+    border: 2px solid #4488CC;
 }</string>
    </property>
    <property name="text">

@@ -20,6 +20,9 @@ AddRecipeDialog::AddRecipeDialog(const QString& chefEmail, QTcpSocket* socket, Q
     ui->ingredientsTable->horizontalHeader()->setStretchLastSection(true);
 
     ui->prepTimeEdit->setDisplayFormat("hh:mm");
+    ui->recipeNameLineEdit->setPlaceholderText("Denumirea retetei");
+    ui->stepsTextEdit->setPlaceholderText("Pasii de preparare");
+
 
     connect(ui->addIngredientButton, &QPushButton::clicked,
             this, &AddRecipeDialog::on_addIngredientButton_clicked);

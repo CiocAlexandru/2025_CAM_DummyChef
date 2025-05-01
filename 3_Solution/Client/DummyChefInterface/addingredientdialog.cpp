@@ -15,10 +15,10 @@ AddIngredientDialog::AddIngredientDialog(const QString& chefEmail, QTcpSocket* s
     backgroundLabel->lower();
 
 
-    ui->nameLineEdit->setPlaceholderText("Ex: Sare");
-    ui->priceLineEdit->setPlaceholderText("Ex: 3.50");
-    ui->stockLineEdit->setPlaceholderText("Ex: 500g");
-    ui->supplierLineEdit->setPlaceholderText("Ex: Metro");
+    ui->nameLineEdit->setPlaceholderText("Denumire Ingredient");
+    ui->priceLineEdit->setPlaceholderText("Pret");
+    ui->stockLineEdit->setPlaceholderText("Cantitate");
+    ui->supplierLineEdit->setPlaceholderText("Furnizor");
 
     connect(ui->submitButtom, &QPushButton::clicked,
             this, &AddIngredientDialog::on_submitButton_clicked);

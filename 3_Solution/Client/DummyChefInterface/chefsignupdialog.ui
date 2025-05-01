@@ -24,28 +24,32 @@
    </property>
    <property name="styleSheet">
     <string notr="true">QPushButton {
-    background-color: #FF6B6B;  /* Culoare primară */
-    color: white;
-    border-radius: 35px;
-    padding: 10px 20px;
-    border: 2px solid #FF8E8E;
-    font-weight: bold;
-    min-width: 120px;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FF6200, stop:1 #00CC66);
+    color: #FFFFFF;
+    border-radius: 10px;
+    border: none;
+    padding: 5px;
+    font-family: &quot;Poppins&quot;;
+    font-size: 16pt;
+    font-weight: 600;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 QPushButton:hover {
-    background-color: #FF8E8E;  /* Culoare la hover */
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #00CC66, stop:1 #FF6200);
+    border: 2px solid #535AEF;
 }
 
 QPushButton:pressed {
-    background-color: #FF5252;  /* Culoare la click */
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #CC4E00, stop:1 #00994C);
+    border: 2px solid #4488CC;
 }</string>
    </property>
    <property name="text">
     <string>SignUp</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>40</x>
