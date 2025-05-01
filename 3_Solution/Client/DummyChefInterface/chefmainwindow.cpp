@@ -31,8 +31,9 @@ ChefMainWindow::~ChefMainWindow()
 
 void ChefMainWindow::openAddRecipe()
 {
-    AddRecipeDialog dialog(email, socket, this);
-    dialog.exec();
+    AddRecipeDialog* dialog=new AddRecipeDialog(email, socket, this);
+    dialog->exec();
+    //dialog->
 }
 
 void ChefMainWindow::openMyRecipes()

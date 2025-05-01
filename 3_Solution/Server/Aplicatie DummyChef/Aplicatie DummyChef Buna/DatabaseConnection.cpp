@@ -661,3 +661,172 @@ void DatabaseConnection::UpdateClientPreferences(int clientId, const std::wstrin
 }
 
 
+int DatabaseConnection::InsertRecipeFromClient(const std::wstring& denumire, const std::wstring& timpPreparare, const std::wstring& pasiPreparare, int userId) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"INSERT INTO Retete (Denumire, TimpPreparare, PasiPreparare, IDBucatar) OUTPUT INSERTED.ID VALUES (?, ?, ?, ?)";
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+        denumire.length(), 0, (SQLPOINTER)denumire.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+        timpPreparare.length(), 0, (SQLPOINTER)timpPreparare.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 3, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+        pasiPreparare.length(), 0, (SQLPOINTER)pasiPreparare.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 4, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER,
+        0, 0, &userId, 0, nullptr);
+
+    SQLRETURN ret = SQLExecute(stmt);
+    ThrowIfFailed(ret, L"Failed to insert recipe", SQL_HANDLE_STMT, stmt);
+
+    int insertedId = -1;
+    if (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_LONG, &insertedId, 0, nullptr);
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return insertedId;
+}
+
+int DatabaseConnection::GetUserIdByEmail(const std::wstring& email) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"SELECT ID FROM Utilizatori WHERE Email = ?";
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+        email.length(), 0, (SQLPOINTER)email.c_str(), 0, nullptr);
+
+    int id = -1;
+    SQLExecute(stmt);
+    if (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_LONG, &id, 0, nullptr);
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return id;
+}
+
+
+void DatabaseConnection::InsertRecipeIngredient(int retetaId, const std::wstring& numeIngredient, const std::wstring& cantitate) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    // Obținem ID ingredient
+    std::wstring queryIngredient = L"SELECT ID FROM Ingrediente WHERE Nume = ?";
+    SQLPrepareW(stmt, (SQLWCHAR*)queryIngredient.c_str(), SQL_NTS);
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+        numeIngredient.length(), 0, (SQLPOINTER)numeIngredient.c_str(), 0, nullptr);
+
+    int ingredientId = -1;
+    SQLExecute(stmt);
+    if (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_LONG, &ingredientId, 0, nullptr);
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+
+    if (ingredientId == -1) {
+        throw std::runtime_error("Ingredientul \"" + std::string(numeIngredient.begin(), numeIngredient.end()) + "\" nu exista in baza de date.");
+    }
+
+    // Inserare in ReteteIngrediente
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+    std::wstring insertQuery = L"INSERT INTO ReteteIngrediente (RetetaID, IngredientID, Cantitate) VALUES (?, ?, ?)";
+    SQLPrepareW(stmt, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
+
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &retetaId, 0, nullptr);
+    SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &ingredientId, 0, nullptr);
+    SQLBindParameter(stmt, 3, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+        cantitate.length(), 0, (SQLPOINTER)cantitate.c_str(), 0, nullptr);
+
+    SQLRETURN ret = SQLExecute(stmt);
+    ThrowIfFailed(ret, L"Failed to insert ingredient into ReteteIngrediente", SQL_HANDLE_STMT, stmt);
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+}
+
+
+int DatabaseConnection::GetFurnizorIdByEmail(const std::wstring& email) {
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"SELECT ID FROM Furnizori WHERE Email = ?";
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+        email.length(), 0, (SQLPOINTER)email.c_str(), 0, nullptr);
+
+    int id = -1;
+    SQLExecute(stmt);
+    if (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_LONG, &id, 0, nullptr);
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return id;
+}
+
+int DatabaseConnection::InsertFurnizor(const std::wstring& nume, const std::wstring& telefon,
+    const std::wstring& email, const std::wstring& adresa) {
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"INSERT INTO Furnizori (Nume, Telefon, Email, AdresaLivrare) OUTPUT INSERTED.ID VALUES (?, ?, ?, ?)";
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, nume.length(), 0, (SQLPOINTER)nume.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, telefon.length(), 0, (SQLPOINTER)telefon.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 3, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, email.length(), 0, (SQLPOINTER)email.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, adresa.length(), 0, (SQLPOINTER)adresa.c_str(), 0, nullptr);
+
+    int id = -1;
+    SQLExecute(stmt);
+    if (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_LONG, &id, 0, nullptr);
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return id;
+}
+
+int DatabaseConnection::InsertIngredient(const std::wstring& nume, double pret, int furnizorId) {
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"INSERT INTO Ingrediente (Nume, Pret, DataAdaugarii) OUTPUT INSERTED.ID VALUES (?, ?, GETDATE())";
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, nume.length(), 0, (SQLPOINTER)nume.c_str(), 0, nullptr);
+    SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_DOUBLE, SQL_DOUBLE, 0, 0, &pret, 0, nullptr);
+
+    int id = -1;
+    SQLExecute(stmt);
+    if (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_LONG, &id, 0, nullptr);
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return id;
+}
+
+void DatabaseConnection::InsertStock(int ingredientId, int cantitate) {
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"INSERT INTO Stoc (IngredientID, Cantiate) VALUES (?, ?)";
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &ingredientId, 0, nullptr);
+    SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &cantitate, 0, nullptr);
+
+    SQLExecute(stmt);
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+}

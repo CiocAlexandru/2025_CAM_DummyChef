@@ -28,7 +28,7 @@ private:
     QTcpSocket* socket;
     QString chefEmail;
     QLabel *backgroundLabel;
-
+    void onReadyRead();
     void updateBackground();
 };
 

@@ -36,7 +36,8 @@ public:
 		const std::string& data_nasterii, const std::string& email,
 		const std::string& adresa_livrare = "", int experienta = 0, const std::string& link_demonstrativ = "");
 	void handleClientPreferences(const std::string& request);
-
+	void handleAddRecipeByClient(const std::string& request);
+	void handleAddIngredientByClient(const std::string& request);
 private:
 	DummyChef(Administrator* administrator) :serverSocket(INVALID_SOCKET), clientSocket(INVALID_SOCKET), resetCode(0),
 		currentEmail("") {

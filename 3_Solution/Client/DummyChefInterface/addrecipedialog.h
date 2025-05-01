@@ -28,8 +28,9 @@ private:
     Ui::AddRecipeDialog *ui;
     QTcpSocket* socket;
     QString chefEmail;
+    bool recipeAlreadySent = false;
     QLabel *backgroundLabel;
-
+    void onSocketReadyRead();
     void updateBackground();
 };
 

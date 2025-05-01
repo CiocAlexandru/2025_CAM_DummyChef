@@ -23,18 +23,37 @@ AddRecipeDialog::AddRecipeDialog(const QString& chefEmail, QTcpSocket* socket, Q
     ui->recipeNameLineEdit->setPlaceholderText("Denumirea retetei");
     ui->stepsTextEdit->setPlaceholderText("Pasii de preparare");
 
-
+     disconnect(ui->addIngredientButton, nullptr, nullptr, nullptr);
     connect(ui->addIngredientButton, &QPushButton::clicked,
             this, &AddRecipeDialog::on_addIngredientButton_clicked);
 
     connect(ui->submitButton, &QPushButton::clicked,
             this, &AddRecipeDialog::on_submitButton_clicked);
 
+    connect(socket, &QTcpSocket::readyRead, this, &AddRecipeDialog::onSocketReadyRead);
+
 }
 
 AddRecipeDialog::~AddRecipeDialog()
 {
     delete ui;
+}
+
+void AddRecipeDialog::onSocketReadyRead() {
+
+    disconnect(socket, &QTcpSocket::readyRead, this, &AddRecipeDialog::onSocketReadyRead);
+    QByteArray response = socket->readAll();
+    QString message = QString::fromUtf8(response).trimmed();
+
+    if (message == "ADD_RECIPE_SUCCESS") {
+        QMessageBox::information(this, "Succes", "Rețeta a fost salvată cu succes!");
+    } else if (message.startsWith("ADD_RECIPE_ERROR")) {
+        QMessageBox::critical(this, "Eroare", "A apărut o eroare la salvarea rețetei.");
+    } else {
+        // Mesaj necunoscut
+        QMessageBox::information(this, "Răspuns server", message);
+    }
+    accept();
 }
 
 void AddRecipeDialog::on_addIngredientButton_clicked()
@@ -45,6 +64,11 @@ void AddRecipeDialog::on_addIngredientButton_clicked()
 
 void AddRecipeDialog::on_submitButton_clicked()
 {
+    if (recipeAlreadySent)
+    {
+        return;  // Protecție
+    }
+    recipeAlreadySent = true;
     QString name = ui->recipeNameLineEdit->text().trimmed();
     QString steps = ui->stepsTextEdit->toPlainText().trimmed();
     QString prepTime = ui->prepTimeEdit->time().toString("hh:mm");
@@ -79,8 +103,7 @@ void AddRecipeDialog::on_submitButton_clicked()
                           .arg(steps.replace("|", " "));
 
     socket->write(message.toUtf8());
-    QMessageBox::information(this, "Succes", "Rețeta a fost trimisă.");
-    accept();
+    socket->flush();
 }
 
 void AddRecipeDialog::updateBackground() {

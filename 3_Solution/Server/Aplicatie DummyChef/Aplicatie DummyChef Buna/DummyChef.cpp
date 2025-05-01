@@ -212,6 +212,13 @@ void DummyChef::handleClient()
             {
                 handleClientPreferences(receivedMessage);
             }
+            else if (receivedMessage.rfind("ADD_RECIPE|", 0) == 0) 
+            {
+                handleAddRecipeByClient(receivedMessage);
+            }
+            else if (receivedMessage.rfind("ADD_INGREDIENT|", 0) == 0) {
+                handleAddIngredientByClient(receivedMessage);
+            }
             else {
                 send(clientSocket, "UNKNOWN_COMMAND", 16, 0);
             }
@@ -497,5 +504,147 @@ void DummyChef::handleClientPreferences(const std::string& request) {
         std::cerr << "Error in handleClientPreferences: " << e.what() << std::endl;
         std::string response = "PREFERINTE_CLIENT_ERROR: " + std::string(e.what());
         send(clientSocket, response.c_str(), response.length(), 0);
+    }
+}
+
+void DummyChef::handleAddRecipeByClient(const std::string& request) {
+    try {
+        // Format: ADD_RECIPE_CLIENT|email|nume|timp|ingred1:qty1;ingred2:qty2|pasi
+        std::vector<std::string> tokens;
+        std::stringstream ss(request);
+        std::string token;
+
+        while (std::getline(ss, token, '|')) {
+            tokens.push_back(token);
+        }
+
+        if (tokens.size() != 6) {
+            std::string response = "ADD_RECIPE_CLIENT_FAILED: Invalid format";
+            send(clientSocket, response.c_str(), response.length(), 0);
+            return;
+        }
+
+        std::string email = tokens[1];
+        std::string numeReteta = tokens[2];
+        std::string timpPreparare = tokens[3];
+        std::string ingredienteRaw = tokens[4];
+        std::string pasiPreparare = tokens[5];
+
+        // Conectare DB
+        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+        db.Connect();
+
+
+        
+
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+
+        int userId = db.GetUserIdByEmail(converter.from_bytes(email));
+        if (userId == -1) {
+            std::string response = "ADD_RECIPE_FAILED: Email not found";
+            send(clientSocket, response.c_str(), response.length(), 0);
+            db.Disconnect();
+            return;
+        }
+
+        int idReteta = db.InsertRecipeFromClient(
+            converter.from_bytes(numeReteta),
+            converter.from_bytes(timpPreparare),
+            converter.from_bytes(pasiPreparare),
+            userId
+        );
+
+        // Ingrediente separate prin ;
+        std::stringstream ingSS(ingredienteRaw);
+        std::string ingPair;
+        while (std::getline(ingSS, ingPair, ';')) {
+            size_t delim = ingPair.find(':');
+            if (delim != std::string::npos) {
+                std::string nume = ingPair.substr(0, delim);
+                std::string cantitate = ingPair.substr(delim + 1);
+                db.InsertRecipeIngredient(
+                    idReteta,
+                    converter.from_bytes(nume),
+                    converter.from_bytes(cantitate)
+                );
+            }
+        }
+
+        db.Disconnect();
+
+        std::string response = "ADD_RECIPE_SUCCESS";
+        send(clientSocket, response.c_str(), response.length(), 0);
+    }
+    catch (const std::exception& e) {
+        std::string error = "ADD_RECIPE_ERROR: " + std::string(e.what());
+        send(clientSocket, error.c_str(), error.length(), 0);
+    }
+}
+
+
+void DummyChef::handleAddIngredientByClient(const std::string& request) {
+    try {
+        // Format: ADD_INGREDIENT|email|nume|pret|stoc|furnizor|telefon|email_furnizor|adresa
+        std::vector<std::string> tokens;
+        std::stringstream ss(request);
+        std::string token;
+
+        while (std::getline(ss, token, '|')) {
+            tokens.push_back(token);
+        }
+
+        if (tokens.size() != 9) {
+            std::string response = "ADD_INGREDIENT_FAILED: Invalid format";
+            send(clientSocket, response.c_str(), response.length(), 0);
+            return;
+        }
+
+        std::string email = tokens[1];
+        std::string numeIngredient = tokens[2];
+        std::string pretStr = tokens[3];
+        std::string cantitateStr = tokens[4];
+        std::string numeFurnizor = tokens[5];
+        std::string telefon = tokens[6];
+        std::string emailFurnizor = tokens[7];
+        std::string adresa = tokens[8];
+
+        double pret = std::stod(pretStr);
+        int cantitate = std::stoi(cantitateStr);
+
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+
+        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+        db.Connect();
+
+        // Verifică dacă furnizorul există
+        int furnizorId = db.GetFurnizorIdByEmail(converter.from_bytes(emailFurnizor));
+        if (furnizorId == -1) {
+            // Inserare furnizor nou
+            furnizorId = db.InsertFurnizor(
+                converter.from_bytes(numeFurnizor),
+                converter.from_bytes(telefon),
+                converter.from_bytes(emailFurnizor),
+                converter.from_bytes(adresa)
+            );
+        }
+
+        // Adaugă ingredient
+        int ingredientId = db.InsertIngredient(
+            converter.from_bytes(numeIngredient),
+            pret,
+            furnizorId
+        );
+
+        // Adaugă în stoc
+        db.InsertStock(ingredientId, cantitate);
+
+        db.Disconnect();
+
+        std::string response = "ADD_INGREDIENT_SUCCESS";
+        send(clientSocket, response.c_str(), response.length(), 0);
+    }
+    catch (const std::exception& e) {
+        std::string error = "ADD_INGREDIENT_ERROR: " + std::string(e.what());
+        send(clientSocket, error.c_str(), error.length(), 0);
     }
 }

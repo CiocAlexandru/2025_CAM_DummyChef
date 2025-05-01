@@ -44,11 +44,18 @@ public:
         const std::wstring& oraLivrare,const std::wstring& preferintaPret,const std::wstring& notite);
     bool UserExistsByUsername(const std::wstring& username);
     int GetUserIdByUsername(const std::wstring& username);
+    int GetUserIdByEmail(const std::wstring& email);
     bool PreferencesExist(int clientId);
     void UpdateClientPreferences(int clientId, const std::wstring& preferinteAlimentare,
         const std::wstring& alergii, const std::wstring& oraLivrare,
         const std::wstring& preferintaPret, const std::wstring& notite);
-
+    int InsertRecipeFromClient(const std::wstring& denumire, const std::wstring& timpPreparare, const std::wstring& pasiPreparare, int userId);
+    void InsertRecipeIngredient(int retetaId, const std::wstring& numeIngredient, const std::wstring& cantitate);
+    int GetFurnizorIdByEmail(const std::wstring& email);
+    int InsertFurnizor(const std::wstring& nume, const std::wstring& telefon,
+        const std::wstring& email, const std::wstring& adresa);
+    int InsertIngredient(const std::wstring& nume, double pret, int furnizorId);
+    void InsertStock(int ingredientId, int cantitate);
 private:
     std::wstring server, database, username, password;
     SQLHENV env;
