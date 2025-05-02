@@ -4,6 +4,7 @@
 #include "addrecipedialog.h"
 #include "myrecipesdialog.h"
 #include "addingredientdialog.h"
+#include "mainwindow.h"
 
 #include <QDebug>
 #include <QMessageBox>
@@ -22,6 +23,7 @@ ChefMainWindow::ChefMainWindow(const QString& email, QTcpSocket* socket, QWidget
     connect(ui->addRecipeButton, &QPushButton::clicked, this, &ChefMainWindow::openAddRecipe);
     connect(ui->myRecipesButton, &QPushButton::clicked, this, &ChefMainWindow::openMyRecipes);
     connect(ui->addIngredientButton, &QPushButton::clicked, this, &ChefMainWindow::openAddIngredient);
+    connect(ui->logoutButton, &QPushButton::clicked,this, &ChefMainWindow::handleLogout);
 }
 
 ChefMainWindow::~ChefMainWindow()
@@ -57,4 +59,16 @@ void ChefMainWindow::updateBackground() {
 void ChefMainWindow::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
     updateBackground();
+}
+
+void ChefMainWindow::handleLogout()
+{
+    if (socket && socket->isOpen()) {
+        socket->disconnectFromHost();
+    }
+
+    this->close();  // Închide fereastra curentă
+
+    MainWindow *mainWin = new MainWindow();  // Creează o nouă instanță
+    mainWin->show();  // Afișează fereastra principală
 }

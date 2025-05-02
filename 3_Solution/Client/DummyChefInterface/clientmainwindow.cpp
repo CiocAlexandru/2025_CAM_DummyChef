@@ -3,6 +3,7 @@
 #include "recipesearchdialog.h"
 #include "shoppinglistdialog.h"
 #include "allrecipesdialog.h"
+#include "mainwindow.h"
 #include <QMessageBox>
 #include <QResizeEvent>
 
@@ -23,6 +24,7 @@ ClientMainWindow::ClientMainWindow(const QString& username,const QString& email,
     connect(ui->shoppingListButton, &QPushButton::clicked, this, &ClientMainWindow::openShoppingList);
     connect(ui->modifyPrefrencesButton, &QPushButton::clicked, this, &ClientMainWindow::openModifyPrefrences);
     connect(ui->viewAllRecipesButton, &QPushButton::clicked, this, &ClientMainWindow::openAllRecipes);
+    connect(ui->logoutButton, &QPushButton::clicked,this, &ClientMainWindow::handleLogout);
 
 
 }
@@ -72,3 +74,14 @@ void ClientMainWindow::resizeEvent(QResizeEvent *event) {
     updateBackground();  // Redimensionează fundalul
 }
 
+void ClientMainWindow::handleLogout()
+{
+    if (socket && socket->isOpen()) {
+        socket->disconnectFromHost();
+    }
+
+    this->close();  // Închide fereastra curentă
+
+    MainWindow *mainWin = new MainWindow();  // Creează o nouă instanță
+    mainWin->show();  // Afișează fereastra principală
+}

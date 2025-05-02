@@ -22,6 +22,7 @@ private slots:
     void openAddRecipe();
     void openMyRecipes();
     void openAddIngredient();
+    void handleLogout();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
