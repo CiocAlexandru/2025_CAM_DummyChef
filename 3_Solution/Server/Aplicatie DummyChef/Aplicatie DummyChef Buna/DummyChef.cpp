@@ -216,12 +216,23 @@ void DummyChef::handleClient()
             {
                 handleAddRecipeByClient(receivedMessage);
             }
-            else if (receivedMessage.rfind("ADD_INGREDIENT|", 0) == 0) {
+            else if (receivedMessage.rfind("ADD_INGREDIENT|", 0) == 0) 
+            {
                 handleAddIngredientByClient(receivedMessage);
             }
+            else if (receivedMessage.rfind("GET_MY_RECIPES|", 0) == 0)
+            {
+                handleGetMyRecipes(receivedMessage);
+            }
+            else if (receivedMessage.rfind("SEARCH_RECIPES ", 0) == 0) 
+            {
+                handleSearchRecipes(receivedMessage);
+            }
+
             else {
                 send(clientSocket, "UNKNOWN_COMMAND", 16, 0);
             }
+           
             
         }
         catch (const std::exception& e) {
@@ -646,5 +657,117 @@ void DummyChef::handleAddIngredientByClient(const std::string& request) {
     catch (const std::exception& e) {
         std::string error = "ADD_INGREDIENT_ERROR: " + std::string(e.what());
         send(clientSocket, error.c_str(), error.length(), 0);
+    }
+}
+
+
+void DummyChef::handleGetMyRecipes(const std::string& request) {
+    try {
+        // Format: GET_MY_RECIPES|email
+        std::string email = request.substr(strlen("GET_MY_RECIPES|"));
+
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        std::wstring wEmail = converter.from_bytes(email);
+
+        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+        db.Connect();
+
+        int userId = db.GetUserIdByEmail(wEmail);
+        if (userId == -1) {
+            std::string response = "MY_RECIPES|";
+            send(clientSocket, response.c_str(), response.length(), 0);
+            db.Disconnect();
+            return;
+        }
+
+        std::vector<std::wstring> recipes = db.GetRecipesByChefId(userId);
+        std::string response = "MY_RECIPES|";
+
+        for (size_t i = 0; i < recipes.size(); ++i) {
+            response += converter.to_bytes(recipes[i]);
+            if (i < recipes.size() - 1)
+                response += "##";
+        }
+
+        send(clientSocket, response.c_str(), response.length(), 0);
+        db.Disconnect();
+    }
+    catch (const std::exception& e) {
+        std::string response = "MY_RECIPES_ERROR: ";
+        response += e.what();
+        send(clientSocket, response.c_str(), response.length(), 0);
+    }
+}
+
+
+void DummyChef::handleSearchRecipes(const std::string& request) {
+    try {
+        std::string keywordsPart = request.substr(strlen("SEARCH_RECIPES "));
+        std::vector<std::string> keywords;
+        std::stringstream ss(keywordsPart);
+        std::string token;
+        while (std::getline(ss, token, ',')) {
+            std::transform(token.begin(), token.end(), token.begin(), ::tolower);  // lowercase
+            keywords.push_back(token);
+        }
+
+        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+        db.Connect();
+
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        std::wstring query;
+
+        if (keywords.empty() || (keywords.size() == 1 && keywords[0].empty())) {
+            query = L"SELECT TOP 10 R.ID, R.Denumire, R.TimpPreparare, R.PasiPreparare "
+                L"FROM Retete R ORDER BY R.ID DESC";
+        }
+        else {
+            query = L"SELECT R.ID, R.Denumire, R.TimpPreparare, R.PasiPreparare FROM Retete R WHERE ";
+            for (size_t i = 0; i < keywords.size(); ++i) {
+                std::wstring kw = converter.from_bytes(keywords[i]);
+                query += L"LOWER(R.Denumire) LIKE N'%" + kw + L"%'";
+                if (i < keywords.size() - 1)
+                    query += L" AND ";
+            }
+        }
+
+        auto recipes = db.ExecuteQuery(query);
+        std::string response = "RECIPE_RESULTS|";
+
+        for (const auto& row : recipes) {
+            std::wstring retetaId = row[0];
+            std::wstring denumire = row[1];
+            std::wstring timp = row[2];
+            std::wstring pasi = row[3];
+
+            int recipeId = std::stoi(retetaId);
+            auto ingrediente = db.ExecuteQuery(L"SELECT I.Nume, RI.Cantitate "
+                L"FROM ReteteIngrediente RI "
+                L"JOIN Ingrediente I ON I.ID = RI.IngredientID "
+                L"WHERE RI.RetetaID = " + retetaId);
+
+            std::string ingrLine;
+            for (const auto& ing : ingrediente) {
+                ingrLine += converter.to_bytes(ing[0]) + ":" + converter.to_bytes(ing[1]) + ";";
+            }
+            if (!ingrLine.empty()) ingrLine.pop_back(); // remove last semicolon
+
+            response += converter.to_bytes(denumire) + "|" +
+                converter.to_bytes(timp) + "|" +
+                ingrLine + "|" +
+                converter.to_bytes(pasi) + "##";
+        }
+
+        if (response.back() == '#' && response[response.size() - 2] == '#') {
+            response.pop_back();
+            response.pop_back();
+        }
+
+        send(clientSocket, response.c_str(), response.length(), 0);
+        db.Disconnect();
+    }
+    catch (const std::exception& e) {
+        std::string err = "RECIPE_SEARCH_ERROR: " + std::string(e.what());
+        send(clientSocket, err.c_str(), err.length(), 0);
     }
 }

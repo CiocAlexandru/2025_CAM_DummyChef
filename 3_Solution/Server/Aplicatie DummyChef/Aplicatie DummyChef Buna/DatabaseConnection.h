@@ -56,12 +56,13 @@ public:
         const std::wstring& email, const std::wstring& adresa);
     int InsertIngredient(const std::wstring& nume, double pret, int furnizorId);
     void InsertStock(int ingredientId, int cantitate);
+    std::vector<std::wstring> GetRecipesByChefId(int chefId);
+
 private:
     std::wstring server, database, username, password;
     SQLHENV env;
     SQLHDBC dbc;
     bool isConnected;
-
     void ThrowIfFailed(SQLRETURN ret,
         const std::wstring& errorMessage,
         SQLSMALLINT handleType = SQL_HANDLE_DBC,

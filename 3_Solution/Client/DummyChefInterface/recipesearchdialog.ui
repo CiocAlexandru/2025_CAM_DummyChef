@@ -13,6 +13,98 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <widget class="QLineEdit" name="keywordEdit">
+   <property name="geometry">
+    <rect>
+     <x>232</x>
+     <y>185</y>
+     <width>371</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="addButton">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>230</y>
+     <width>371</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FF6200, stop:1 #00CC66);
+    color: #FFFFFF;
+    border-radius: 10px;
+    border: none;
+    padding: 5px;
+    font-family: &quot;Poppins&quot;;
+    font-size: 16pt;
+    font-weight: 600;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #00CC66, stop:1 #FF6200);
+    border: 2px solid #535AEF;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #CC4E00, stop:1 #00994C);
+    border: 2px solid #4488CC;
+}</string>
+   </property>
+   <property name="text">
+    <string>Add key word</string>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="keywordList">
+   <property name="geometry">
+    <rect>
+     <x>235</x>
+     <y>280</y>
+     <width>361</width>
+     <height>241</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="searchButton">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>540</y>
+     <width>371</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FF6200, stop:1 #00CC66);
+    color: #FFFFFF;
+    border-radius: 10px;
+    border: none;
+    padding: 5px;
+    font-family: &quot;Poppins&quot;;
+    font-size: 16pt;
+    font-weight: 600;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #00CC66, stop:1 #FF6200);
+    border: 2px solid #535AEF;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #CC4E00, stop:1 #00994C);
+    border: 2px solid #4488CC;
+}</string>
+   </property>
+   <property name="text">
+    <string>Search Recipes</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

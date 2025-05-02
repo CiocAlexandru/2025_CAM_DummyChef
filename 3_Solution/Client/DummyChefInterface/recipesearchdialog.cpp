@@ -1,65 +1,77 @@
 #include "recipesearchdialog.h"
 #include "ui_recipesearchdialog.h"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QLineEdit>
-#include <QListWidget>
-#include <QLabel>
 #include <QMessageBox>
 
-RecipeSearchDialog::RecipeSearchDialog(const QString& username, QTcpSocket* socket, QWidget *parent)
-    : QDialog(parent), username(username), socket(socket), ui(nullptr)
+RecipeSearchDialog::RecipeSearchDialog(const QString& username, QTcpSocket* socket, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::RecipeSearchDialog),
+    username(username),
+    socket(socket)
 {
-    setWindowTitle("Căutare rețete");
-    resize(400, 300);
+    ui->setupUi(this);  // Încarcă interfața grafică din .ui
 
-    // Layout principal
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
-
-    // Label introductiv
-    QLabel *label = new QLabel("Introduceți ingrediente sau cuvinte cheie:");
-    mainLayout->addWidget(label);
-
-    // Layout pentru adăugare cuvânt
-    QHBoxLayout *inputLayout = new QHBoxLayout();
-    QLineEdit *keywordEdit = new QLineEdit(this);
-    QPushButton *addButton = new QPushButton("Adaugă", this);
-    inputLayout->addWidget(keywordEdit);
-    inputLayout->addWidget(addButton);
-    mainLayout->addLayout(inputLayout);
-
-    // Listă cuvinte adăugate
-    QListWidget *keywordList = new QListWidget(this);
-    mainLayout->addWidget(keywordList);
-
-    // Buton căutare
-    QPushButton *searchButton = new QPushButton("Caută rețete", this);
-    mainLayout->addWidget(searchButton);
-
-    // Conectări
-    connect(addButton, &QPushButton::clicked, this, [=]() {
-        QString text = keywordEdit->text().trimmed();
-        if (!text.isEmpty()) {
-            keywords << text;
-            keywordList->addItem(text);
-            keywordEdit->clear();
-        }
-    });
-
-    connect(searchButton, &QPushButton::clicked, this, [=]() {
-        if (keywords.isEmpty()) {
-            QMessageBox::warning(this, "Atenție", "Adăugați cel puțin un ingredient sau cuvânt!");
-            return;
-        }
-
-        QString message = "SEARCH_RECIPES " + keywords.join(",");
-        socket->write(message.toUtf8());
-
-        QMessageBox::information(this, "Căutare trimisă", "Cererea a fost trimisă serverului.");
-        // TODO: Așteaptă răspuns și afișează rețetele primite
-    });
+    // Conectăm butoanele la funcțiile noastre
+    connect(ui->addButton, &QPushButton::clicked, this, &RecipeSearchDialog::onAddKeywordClicked);
+    connect(ui->searchButton, &QPushButton::clicked, this, &RecipeSearchDialog::onSearchClicked);
+    connect(socket, &QTcpSocket::readyRead, this, &RecipeSearchDialog::onSocketReadyRead);
 }
 
+RecipeSearchDialog::~RecipeSearchDialog()
+{
+    delete ui;
+}
 
-RecipeSearchDialog::~RecipeSearchDialog() {}
+void RecipeSearchDialog::onAddKeywordClicked()
+{
+    QString text = ui->keywordEdit->text().trimmed();
+    if (!text.isEmpty()) {
+        keywords << text;
+        ui->keywordList->addItem(text);
+        ui->keywordEdit->clear();
+    }
+}
+
+void RecipeSearchDialog::onSearchClicked()
+{
+    if (keywords.isEmpty()) {
+        QMessageBox::warning(this, "Atenție", "Adăugați cel puțin un ingredient sau cuvânt!");
+        return;
+    }
+
+    QString message = "SEARCH_RECIPES " + keywords.join(",");
+    socket->write(message.toUtf8());
+}
+
+void RecipeSearchDialog::onSocketReadyRead()
+{
+    QByteArray data = socket->readAll();
+    QString response(data);
+
+    if (response.startsWith("RECIPE_RESULTS|")) {
+        QString all = response.section("|", 1);
+        QStringList entries = all.split("##");
+
+        QStringList finalList;
+        for (const QString& entry : entries) {
+            QStringList parts = entry.split("|");
+            if (parts.size() < 4) continue;
+
+            QString denumire = parts[0];
+            QString timp = parts[1];
+            QString ingrediente = parts[2];
+            QString pasi = parts[3];
+
+            finalList << "🍽 " + denumire +
+                             "\n⏱ Timp: " + timp +
+                             "\n🧂 Ingrediente:\n - " + ingrediente.replace(";", "\n - ") +
+                             "\n👨‍🍳 Pași:\n" + pasi +
+                             "\n-------------------";
+        }
+
+        QMessageBox::information(this, "Rezultate căutare", finalList.join("\n\n"));
+        accept();
+    }
+    else {
+        QMessageBox::warning(this, "Eroare", "Eroare la primirea rețetelor.");
+    }
+}

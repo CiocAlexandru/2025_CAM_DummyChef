@@ -830,3 +830,31 @@ void DatabaseConnection::InsertStock(int ingredientId, int cantitate) {
     SQLExecute(stmt);
     SQLFreeHandle(SQL_HANDLE_STMT, stmt);
 }
+
+
+std::vector<std::wstring> DatabaseConnection::GetRecipesByChefId(int chefId) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"SELECT Denumire FROM Retete WHERE IDBucatar = ?";
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &chefId, 0, nullptr);
+
+    SQLExecute(stmt);
+
+    std::vector<std::wstring> recipes;
+    wchar_t buffer[256];
+    SQLLEN indicator;
+
+    while (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_WCHAR, buffer, sizeof(buffer), &indicator);
+        if (indicator != SQL_NULL_DATA) {
+            recipes.push_back(buffer);
+        }
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return recipes;
+}

@@ -36,13 +36,16 @@ void MyRecipesDialog::onReadyRead()
         QStringList parts = response.mid(QString("MY_RECIPES|").length()).split("##");
 
         ui->recipesListWidget->clear();
-        for (const QString& recipe : parts) {
-            ui->recipesListWidget->addItem(recipe);
+        for (int i = 0; i < parts.size(); ++i) {
+            QString itemText = QString::number(i + 1) + ". " + parts[i];
+            ui->recipesListWidget->addItem(itemText);
         }
+
     } else {
         QMessageBox::warning(this, "Eroare", "Nu s-au putut încărca rețetele.");
     }
 }
+
 
 void MyRecipesDialog::updateBackground() {
     QPixmap pixmap(":/images/ChefMainWindow.jpg");

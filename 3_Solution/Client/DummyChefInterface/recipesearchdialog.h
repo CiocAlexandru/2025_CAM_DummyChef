@@ -18,8 +18,9 @@ public:
     ~RecipeSearchDialog();
 
 private slots:
-    //void addKeyword();
-    //void searchRecipes();
+    void onAddKeywordClicked();     // pentru butonul "Adaugă"
+    void onSearchClicked();         // pentru butonul "Caută rețete"
+    void onSocketReadyRead();       // pentru primirea răspunsului
 
 private:
     Ui::RecipeSearchDialog *ui;
