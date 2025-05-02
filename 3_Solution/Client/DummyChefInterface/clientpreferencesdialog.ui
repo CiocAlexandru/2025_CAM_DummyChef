@@ -46,7 +46,7 @@ QPushButton:pressed {
 }</string>
    </property>
    <property name="text">
-    <string>save</string>
+    <string>Save</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="allergiesEdit">

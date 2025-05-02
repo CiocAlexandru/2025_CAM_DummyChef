@@ -14,6 +14,8 @@ RecipeSearchDialog::RecipeSearchDialog(const QString& username, QTcpSocket* sock
     backgroundLabel->setScaledContents(true);
     backgroundLabel->lower();
 
+    ui->keywordEdit->setPlaceholderText("Introduceți cuvinte cheie pentru cautare");
+
     // Conectăm butoanele la funcțiile noastre
     connect(ui->addButton, &QPushButton::clicked, this, &RecipeSearchDialog::onAddKeywordClicked);
     connect(ui->searchButton, &QPushButton::clicked, this, &RecipeSearchDialog::onSearchClicked);

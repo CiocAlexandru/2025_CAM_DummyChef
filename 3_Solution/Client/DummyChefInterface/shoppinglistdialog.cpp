@@ -16,6 +16,8 @@ ShoppingListDialog::ShoppingListDialog(const QString& username, QTcpSocket* sock
     backgroundLabel->lower();
     updateBackground();
 
+    ui->recipeLineEdit->setPlaceholderText("Introduceți reteta care va intereseaza ");
+
     connect(socket, &QTcpSocket::readyRead, this, &ShoppingListDialog::onReadyRead);
     connect(socket, &QTcpSocket::errorOccurred, this, &ShoppingListDialog::onError);
 
