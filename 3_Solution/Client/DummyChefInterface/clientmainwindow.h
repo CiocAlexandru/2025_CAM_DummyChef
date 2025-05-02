@@ -22,6 +22,7 @@ private slots:
     void openSearchRecipes();
     void openShoppingList();
     void openModifyPrefrences();
+    void openAllRecipes();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;

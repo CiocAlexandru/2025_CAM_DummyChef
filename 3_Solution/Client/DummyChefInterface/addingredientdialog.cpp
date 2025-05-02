@@ -104,7 +104,7 @@ void AddIngredientDialog::on_submitButton_clicked()
 
 
 void AddIngredientDialog::updateBackground() {
-    QPixmap pixmap(":/images/AddIngredient.jpg");
+    QPixmap pixmap(":/images/AddIngredient2.jpg");
     backgroundLabel->setPixmap(pixmap);
     backgroundLabel->setGeometry(0, 0, this->width(), this->height());
 }

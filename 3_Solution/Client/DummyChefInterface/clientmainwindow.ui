@@ -122,6 +122,42 @@ QPushButton:pressed {
      <string>Modify Prefrences</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="viewAllRecipesButton">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>170</y>
+      <width>251</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FF6200, stop:1 #00CC66);
+    color: #FFFFFF;
+    border-radius: 10px;
+    border: none;
+    padding: 5px;
+    font-family: &quot;Poppins&quot;;
+    font-size: 16pt;
+    font-weight: 600;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #00CC66, stop:1 #FF6200);
+    border: 2px solid #535AEF;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #CC4E00, stop:1 #00994C);
+    border: 2px solid #4488CC;
+}</string>
+    </property>
+    <property name="text">
+     <string>View All Recipes</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

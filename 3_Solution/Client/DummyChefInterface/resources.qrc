@@ -12,6 +12,8 @@
         <file>MainWindowClient.jpg</file>
         <file>ChefMainWindow.jpg</file>
         <file>AddRecipe.jpg</file>
-        <file>AddIngredient.jpg</file>
+        <file>AllRecipes.jpg</file>
+        <file>AddIngredient2.jpg</file>
+        <file>ShoppingList.jpg</file>
     </qresource>
 </RCC>

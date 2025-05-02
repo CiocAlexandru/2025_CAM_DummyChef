@@ -16,11 +16,83 @@
   <widget class="QTextEdit" name="shoppingListTextEdit">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>270</y>
-     <width>391</width>
-     <height>161</height>
+     <x>390</x>
+     <y>130</y>
+     <width>441</width>
+     <height>351</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="placeOrderButton">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>540</y>
+     <width>251</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FF6200, stop:1 #00CC66);
+    color: #FFFFFF;
+    border-radius: 10px;
+    border: none;
+    padding: 5px;
+    font-family: &quot;Poppins&quot;;
+    font-size: 16pt;
+    font-weight: 600;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #00CC66, stop:1 #FF6200);
+    border: 2px solid #535AEF;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #CC4E00, stop:1 #00994C);
+    border: 2px solid #4488CC;
+}</string>
+   </property>
+   <property name="text">
+    <string>Place Order</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cancelButton">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>600</y>
+     <width>251</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FF6200, stop:1 #00CC66);
+    color: #FFFFFF;
+    border-radius: 10px;
+    border: none;
+    padding: 5px;
+    font-family: &quot;Poppins&quot;;
+    font-size: 16pt;
+    font-weight: 600;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #00CC66, stop:1 #FF6200);
+    border: 2px solid #535AEF;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #CC4E00, stop:1 #00994C);
+    border: 2px solid #4488CC;
+}</string>
+   </property>
+   <property name="text">
+    <string>Cancel Order</string>
    </property>
   </widget>
  </widget>

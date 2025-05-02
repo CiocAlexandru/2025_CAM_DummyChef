@@ -2,6 +2,7 @@
 #include "ui_clientmainwindow.h"
 #include "recipesearchdialog.h"
 #include "shoppinglistdialog.h"
+#include "allrecipesdialog.h"
 #include <QMessageBox>
 #include <QResizeEvent>
 
@@ -21,6 +22,7 @@ ClientMainWindow::ClientMainWindow(const QString& username,const QString& email,
     connect(ui->searchRecipesButton, &QPushButton::clicked, this, &ClientMainWindow::openSearchRecipes);
     connect(ui->shoppingListButton, &QPushButton::clicked, this, &ClientMainWindow::openShoppingList);
     connect(ui->modifyPrefrencesButton, &QPushButton::clicked, this, &ClientMainWindow::openModifyPrefrences);
+    connect(ui->viewAllRecipesButton, &QPushButton::clicked, this, &ClientMainWindow::openAllRecipes);
 
 
 }
@@ -51,6 +53,13 @@ void ClientMainWindow::openModifyPrefrences()
     ClientPreferencesDialog dialog(username, socket, this);
     dialog.exec(); // deschide modal
 }
+
+void ClientMainWindow::openAllRecipes()
+{
+    AllRecipesDialog dialog(username, socket, this);
+    dialog.exec();
+}
+
 
 void ClientMainWindow::updateBackground() {
     QPixmap pixmap(":/images/MainWindowClient.jpg");  // Încarcă imaginea din resurse

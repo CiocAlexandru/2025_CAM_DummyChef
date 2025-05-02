@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     addingredientdialog.cpp \
     addrecipedialog.cpp \
+    allrecipesdialog.cpp \
     chefmainwindow.cpp \
     chefsignupdialog.cpp \
     clientmainwindow.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
 HEADERS += \
     addingredientdialog.h \
     addrecipedialog.h \
+    allrecipesdialog.h \
     chefmainwindow.h \
     chefsignupdialog.h \
     clientmainwindow.h \
@@ -46,6 +48,7 @@ HEADERS += \
 FORMS += \
     addingredientdialog.ui \
     addrecipedialog.ui \
+    allrecipesdialog.ui \
     chefmainwindow.ui \
     chefsignupdialog.ui \
     clientmainwindow.ui \

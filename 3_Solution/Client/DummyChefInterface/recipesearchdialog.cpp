@@ -9,6 +9,10 @@ RecipeSearchDialog::RecipeSearchDialog(const QString& username, QTcpSocket* sock
     socket(socket)
 {
     ui->setupUi(this);  // Încarcă interfața grafică din .ui
+    setWindowTitle("Cauta retete in functie de cuvinte cheie: ");
+    backgroundLabel = new QLabel(this);
+    backgroundLabel->setScaledContents(true);
+    backgroundLabel->lower();
 
     // Conectăm butoanele la funcțiile noastre
     connect(ui->addButton, &QPushButton::clicked, this, &RecipeSearchDialog::onAddKeywordClicked);
@@ -74,4 +78,15 @@ void RecipeSearchDialog::onSocketReadyRead()
     else {
         QMessageBox::warning(this, "Eroare", "Eroare la primirea rețetelor.");
     }
+}
+
+void RecipeSearchDialog::updateBackground() {
+    QPixmap pixmap(":/images/AllRecipes.jpg");
+    backgroundLabel->setPixmap(pixmap);
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());
+}
+
+void RecipeSearchDialog::resizeEvent(QResizeEvent *event) {
+    QDialog::resizeEvent(event);
+    updateBackground();
 }
