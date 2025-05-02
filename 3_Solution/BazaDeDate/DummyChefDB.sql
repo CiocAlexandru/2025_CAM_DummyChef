@@ -79,3 +79,7 @@ CREATE TABLE PreferinteClienti (
 );
 
 
+ALTER TABLE Utilizatori
+ALTER COLUMN DataNasterii NVARCHAR(20) NOT NULL;
+
+

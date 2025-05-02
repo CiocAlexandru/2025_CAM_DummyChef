@@ -35,7 +35,7 @@ void ChefMainWindow::openAddRecipe()
 {
     AddRecipeDialog* dialog=new AddRecipeDialog(email, socket, this);
     dialog->exec();
-    //dialog->
+
 }
 
 void ChefMainWindow::openMyRecipes()
@@ -61,14 +61,15 @@ void ChefMainWindow::resizeEvent(QResizeEvent *event) {
     updateBackground();
 }
 
+
 void ChefMainWindow::handleLogout()
 {
-    if (socket && socket->isOpen()) {
+        socket->abort();
         socket->disconnectFromHost();
-    }
+        socket->deleteLater(); // eliberează resursa
+        this->close();
 
-    this->close();  // Închide fereastra curentă
+        MainWindow *mainWin = new MainWindow();
+        mainWin->show();
 
-    MainWindow *mainWin = new MainWindow();  // Creează o nouă instanță
-    mainWin->show();  // Afișează fereastra principală
 }

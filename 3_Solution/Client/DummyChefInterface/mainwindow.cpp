@@ -60,14 +60,9 @@ void MainWindow::handleSignUp()
 
     SignUpDialog signUpDialog(this);  // Creează dialogul de înregistrare
 
-    if (signUpDialog.exec() == QDialog::Accepted) {
+    if (signUpDialog.exec() == QDialog::Accepted)
+    {
         qDebug() << "Utilizatorul s-a înregistrat cu succes!";
-         socket->connectToHost("127.0.0.1", 12345);
-        // Aici poți trimite datele la server sau face alte acțiuni
-        // Exemplu: trimitere username, parolă, etc.
-        // socket->write(...);
-
-        // După înregistrare, poți reveni la login sau afișa fereastra principală
     }
     else {
         this->show();  // Reafișează fereastra principală dacă userul anulează
@@ -78,10 +73,9 @@ void MainWindow::handleLogin()
 {
     this->hide();
     LoginDialog loginDialog(this);
-    if (loginDialog.exec() == QDialog::Accepted) {
+    if (loginDialog.exec() == QDialog::Accepted)
+    {
         qDebug() << "Utilizatorul a dat Login!";
-        // Aici poți face conexiunea la server
-        socket->connectToHost("127.0.0.1", 12345);
     }
     else
     {
@@ -100,7 +94,6 @@ void MainWindow::handleForgotPassword()
 
     if (result == QDialog::Accepted) {
         qDebug() << "Resetare parolă confirmată!";
-        // Nu mai afișăm MainWindow pentru că userul va merge mai departe în aplicație
     } else {
         qDebug() << "Resetare parolă anulată!";
         this->show();  // Dacă utilizatorul a anulat, readuce MainWindow

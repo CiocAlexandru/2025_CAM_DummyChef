@@ -310,11 +310,11 @@ void DummyChef::registerUser(const std::string& userType, const std::string& num
         if (userType=="Bucatar")
         {
             std::string confirmInput;
-            std::cout << "Confirmați înregistrarea (scrieți OK daca link-ul demonstrativ este valabil pentru a continua), daca nu Falsw: ";
-            std::getline(std::cin, confirmInput);
+            std::cout << "Confirmati inregistrarea (scrieți OK daca link-ul demonstrativ este valabil pentru a continua), daca nu False: ";
+            std::cin >> confirmInput;
 
             if (confirmInput != "OK") {
-                std::cerr << "Eroare: Înregistrarea a fost anulată de utilizator." << std::endl;
+                std::cerr << "Eroare: Inregistrarea a fost anulata de utilizator." << std::endl;
                 std::string response = "Link_demonstrativ_refuzat";
                 send(clientSocket, response.c_str(), response.size(), 0);
                 return;
@@ -364,6 +364,8 @@ void DummyChef::registerUser(const std::string& userType, const std::string& num
         std::cerr << "Error during registration: " << e.what() << std::endl;
     }
 }
+
+
 
 
 
