@@ -16,12 +16,21 @@ CREATE TABLE Utilizatori (
     TipUtilizator NVARCHAR(20)  CHECK (TipUtilizator IN ('Client', 'Bucatar'))
 );
 
+CREATE TABLE Furnizori (
+    ID INT IDENTITY(1,1) PRIMARY KEY,
+    Nume NVARCHAR(255) NOT NULL,
+    Telefon NVARCHAR(20) UNIQUE NOT NULL,
+    Email NVARCHAR(100) UNIQUE NOT NULL,
+    AdresaLivrare NVARCHAR(200) 
+);
+
 
 CREATE TABLE Ingrediente (
     ID INT IDENTITY(1,1) PRIMARY KEY,
     Nume NVARCHAR(255) NOT NULL,
     Pret DECIMAL(10,2) NOT NULL CHECK (Pret >= 0),
-    DataAdaugarii DATETIME DEFAULT GETDATE()
+    DataAdaugarii DATETIME DEFAULT GETDATE(),
+	IDFurnizor INT NOT NULL FOREIGN KEY REFERENCES Furnizori(ID)
 );
 
 CREATE TABLE Stoc(
@@ -30,13 +39,6 @@ CREATE TABLE Stoc(
 	Cantiate INT
 );
 
-CREATE TABLE Furnizori (
-    ID INT IDENTITY(1,1) PRIMARY KEY,
-    Nume NVARCHAR(255) NOT NULL,
-    Telefon NVARCHAR(20) UNIQUE NOT NULL,
-    Email NVARCHAR(100) UNIQUE NOT NULL,
-    AdresaLivrare NVARCHAR(200) 
-);
 
 CREATE TABLE Retete(
 	ID INT IDENTITY(1,1) PRIMARY KEY,
@@ -77,12 +79,3 @@ CREATE TABLE PreferinteClienti (
 );
 
 
-INSERT INTO Furnizori (Nume, Telefon, Email, AdresaLivrare)
-VALUES (N'Furnizor Standard', N'0712345678', N'furnizor@example.com', N'Soseaua Furnizorilor 1, Bucuresti');
-
-
-INSERT INTO Stoc (IngredientID, Cantiate) VALUES
-(1, 100);  -- Ou
-
-INSERT INTO Ingrediente (Nume, Pret) VALUES 
-(N'Ou', 1.50);

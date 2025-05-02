@@ -36,24 +36,6 @@
     <ClCompile Include="Ingrediente.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IngredienteDeBaza.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IngredienteLichide.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IngredienteLegume.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IngredienteOrigineAnimala.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IngredienteFructe.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IngredienteDeserturi.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ListaDeCumparaturi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -90,9 +72,6 @@
     <ClCompile Include="StatisticiReteta.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Exceptie.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IDGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -103,12 +82,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DatabaseConnection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ExceptieSocket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="iExceptie.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -132,24 +105,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Ingrediente.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IngredienteDeBaza.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IngredienteLichide.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IngredienteLegume.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IngredienteOrigineAnimala.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IngredienteFructe.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IngredienteDeserturi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ListaDeCumparaturi.h">
@@ -188,9 +143,6 @@
     <ClInclude Include="StatisticiReteta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Exceptie.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IDGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -200,16 +152,18 @@
     <ClInclude Include="DatabaseConnection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ExceptieSocket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="iExceptie.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
     <None Include="ClassDiagram2.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Ingrediente.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Furnizori.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

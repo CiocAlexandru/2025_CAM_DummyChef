@@ -37,47 +37,33 @@ void DummyChef::run()
 {
    
     try {
-        connectToClient();
+        std::cout << "Bun venit in serverul aplicatiei DummyChef!\n";
+        
+        int n;
+        do {
+            std::cout << "Pentru inchiderea aplicatiei apsati tasta 0:\n";
+            std::cout << "Pentru pornirea serverului apsati tasta 1:\n";
+            std::cout << "Pentru mentenanta (ocupati functia de administrator) apsati tasta 5:\n";
+            std::cin >> n;
+            switch (n)
+            {
+                
+            case 1:
+                connectToClient();
+                closeSocket();
+                break;
+            case 5:
+                administrator->menu();
+                break;
+            }
+        } while (n);
     }
     catch (...) {
         closeSocket(); // Asigura-te că socket-urile sunt inchise in caz de eroare
         throw; // Re-arunca exceptia pentru gestionare ulterioara
     }
-    closeSocket();
+    
 }
-
-void DummyChef::InsertNewClient() {
-    try {
-        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
-        db.Connect();
-
-        db.InsertClient(L"Popescu", L"Ion", L"ionpopescu", L"parola123",
-            L"0745123456", L"1990-05-15", L"ion.popescu@example.com",
-            L"Strada Mihai Eminescu, nr. 10, Bucuresti");
-
-        db.Disconnect();
-    }
-    catch (const std::exception& e) {
-        std::cerr << "Error inserting client: " << e.what() << std::endl;
-    }
-}
-
-
-void DummyChef::InsertNewProduct()
-{
-    try {
-        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
-        db.Connect();
-        // Test INSERT
-        db.InsertProduct(L"Pizza Margherita", 29.99, 10);
-        db.InsertProduct(L"Tiramisu", 15.50, 20);
-        db.Disconnect();
-    }
-    catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-    }
-}
-
 
 
 void DummyChef::connectToClient()
@@ -130,7 +116,7 @@ void DummyChef::connectToClient()
 
         std::cout << "Client conectat!\n";
 
-        handleClient(); // Tot fără thread
+        handleClient(); 
 
         closesocket(clientSocket);
     }
@@ -601,8 +587,6 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
         );
 
         // Ingrediente separate prin ;
-        std::stringstream ingSS(ingredienteRaw);
-        std::string ingPair;
         while (std::getline(ingSS, ingPair, ';')) {
             size_t delim = ingPair.find(':');
             if (delim != std::string::npos) {

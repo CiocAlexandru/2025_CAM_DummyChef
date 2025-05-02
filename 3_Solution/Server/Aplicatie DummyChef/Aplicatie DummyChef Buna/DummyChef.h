@@ -11,7 +11,6 @@
 #include <vector>
 #include "Administrator.h"
 #include "DatabaseConnection.h"
-#include "ExceptieSocket.h"
 #include <string>
 #include <iostream>
 
@@ -22,8 +21,6 @@ class DummyChef
 public:
 	static DummyChef* getApp(Administrator* administrator);
 	static void destroyApp();
-	void InsertNewProduct();
-	void InsertNewClient();
 	void connectToClient();
 	void closeSocket();
 	void run();

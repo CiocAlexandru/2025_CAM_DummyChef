@@ -2,7 +2,7 @@
 #include <iostream>
 #include "DummyChef.h"
 #include "Administrator.h"
-#include "iExceptie.h"
+
 
 
 int main(array<System::String^>^ args)
@@ -15,9 +15,9 @@ int main(array<System::String^>^ args)
         aplicatie->run();
 
     }
-    catch (iExceptie* exceptie)
+    catch (const std::exception& e)
     {
-        exceptie->printInfo();
+        std::cout << e.what() << "\n";
     }
     return 0;
 }

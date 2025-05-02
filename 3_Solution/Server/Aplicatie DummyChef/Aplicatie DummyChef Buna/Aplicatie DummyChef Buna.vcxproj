@@ -134,20 +134,11 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="DatabaseConnection.cpp" />
     <ClCompile Include="DummyChef.cpp" />
-    <ClCompile Include="Exceptie.cpp" />
-    <ClCompile Include="ExceptieSocket.cpp" />
     <ClCompile Include="Furnizor.cpp" />
     <ClCompile Include="IDGenerator.cpp" />
-    <ClCompile Include="iExceptie.cpp" />
     <ClCompile Include="iFurnizior.cpp" />
     <ClCompile Include="iIngrediente.cpp" />
     <ClCompile Include="Ingrediente.cpp" />
-    <ClCompile Include="IngredienteDeBaza.cpp" />
-    <ClCompile Include="IngredienteDeserturi.cpp" />
-    <ClCompile Include="IngredienteFructe.cpp" />
-    <ClCompile Include="IngredienteLegume.cpp" />
-    <ClCompile Include="IngredienteLichide.cpp" />
-    <ClCompile Include="IngredienteOrigineAnimala.cpp" />
     <ClCompile Include="iReteta.cpp" />
     <ClCompile Include="iStatistici.cpp" />
     <ClCompile Include="iUtilizator.cpp" />
@@ -168,20 +159,11 @@
     <ClInclude Include="Client.h" />
     <ClInclude Include="DatabaseConnection.h" />
     <ClInclude Include="DummyChef.h" />
-    <ClInclude Include="Exceptie.h" />
-    <ClInclude Include="ExceptieSocket.h" />
     <ClInclude Include="Furnizor.h" />
     <ClInclude Include="IDGenerator.h" />
-    <ClInclude Include="iExceptie.h" />
     <ClInclude Include="iFurnizior.h" />
     <ClInclude Include="iIngrediente.h" />
     <ClInclude Include="Ingrediente.h" />
-    <ClInclude Include="IngredienteDeBaza.h" />
-    <ClInclude Include="IngredienteDeserturi.h" />
-    <ClInclude Include="IngredienteFructe.h" />
-    <ClInclude Include="IngredienteLegume.h" />
-    <ClInclude Include="IngredienteLichide.h" />
-    <ClInclude Include="IngredienteOrigineAnimala.h" />
     <ClInclude Include="iReteta.h" />
     <ClInclude Include="iStatistici.h" />
     <ClInclude Include="iUtilizator.h" />
@@ -204,6 +186,10 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Furnizori.txt" />
+    <Text Include="Ingrediente.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
