@@ -68,18 +68,26 @@ void LoginDialog::sendLoginRequest()
     QString password = ui->passwordLineEdit->text();
 
     // Validare
-    if(username. isEmpty() || email.isEmpty() || password.isEmpty()) {
-        QMessageBox::warning(this, "Eroare", "Completați ambele câmpuri!");
+    if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+        QMessageBox::warning(this, "Eroare", "Completați toate câmpurile!");
         return;
     }
 
-    if(!QRegularExpression(R"(^[^@]+@[^@]+\.[^@]+$)").match(email).hasMatch()) {
+    if (!QRegularExpression(R"(^[^@]+@[^@]+\.[^@]+$)").match(email).hasMatch()) {
         QMessageBox::warning(this, "Eroare", "Email invalid!");
         return;
     }
 
+    // Dacă e deja conectat sau în proces de conectare, deconectează-l
+    if (socket->state() == QAbstractSocket::ConnectedState ||
+        socket->state() == QAbstractSocket::ConnectingState) {
+
+        socket->abort();  // Închide imediat conexiunea curentă
+    }
+
     socket->connectToHost("127.0.0.1", 12345);
 }
+
 
 void LoginDialog::onConnected()
 {
@@ -126,6 +134,9 @@ void LoginDialog::onReadyRead()
     }
     else {
         QMessageBox::warning(this, "Eroare", "Email sau parolă incorecte!");
+        ui->usernameLineEdit->clear();
+        ui->emailLineEdit->clear();
+        ui->passwordLineEdit->clear();
     }
 }
 

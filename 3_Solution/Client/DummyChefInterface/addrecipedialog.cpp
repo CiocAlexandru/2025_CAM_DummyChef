@@ -40,21 +40,30 @@ AddRecipeDialog::~AddRecipeDialog()
 }
 
 void AddRecipeDialog::onSocketReadyRead() {
-
     disconnect(socket, &QTcpSocket::readyRead, this, &AddRecipeDialog::onSocketReadyRead);
+
     QByteArray response = socket->readAll();
     QString message = QString::fromUtf8(response).trimmed();
 
     if (message == "ADD_RECIPE_SUCCESS") {
         QMessageBox::information(this, "Succes", "Rețeta a fost salvată cu succes!");
-    } else if (message.startsWith("ADD_RECIPE_ERROR")) {
-        QMessageBox::critical(this, "Eroare", "A apărut o eroare la salvarea rețetei.");
-    } else {
-        // Mesaj necunoscut
+        accept();
+    }
+    else if (message.startsWith("ADD_RECIPE_ERROR")) {
+        QString errorDetail = message.section(':', 1).trimmed();
+        QMessageBox::critical(this, "Eroare la salvare",
+                              errorDetail.isEmpty() ? "A apărut o eroare necunoscută." : errorDetail);
+    }
+    else if (message.startsWith("ADD_RECIPE_FAILED")) {
+        QString failReason = message.section(':', 1).trimmed();
+        QMessageBox::warning(this, "Salvare eșuată",
+                             failReason.isEmpty() ? "Rețeta nu a putut fi salvată." : failReason);
+    }
+    else {
         QMessageBox::information(this, "Răspuns server", message);
     }
-    accept();
 }
+
 
 void AddRecipeDialog::on_addIngredientButton_clicked()
 {

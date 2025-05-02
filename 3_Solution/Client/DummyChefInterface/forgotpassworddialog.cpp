@@ -47,6 +47,12 @@ void ForgotPasswordDialog::handleSendRequest()
         QMessageBox::warning(this, "Eroare", "Introduceți un email valabil!");
         return;
     }
+    // Dacă e deja conectat sau în proces de conectare, deconectează-l
+    if (socket->state() == QAbstractSocket::ConnectedState ||
+        socket->state() == QAbstractSocket::ConnectingState) {
+
+        socket->abort();  // Închide imediat conexiunea curentă
+    }
     socket->connectToHost("127.0.0.1", 12345);
 }
 

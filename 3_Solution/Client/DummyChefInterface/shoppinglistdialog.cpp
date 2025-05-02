@@ -2,31 +2,43 @@
 #include "ui_shoppinglistdialog.h"
 #include <QMessageBox>
 
-ShoppingListDialog::ShoppingListDialog(const QString& username, const QString& reteta, QTcpSocket* socket, QWidget *parent) :
+ShoppingListDialog::ShoppingListDialog(const QString& username, QTcpSocket* socket, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ShoppingListDialog),
     socket(socket),
-    username(username),
-    reteta(reteta)
+    username(username)
 {
     ui->setupUi(this);
     setWindowTitle("Lista de cumpărături");
+
     backgroundLabel = new QLabel(this);
     backgroundLabel->setScaledContents(true);
     backgroundLabel->lower();
     updateBackground();
+
     connect(socket, &QTcpSocket::readyRead, this, &ShoppingListDialog::onReadyRead);
     connect(socket, &QTcpSocket::errorOccurred, this, &ShoppingListDialog::onError);
 
     connect(ui->placeOrderButton, &QPushButton::clicked, this, &ShoppingListDialog::onPlaceOrderClicked);
     connect(ui->cancelButton, &QPushButton::clicked, this, &ShoppingListDialog::reject);
+    connect(ui->generateListButton, &QPushButton::clicked, this, &ShoppingListDialog::onGenerateListClicked);
 
-    // Trimitere comandă spre server
+    ui->placeOrderButton->setEnabled(false);  // Inițial dezactivat
+}
+
+void ShoppingListDialog::onGenerateListClicked()
+{
+    QString retetaIntroduse = ui->recipeLineEdit->text().trimmed();
+    if (retetaIntroduse.isEmpty()) {
+        QMessageBox::warning(this, "Input lipsă", "Introduceți numele rețetei.");
+        return;
+    }
+
+    reteta = retetaIntroduse;
     QString message = "GENERARE_LISTA " + username + " " + reteta + "\n";
     socket->write(message.toUtf8());
 
-    // Inițial, dezactivez butonul de comandă până la răspuns
-    ui->placeOrderButton->setEnabled(false);
+    ui->placeOrderButton->setEnabled(false); // Dezactivez până la răspuns
 }
 
 void ShoppingListDialog::onReadyRead()
@@ -74,7 +86,7 @@ void ShoppingListDialog::updateBackground()
 
 void ShoppingListDialog::resizeEvent(QResizeEvent *event)
 {
-    QDialog::resizeEvent(event); // Apelare funcție de bază
+    QDialog::resizeEvent(event);
     setWindowState(windowState() | Qt::WindowFullScreen);
-    updateBackground(); // Actualizare dimensiuni fundal
+    updateBackground();
 }

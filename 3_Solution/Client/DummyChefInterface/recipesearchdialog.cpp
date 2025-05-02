@@ -72,7 +72,7 @@ void RecipeSearchDialog::onSocketReadyRead()
                              "\n-------------------";
         }
 
-        QMessageBox::information(this, "Rezultate căutare", finalList.join("\n\n"));
+        QMessageBox::information(this, "Rezultate căutare", "Nu exista astfel de retete!");
         accept();
     }
     else {

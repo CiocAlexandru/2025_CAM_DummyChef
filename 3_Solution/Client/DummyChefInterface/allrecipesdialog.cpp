@@ -17,7 +17,7 @@ AllRecipesDialog::AllRecipesDialog(const QString& username, QTcpSocket* socket, 
     connect(socket, &QTcpSocket::readyRead, this, &AllRecipesDialog::onSocketReadyRead);
     connect(ui->recipeListWidget, &QListWidget::itemClicked, this, &AllRecipesDialog::onRecipeSelected);
 
-    socket->write("GET_ALL_RECIPES\n");
+    socket->write("SEARCH_RECIPES ");
 }
 
 AllRecipesDialog::~AllRecipesDialog()
@@ -30,11 +30,12 @@ void AllRecipesDialog::onSocketReadyRead()
     QByteArray data = socket->readAll();
     QString response(data);
 
-    if (response.startsWith("ALL_RECIPES|")) {
+    if (response.startsWith("RECIPE_RESULTS|")) {
         QString all = response.section("|", 1);
         QStringList entries = all.split("##");
 
         recipeDetails = entries;
+        ui->recipeListWidget->clear();
         for (const QString& entry : entries) {
             QString title = entry.section("|", 0, 0);
             ui->recipeListWidget->addItem("🍲 " + title);
@@ -42,6 +43,7 @@ void AllRecipesDialog::onSocketReadyRead()
     } else {
         QMessageBox::warning(this, "Eroare", "Nu s-au putut încărca rețetele.");
     }
+
 }
 
 void AllRecipesDialog::onRecipeSelected()

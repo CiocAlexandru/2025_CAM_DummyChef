@@ -858,3 +858,27 @@ std::vector<std::wstring> DatabaseConnection::GetRecipesByChefId(int chefId) {
     SQLFreeHandle(SQL_HANDLE_STMT, stmt);
     return recipes;
 }
+
+
+bool DatabaseConnection::IngredientExists(const std::wstring& ingredientName) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmt = nullptr;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"SELECT COUNT(*) FROM Ingrediente WHERE Nume = ?";
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+        ingredientName.length(), 0, (SQLPOINTER)ingredientName.c_str(), 0, nullptr);
+
+    SQLExecute(stmt);
+
+    int count = 0;
+    if (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_LONG, &count, 0, nullptr);
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return count > 0;
+}

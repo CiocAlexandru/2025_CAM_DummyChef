@@ -62,6 +62,13 @@ void ChefSignUpDialog::handleSignUp()
         return;
     }
 
+    // Dacă e deja conectat sau în proces de conectare, deconectează-l
+    if (socket->state() == QAbstractSocket::ConnectedState ||
+        socket->state() == QAbstractSocket::ConnectingState) {
+
+        socket->abort();  // Închide imediat conexiunea curentă
+    }
+
     socket->connectToHost("127.0.0.1", 12345);
 }
 
@@ -94,8 +101,36 @@ void ChefSignUpDialog::onReadyRead()
     if (response == "SIGNUP_CHEF_SUCCESS") {
         QMessageBox::information(this, "Succes", "Cont de bucătar creat cu succes!");
         accept();
-    } else {
+    }
+    else if(response == "Link_demonstrativ_refuzat")
+    {
+        QMessageBox::information(this, "Eroare", "Link demonstrativ fals!");
+        ui->nameLineEdit->clear();
+        ui->surnameLineEdit->clear();
+        ui->usernameLineEdit->clear();
+        ui->passwordLineEdit->clear();
+        ui->confirmPasswordLineEdit->clear();
+        ui->phoneLineEdit->clear();
+        ui->birthDateEdit->setDate(QDate::currentDate());  // Reset la data curentă
+        ui->emailLineEdit->clear();
+        ui->experienceYearsLineEdit->clear();
+        ui->experienceLinkLineEdit->clear();
+        ui->nameLineEdit->setFocus();  // Focus pe primul câmp
+    }
+    else {
         QMessageBox::warning(this, "Eroare", "Înregistrare eșuată!");
+        // Golește toate câmpurile
+        ui->nameLineEdit->clear();
+        ui->surnameLineEdit->clear();
+        ui->usernameLineEdit->clear();
+        ui->passwordLineEdit->clear();
+        ui->confirmPasswordLineEdit->clear();
+        ui->phoneLineEdit->clear();
+        ui->birthDateEdit->setDate(QDate::currentDate());  // Reset la data curentă
+        ui->emailLineEdit->clear();
+        ui->experienceYearsLineEdit->clear();
+        ui->experienceLinkLineEdit->clear();
+        ui->nameLineEdit->setFocus();  // Focus pe primul câmp
     }
 }
 

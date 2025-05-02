@@ -62,6 +62,13 @@ void ClientSignUpDialog::handleSignUp()
         return;
     }
 
+    // Dacă e deja conectat sau în proces de conectare, deconectează-l
+    if (socket->state() == QAbstractSocket::ConnectedState ||
+        socket->state() == QAbstractSocket::ConnectingState) {
+
+        socket->abort();  // Închide imediat conexiunea curentă
+    }
+
     socket->connectToHost("127.0.0.1", 12345);
 }
 
@@ -94,12 +101,27 @@ void ClientSignUpDialog::onReadyRead()
         QMessageBox::information(this, "Succes", "Cont creat cu succes!");
         accept();
 
-        // Trimite username-ul introdus și socket-ul existent la preferințe
         QString username = ui->usernameLineEdit->text().trimmed();
-        ClientPreferencesDialog prefDialog(username, socket, this);  // Trece socket-ul existent
+        ClientPreferencesDialog prefDialog(username, socket, this);
         prefDialog.exec();
+    } else {
+        QMessageBox::warning(this, "Eroare", "Înregistrare eșuată!");
+
+        // Golește toate câmpurile
+        ui->nameLineEdit->clear();
+        ui->surnameLineEdit->clear();
+        ui->usernameLineEdit->clear();
+        ui->passwordLineEdit->clear();
+        ui->confirmPasswordLineEdit->clear();
+        ui->phoneLineEdit->clear();
+        ui->birthDateEdit->setDate(QDate::currentDate());
+        ui->emailLineEdit->clear();
+        ui->adressLineEdit->clear();
+
+        ui->nameLineEdit->setFocus();  // Pune focusul pe primul câmp
     }
 }
+
 
 void ClientSignUpDialog::updateBackground() {
     QPixmap pixmap(":/images/LoginClient.jpg");  // Încarcă imaginea din resurse

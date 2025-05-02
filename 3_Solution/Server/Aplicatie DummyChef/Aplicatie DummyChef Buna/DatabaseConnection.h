@@ -57,7 +57,7 @@ public:
     int InsertIngredient(const std::wstring& nume, double pret, int furnizorId);
     void InsertStock(int ingredientId, int cantitate);
     std::vector<std::wstring> GetRecipesByChefId(int chefId);
-
+    bool IngredientExists(const std::wstring& ingredientName);
 private:
     std::wstring server, database, username, password;
     SQLHENV env;
