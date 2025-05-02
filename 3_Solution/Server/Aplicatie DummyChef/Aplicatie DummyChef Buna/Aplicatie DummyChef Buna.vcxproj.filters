@@ -165,5 +165,8 @@
     <Text Include="Furnizori.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Stoc.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

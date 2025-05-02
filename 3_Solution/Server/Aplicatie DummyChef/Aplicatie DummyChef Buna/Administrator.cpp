@@ -71,7 +71,7 @@ void Administrator::insertFurnizori(std::vector<Furnizor*> furnizoriExterni)
 
         try {
             db.InsertFurnizor(nume, telefon, email, adresa);
-            std::wcout << L"Furnizor adãugat: " << nume << std::endl;
+            std::wcout << L"Furnizor adaugat: " << nume << std::endl;
         }
         catch (const std::exception& ex) {
             std::cerr << "Eroare la inserarea furnizorului: " << ex.what() << std::endl;
@@ -130,7 +130,7 @@ void Administrator::insertIngrediente(std::vector<Ingrediente*> ingrediente)
 
         try {
             db.InsertIngredient(nume, pret, furnizorId);
-            std::wcout << L"Ingredient adãugat în DB: " << nume << L" (pret: " << pret << L", furnizor: " << furnizorId << L")" << std::endl;
+            std::wcout << L"Ingredient adaugat în DB: " << nume << L" (pret: " << pret << L", furnizor: " << furnizorId << L")" << std::endl;
         }
         catch (const std::exception& e) {
             std::cerr << "Eroare la inserarea ingredientului " << numeStr << ": " << e.what() << std::endl;
@@ -141,6 +141,40 @@ void Administrator::insertIngrediente(std::vector<Ingrediente*> ingrediente)
     db.Disconnect();
 }
 
+void Administrator::addStoc() {
+    std::ifstream file("Stoc.txt");
+    if (!file.is_open()) {
+        std::cerr << "Eroare la deschiderea fisierului stoc.txt" << std::endl;
+        return;
+    }
+
+    DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+    db.Connect();
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream ss(line);
+        std::string idStr, cantStr;
+
+        if (std::getline(ss, idStr, '|') && std::getline(ss, cantStr, '|')) {
+            try {
+                int ingredientId = std::stoi(idStr);
+                int cantitate = std::stoi(cantStr);
+
+                db.InsertStock(ingredientId, cantitate);
+                std::wcout << L"Stoc adaugat: IngredientID = " << ingredientId << L", Cantitate = " << cantitate << std::endl;
+            }
+            catch (...) {
+                std::cerr << "Eroare la procesarea liniei: " << line << std::endl;
+            }
+        }
+    }
+
+    db.Disconnect();
+    file.close();
+}
+
+
 void Administrator::menu()
 {
     std::cout << "Bine ati venit!\n";
@@ -150,6 +184,7 @@ void Administrator::menu()
         std::cout << "Pentru a finaliza mentenanta apasati tasta 0:\n";
         std::cout << "Pentru a introduce furnizorii in baza de date apasati tasta 1:\n";
         std::cout << "Pentru a introduce ingredientele in baza de date apasati tasta 3:\n";
+        std::cout << "Pentru a introduce stocul alimentelor in baza de date apasati tasta 5:\n";
         std::cin >> n;
         switch (n)
         {
@@ -160,6 +195,9 @@ void Administrator::menu()
         case 3:
             this->addIngrediente();
             this->insertIngrediente(this->ingrediente);
+            break;
+        case 5:
+            this->addStoc();
             break;
         }
     } while (n);

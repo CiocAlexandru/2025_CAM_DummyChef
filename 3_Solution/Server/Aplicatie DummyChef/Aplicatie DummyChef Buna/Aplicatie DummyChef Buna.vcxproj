@@ -190,6 +190,7 @@
   <ItemGroup>
     <Text Include="Furnizori.txt" />
     <Text Include="Ingrediente.txt" />
+    <Text Include="Stoc.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

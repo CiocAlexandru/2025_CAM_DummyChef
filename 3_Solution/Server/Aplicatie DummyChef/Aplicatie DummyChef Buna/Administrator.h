@@ -22,6 +22,7 @@ public:
 	void insertFurnizori(std::vector<Furnizor*>furnizori);
 	void addIngrediente();
 	void insertIngrediente(std::vector<Ingrediente*>ingrediente);
+	void addStoc();
 	void menu();
 };
 
