@@ -1,5 +1,6 @@
 #include "clientpreferencesdialog.h"
 #include "ui_clientpreferencesdialog.h"
+#include "mainwindow.h"
 #include <QMessageBox>
 #include <QDebug>
 
@@ -88,9 +89,19 @@ void ClientPreferencesDialog::onReadyRead()
 
     if (response == "PreferinteSucces") {
         QMessageBox::information(this, "Succes", "Preferințele au fost salvate cu succes!");
-        raspunsPrimit=true;
-        accept();
-    } else {
+        raspunsPrimit = true;
+
+        // Închide socketul imediat
+        if (socket && socket->isOpen()) {
+            socket->abort();
+        }
+
+        this->close();  // Închide dialogul
+
+        MainWindow* mainWin = new MainWindow();
+        mainWin->show();  // Reafișează fereastra principală
+    }
+     else {
         QMessageBox::warning(this, "Eroare", "Salvarea preferințelor a eșuat!");
     }
 }

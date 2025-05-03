@@ -1,5 +1,6 @@
 #include "chefsignupdialog.h"
 #include "ui_chefsignupdialog.h"
+#include "mainwindow.h"
 #include <QMessageBox>
 #include <QRegularExpression>
 
@@ -100,8 +101,18 @@ void ChefSignUpDialog::onReadyRead()
 
     if (response == "SIGNUP_CHEF_SUCCESS") {
         QMessageBox::information(this, "Succes", "Cont de bucătar creat cu succes!");
-        accept();
+
+        if (socket && socket->isOpen()) {
+            socket->abort();  // Închide conexiunea imediat
+        }
+
+        this->close();  // Închide dialogul
+
+        MainWindow* mainWin = new MainWindow();
+        mainWin->show();  // Reafișează fereastra principală
+        return;
     }
+
     else if(response == "Link_demonstrativ_refuzat")
     {
         QMessageBox::information(this, "Eroare", "Link demonstrativ fals!");
