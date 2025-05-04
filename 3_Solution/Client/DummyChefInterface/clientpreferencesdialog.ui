@@ -16,9 +16,9 @@
   <widget class="QPushButton" name="saveButton">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>80</x>
      <y>560</y>
-     <width>171</width>
+     <width>221</width>
      <height>51</height>
     </rect>
    </property>
