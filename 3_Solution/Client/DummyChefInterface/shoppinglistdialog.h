@@ -14,26 +14,27 @@ class ShoppingListDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ShoppingListDialog(const QString& username, QTcpSocket* socket, QWidget *parent = nullptr);
+    explicit ShoppingListDialog(const QString& email, QTcpSocket* socket, QWidget *parent = nullptr);
     ~ShoppingListDialog();
-
-private slots:
-    void onReadyRead();
-    void onError(QAbstractSocket::SocketError socketError);
-    void onPlaceOrderClicked();
-    void onGenerateListClicked(); // Nou slot
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
 
+private slots:
+    void onGenerateListClicked();
+    void onReadyRead();
+    void onError(QAbstractSocket::SocketError socketError);
+    void onPlaceOrderClicked();
+
 private:
+    void updateBackground();
+
     Ui::ShoppingListDialog *ui;
     QTcpSocket* socket;
-    QString username;
+    QString email;
     QString reteta;
-    QLabel *backgroundLabel;
-
-    void updateBackground();
+    int idReteta = -1;
+    QLabel* backgroundLabel;
 };
 
 #endif // SHOPPINGLISTDIALOG_H

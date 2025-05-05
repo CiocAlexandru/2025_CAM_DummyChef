@@ -6,6 +6,7 @@
 #include "mainwindow.h"
 #include <QMessageBox>
 #include <QResizeEvent>
+#include "myordersdialog.h"
 
 
 ClientMainWindow::ClientMainWindow(const QString& username,const QString& email, QTcpSocket* socket, QWidget *parent) :
@@ -25,6 +26,9 @@ ClientMainWindow::ClientMainWindow(const QString& username,const QString& email,
     connect(ui->modifyPrefrencesButton, &QPushButton::clicked, this, &ClientMainWindow::openModifyPrefrences);
     connect(ui->viewAllRecipesButton, &QPushButton::clicked, this, &ClientMainWindow::openAllRecipes);
     connect(ui->logoutButton, &QPushButton::clicked,this, &ClientMainWindow::handleLogout);
+    connect(ui->viewOrdersButton, &QPushButton::clicked, this, &ClientMainWindow::openOrderHistory);
+
+
 
 
 }
@@ -34,6 +38,14 @@ ClientMainWindow::~ClientMainWindow()
     delete ui;
 }
 
+
+
+void ClientMainWindow::openOrderHistory() {
+    MyOrdersDialog dialog(email, socket, this);
+    dialog.exec();
+}
+
+
 void ClientMainWindow::openSearchRecipes()
 {
     RecipeSearchDialog dialog (username,socket,this);
@@ -42,7 +54,7 @@ void ClientMainWindow::openSearchRecipes()
 
 void ClientMainWindow::openShoppingList()
 {
-    ShoppingListDialog* dialog=new ShoppingListDialog(username,socket,this);
+    ShoppingListDialog* dialog=new ShoppingListDialog(email,socket,this);
     dialog->exec();
 }
 

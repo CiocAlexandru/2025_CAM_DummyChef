@@ -39,6 +39,9 @@ public:
 	void handleGetMyRecipes(const std::string& request);
 	void handleSearchRecipes(const std::string& request);
 	void handleGenerareLista(const std::string& request);
+	void handlePlaceOrder(const std::string& request);
+	void handleGetOrders(const std::string& request);
+
 private:
 	DummyChef(Administrator* administrator) :serverSocket(INVALID_SOCKET), clientSocket(INVALID_SOCKET), resetCode(0),
 		currentEmail("") {

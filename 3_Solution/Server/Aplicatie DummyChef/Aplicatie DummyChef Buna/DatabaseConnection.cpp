@@ -892,3 +892,37 @@ bool DatabaseConnection::IngredientExists(const std::wstring& ingredientName) {
     SQLFreeHandle(SQL_HANDLE_STMT, stmt);
     return count > 0;
 }
+
+
+
+void DatabaseConnection::InsertOrder(int clientId, int idReteta) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    std::wstring query = L"INSERT INTO Comenzi (IDClient, IDReteta) VALUES (?, ?)";  // SCHIMBAT
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &clientId, 0, nullptr);
+    SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &idReteta, 0, nullptr);  // SCHIMBAT
+
+    SQLRETURN ret = SQLExecute(stmt);
+    ThrowIfFailed(ret, L"Failed to insert order", SQL_HANDLE_STMT, stmt);
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+}
+
+
+std::vector<std::vector<std::wstring>> DatabaseConnection::GetOrdersByClientId(int clientId) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    // Interogare SQL corectă: se face JOIN între Comenzi și Retete
+    std::wstring query =
+        L"SELECT R.Denumire, C.DataExecutare "
+        L"FROM Comenzi C "
+        L"JOIN Retete R ON C.IDReteta = R.ID "
+        L"WHERE C.IDClient = " + std::to_wstring(clientId);
+
+    return ExecuteQuery(query);
+}

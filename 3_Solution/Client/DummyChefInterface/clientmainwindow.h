@@ -24,6 +24,7 @@ private slots:
     void openModifyPrefrences();
     void openAllRecipes();
     void handleLogout();
+    void openOrderHistory();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;

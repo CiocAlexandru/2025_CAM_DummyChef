@@ -2,11 +2,11 @@
 #include "ui_shoppinglistdialog.h"
 #include <QMessageBox>
 
-ShoppingListDialog::ShoppingListDialog(const QString& username, QTcpSocket* socket, QWidget *parent) :
+ShoppingListDialog::ShoppingListDialog(const QString& email, QTcpSocket* socket, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ShoppingListDialog),
     socket(socket),
-    username(username)
+    email(email)
 {
     ui->setupUi(this);
     setWindowTitle("Lista de cumpărături");
@@ -16,16 +16,20 @@ ShoppingListDialog::ShoppingListDialog(const QString& username, QTcpSocket* sock
     backgroundLabel->lower();
     updateBackground();
 
-    ui->recipeLineEdit->setPlaceholderText("Introduceți reteta care va intereseaza ");
+    ui->recipeLineEdit->setPlaceholderText("Introduceți rețeta care vă interesează");
 
     connect(socket, &QTcpSocket::readyRead, this, &ShoppingListDialog::onReadyRead);
     connect(socket, &QTcpSocket::errorOccurred, this, &ShoppingListDialog::onError);
-
     connect(ui->placeOrderButton, &QPushButton::clicked, this, &ShoppingListDialog::onPlaceOrderClicked);
     connect(ui->cancelButton, &QPushButton::clicked, this, &ShoppingListDialog::reject);
     connect(ui->generateListButton, &QPushButton::clicked, this, &ShoppingListDialog::onGenerateListClicked);
 
-    ui->placeOrderButton->setEnabled(false);  // Inițial dezactivat
+    ui->placeOrderButton->setEnabled(false);
+}
+
+ShoppingListDialog::~ShoppingListDialog()
+{
+    delete ui;
 }
 
 void ShoppingListDialog::onGenerateListClicked()
@@ -37,24 +41,53 @@ void ShoppingListDialog::onGenerateListClicked()
     }
 
     reteta = retetaIntroduse;
-    QString message = "GENERARE_LISTA " + username + " " + reteta + "\n";
+    QString message = "GENERARE_LISTA " + email + " " + reteta + "\n";
     socket->write(message.toUtf8());
 
-    ui->placeOrderButton->setEnabled(false); // Dezactivez până la răspuns
+    ui->placeOrderButton->setEnabled(false);
 }
 
 void ShoppingListDialog::onReadyRead()
 {
-    QString response = QString::fromUtf8(socket->readAll());
+    QString response = QString::fromUtf8(socket->readAll()).trimmed();
 
-    if (response.trimmed() == "NU_EXISTA_PRODUSE") {
+    if (response == "NU_EXISTA_PRODUSE") {
         QMessageBox::warning(this, "Eroare", "Nu există produse disponibile conform preferințelor dumneavoastră.");
-        ui->shoppingListTextEdit->setPlainText("Nu există produse disponibile conform preferințelor dumneavoastră.");
+        ui->shoppingListTextEdit->setPlainText(response);
         ui->placeOrderButton->setEnabled(false);
+        return;
+    }
+
+    if (response.startsWith("ID_RETETA|")) {
+        QStringList parts = response.split("|");
+        if (parts.size() >= 3) {
+            idReteta = parts[1].toInt();
+            QString content = parts.mid(2).join("|");
+            ui->shoppingListTextEdit->setPlainText(content);
+            ui->placeOrderButton->setEnabled(true);
+        } else {
+            ui->shoppingListTextEdit->setPlainText("Eroare la interpretarea răspunsului de la server.");
+            ui->placeOrderButton->setEnabled(false);
+        }
     } else {
         ui->shoppingListTextEdit->setPlainText(response);
-        ui->placeOrderButton->setEnabled(true);
+        ui->placeOrderButton->setEnabled(false);
     }
+}
+
+void ShoppingListDialog::onPlaceOrderClicked()
+{
+    if (idReteta == -1) {
+        QMessageBox::warning(this, "Eroare", "ID-ul rețetei nu este valid.");
+        return;
+    }
+
+    QString message = "PLACE_ORDER|" + email + "|" + QString::number(idReteta) + "\n";  // SCHIMBAT
+    socket->write(message.toUtf8());
+
+    QMessageBox::information(this, "Comandă trimisă", "Comanda a fost plasată cu succes!");
+    accept();
+
 }
 
 void ShoppingListDialog::onError(QAbstractSocket::SocketError socketError)
@@ -63,24 +96,10 @@ void ShoppingListDialog::onError(QAbstractSocket::SocketError socketError)
     QMessageBox::critical(this, "Eroare conexiune", socket->errorString());
 }
 
-void ShoppingListDialog::onPlaceOrderClicked()
-{
-    QString message = "PLASEAZA_COMANDA " + username + " " + reteta + "\n";
-    socket->write(message.toUtf8());
-
-    QMessageBox::information(this, "Comandă trimisă", "Comanda a fost plasată cu succes!");
-    accept();
-}
-
-ShoppingListDialog::~ShoppingListDialog()
-{
-    delete ui;
-}
-
 void ShoppingListDialog::updateBackground()
 {
     QPixmap pixmap(":/images/ShoppingList.jpg");
-    if(!pixmap.isNull()) {
+    if (!pixmap.isNull()) {
         backgroundLabel->setPixmap(pixmap);
         backgroundLabel->setGeometry(0, 0, width(), height());
     }
@@ -89,6 +108,5 @@ void ShoppingListDialog::updateBackground()
 void ShoppingListDialog::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
-    setWindowState(windowState() | Qt::WindowFullScreen);
     updateBackground();
 }

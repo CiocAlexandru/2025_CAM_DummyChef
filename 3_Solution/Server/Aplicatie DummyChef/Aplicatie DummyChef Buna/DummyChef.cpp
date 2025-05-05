@@ -233,6 +233,12 @@ void DummyChef::handleClient()
             else if (receivedMessage.rfind("GENERARE_LISTA ", 0) == 0) {
                 handleGenerareLista(receivedMessage);
             }
+            else if (receivedMessage.rfind("PLACE_ORDER|", 0) == 0) {
+                handlePlaceOrder(receivedMessage);
+            }
+            else if (receivedMessage.rfind("GET_ORDERS|", 0) == 0) {
+                handleGetOrders(receivedMessage);
+            }
             else {
                 send(clientSocket, "UNKNOWN_COMMAND", 16, 0);
                 log->add("UNKNOWN_COMMAND\n");
@@ -842,30 +848,28 @@ void DummyChef::handleSearchRecipes(const std::string& request) {
 
 void DummyChef::handleGenerareLista(const std::string& request) {
     std::istringstream iss(request);
-    std::string command, username, recipeName;
-    iss >> command >> username;
+    std::string command, email, recipeName;
+    iss >> command >> email;
     std::getline(iss, recipeName);
-    recipeName = recipeName.substr(1); // remove leading space
+    recipeName = recipeName.substr(1); // elimină spațiul rămas după email
 
     try {
         DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
         db.Connect();
         std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 
-        // Obține ID client
-        int clientId = db.GetUserIdByUsername(converter.from_bytes(username));
+        int clientId = db.GetUserIdByEmail(converter.from_bytes(email));
         if (clientId == -1) {
             send(clientSocket, "NU_EXISTA_PRODUSE", 17, 0);
-            log->add("NU_EXISTA_PRODUSE\n");
+            log->add("NU_EXISTA_PRODUSE (email invalid)\n");
             db.Disconnect();
             return;
         }
 
-        // Obține preferințe client
         auto pref = db.ExecuteQuery(L"SELECT Alergii, PreferintaPret FROM PreferinteClienti WHERE IDClient = " + std::to_wstring(clientId));
         if (pref.empty()) {
             send(clientSocket, "NU_EXISTA_PRODUSE", 17, 0);
-            log->add("NU_EXISTA_PRODUSE\n");
+            log->add("NU_EXISTA_PRODUSE (lipsă preferințe)\n");
             db.Disconnect();
             return;
         }
@@ -873,26 +877,24 @@ void DummyChef::handleGenerareLista(const std::string& request) {
         std::wstring alergii = pref[0][0];
         std::wstring preferintaPret = pref[0][1];
 
-        // Obține ID rețetă
         auto recipeRes = db.ExecuteQuery(L"SELECT ID FROM Retete WHERE Denumire = N'" + converter.from_bytes(recipeName) + L"'");
         if (recipeRes.empty()) {
             send(clientSocket, "NU_EXISTA_PRODUSE", 17, 0);
-            log->add("NU_EXISTA_PRODUSE\n");
+            log->add("NU_EXISTA_PRODUSE (rețetă inexistentă)\n");
             db.Disconnect();
             return;
         }
 
         int recipeId = std::stoi(recipeRes[0][0]);
 
-        // Obține ingredientele rețetei
         auto ingrediente = db.ExecuteQuery(L"SELECT Ingrediente.Nume, Cantitate, Ingrediente.Pret FROM ReteteIngrediente "
             L"JOIN Ingrediente ON ReteteIngrediente.IngredientID = Ingrediente.ID "
             L"WHERE RetetaID = " + std::to_wstring(recipeId));
 
         double totalPret = 0;
         std::wstringstream listaFinala;
-
         bool alergic = false;
+
         for (auto& ing : ingrediente) {
             if (alergii.find(ing[0]) != std::wstring::npos) {
                 alergic = true;
@@ -905,42 +907,131 @@ void DummyChef::handleGenerareLista(const std::string& request) {
 
         if (alergic) {
             send(clientSocket, "NU_EXISTA_PRODUSE", 17, 0);
-            log->add("NU_EXISTA_PRODUSE\n");
+            log->add("NU_EXISTA_PRODUSE (alergie detectată)\n");
             db.Disconnect();
             return;
         }
 
-        // Verificare preferințe preț
         bool pretValid = false;
         if (preferintaPret == L"Economic" && totalPret <= 100.0) pretValid = true;
         else if (preferintaPret == L"Moderat" && totalPret > 100.0 && totalPret <= 250.0) pretValid = true;
         else if (preferintaPret == L"Premium" && totalPret > 250.0) pretValid = true;
+        else if (preferintaPret == L"Orice_pret") pretValid = true;
 
         if (!pretValid) {
             send(clientSocket, "NU_EXISTA_PRODUSE", 17, 0);
-            log->add("NU_EXISTA_PRODUSE\n");
+            log->add("NU_EXISTA_PRODUSE (nu se încadrează în buget)\n");
             db.Disconnect();
             return;
         }
 
-        // Obține furnizor
+        // Obținem furnizorul (opțional)
         auto furnizor = db.ExecuteQuery(L"SELECT TOP 1 Nume FROM Furnizori");
         std::wstring numeFurnizor = furnizor.empty() ? L"Furnizor Standard" : furnizor[0][0];
 
         std::wstringstream mesajClient;
-        mesajClient << L"Lista cumpărături pentru rețeta " << converter.from_bytes(recipeName) << L":\n\n";
+        mesajClient << L"Lista cumpărături pentru rețeta \"" << converter.from_bytes(recipeName) << L"\":\n\n";
         mesajClient << listaFinala.str() << L"\n";
         mesajClient << L"Total: " << totalPret << L" RON\n";
         mesajClient << L"Furnizor: " << numeFurnizor;
 
-        std::string response = converter.to_bytes(mesajClient.str());
+        std::string response = "ID_RETETA|" + std::to_string(recipeId) + "|" + converter.to_bytes(mesajClient.str());
         send(clientSocket, response.c_str(), response.length(), 0);
-        log->add(response+"\n");
+        log->add("Trimis către client: " + response + "\n");
+
         db.Disconnect();
     }
     catch (const std::exception& e) {
         std::string error = "SERVER_ERROR: " + std::string(e.what());
-        log->add(error + "\n");
         send(clientSocket, error.c_str(), error.length(), 0);
+        log->add(error + "\n");
+    }
+}
+
+
+
+
+void DummyChef::handlePlaceOrder(const std::string& request) {
+    // Format: PLACE_ORDER|email|id_reteta
+    std::vector<std::string> tokens;
+    std::stringstream ss(request);
+    std::string token;
+    while (std::getline(ss, token, '|')) {
+        tokens.push_back(token);
+    }
+
+    if (tokens.size() != 3) {
+        send(clientSocket, "PLACE_ORDER_FAILED: Invalid format", 34, 0);
+        return;
+    }
+
+    std::string email = tokens[1];
+    int idReteta = std::stoi(tokens[2]);  // ATENȚIE: acum trimitem ID-ul rețetei
+
+    try {
+        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+        db.Connect();
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        int userId = db.GetUserIdByEmail(converter.from_bytes(email));
+
+        if (userId == -1) {
+            send(clientSocket, "PLACE_ORDER_FAILED: Email not found", 35, 0);
+            return;
+        }
+
+        // Salvează comanda cu ID-ul rețetei
+        db.InsertOrder(userId, idReteta);
+
+        send(clientSocket, "PLACE_ORDER_SUCCESS", 20, 0);
+        log->add("PLACE_ORDER_SUCCESS\n");
+        db.Disconnect();
+    }
+    catch (const std::exception& e) {
+        std::string error = "PLACE_ORDER_ERROR: " + std::string(e.what());
+        send(clientSocket, error.c_str(), error.length(), 0);
+        log->add(error + "\n");
+    }
+}
+
+
+
+
+
+void DummyChef::handleGetOrders(const std::string& request) {
+    // Format: GET_ORDERS|email
+    std::string email = request.substr(strlen("GET_ORDERS|"));
+
+    try {
+        DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+        db.Connect();
+
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        int userId = db.GetUserIdByEmail(converter.from_bytes(email));
+
+        if (userId == -1) {
+            send(clientSocket, "NO_ORDERS", 9, 0);
+            return;
+        }
+
+        auto orders = db.GetOrdersByClientId(userId);
+        std::string response = "ORDERS|";
+
+        for (const auto& row : orders) {
+            std::string reteta = converter.to_bytes(row[0]);
+            std::string data = converter.to_bytes(row[1]);
+            response += reteta + "|" + data + "##";
+        }
+
+        if (response.size() > 2 && response.substr(response.size() - 2) == "##") {
+            response.erase(response.size() - 2);
+        }
+
+        send(clientSocket, response.c_str(), response.length(), 0);
+        db.Disconnect();
+    }
+    catch (const std::exception& e) {
+        std::string error = "GET_ORDERS_ERROR: " + std::string(e.what());
+        send(clientSocket, error.c_str(), error.length(), 0);
+        log->add(error + "\n");
     }
 }
