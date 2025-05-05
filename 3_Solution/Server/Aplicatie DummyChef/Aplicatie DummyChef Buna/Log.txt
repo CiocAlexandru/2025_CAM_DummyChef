@@ -1,0 +1,32 @@
+05/05/2025 09:31:11 - Client conectat!
+
+05/05/2025 09:31:11 - ClientLOGIN cazanalexandra@yahoo.com 2133
+
+05/05/2025 09:31:12 - Login successful! Welcome 
+
+05/05/2025 09:31:12 - LOGIN_SUCCESS_CHEF
+
+05/05/2025 09:31:12 - LOGIN_SUCCESS
+
+05/05/2025 09:43:58 - ClientGET_MY_RECIPES|cazanalexandra@yahoo.com
+
+05/05/2025 09:43:58 - MY_RECIPES|
+
+05/05/2025 09:44:03 - Clientul s-a deconectat.
+
+05/05/2025 09:44:26 - Client conectat!
+
+05/05/2025 09:44:26 - ClientLOGIN ciocalex@yahoo.ro 2907
+
+05/05/2025 09:44:26 - Login successful! Welcome 
+
+05/05/2025 09:44:26 - LOGIN_SUCCESS_CLIENT
+
+05/05/2025 09:44:26 - LOGIN_SUCCESS
+
+05/05/2025 09:44:31 - ClientSEARCH_RECIPES 
+
+05/05/2025 09:44:31 - RECIPE_RESULTS|
+
+05/05/2025 09:44:35 - Clientul s-a deconectat.
+

@@ -17,7 +17,6 @@ public:
     double GetPret() const { return pret; }
     int GetFurnizorId() const { return idFurnizor; }
 
-    // Setters (opțional)
     void SetNume(const std::string& name) {nume = name; }
     void SetPret(double price) { pret = price; }
     void SetFurnizorId(int id) { idFurnizor = id; }

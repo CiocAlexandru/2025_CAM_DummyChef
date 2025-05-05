@@ -60,6 +60,7 @@ void DummyChef::run()
     }
     catch (...) {
         closeSocket(); // Asigura-te că socket-urile sunt inchise in caz de eroare
+        this->log->add("Eroare!\n");
         throw; // Re-arunca exceptia pentru gestionare ulterioara
     }
     
@@ -73,6 +74,7 @@ void DummyChef::connectToClient()
     int wsaInitResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (wsaInitResult != 0) {
         std::cerr << "Eroare Winsock: " << wsaInitResult << std::endl;
+        std::string mesaj = "Eroare Winsock: \n";
         return;
     }
 
@@ -80,6 +82,8 @@ void DummyChef::connectToClient()
     if (serverSocket == INVALID_SOCKET) {
         WSACleanup();
         std::cerr << "Eroare la crearea socketului server." << std::endl;
+        std::string mesaj = "Eroare la crearea socketului server.\n";
+        log->add(mesaj);
         return;
     }
 
@@ -92,6 +96,7 @@ void DummyChef::connectToClient()
         closesocket(serverSocket);
         WSACleanup();
         std::cerr << "Eroare la bind." << std::endl;
+        log->add("Eroare la bind!\n");
         return;
     }
 
@@ -99,6 +104,7 @@ void DummyChef::connectToClient()
         closesocket(serverSocket);
         WSACleanup();
         std::cerr << "Eroare la listen." << std::endl;
+        log->add("Eroare la listen!\n");
         return;
     }
 
@@ -111,9 +117,11 @@ void DummyChef::connectToClient()
 
         if (clientSocket == INVALID_SOCKET) {
             std::cerr << "Eroare la acceptarea conexiunii.\n";
+            log->add("Eroare la acceptarea conexiunii!\n");
             continue;
         }
 
+        log->add("Client conectat!\n");
         std::cout << "Client conectat!\n";
 
         handleClient(); 
@@ -135,17 +143,20 @@ void DummyChef::handleClient()
 
         if (bytesReceived == SOCKET_ERROR) {
             std::cerr << "Eroare la receptionare. Inchidem clientul." << std::endl;
+            log->add("Eroare la receptionare.Inchidem clientul\n");
             break;
         }
 
         if (bytesReceived == 0) {
             std::cout << "Clientul s-a deconectat.\n";
+            log->add("Clientul s-a deconectat.\n");
             break;
         }
 
         std::string receivedMessage(buffer);
         std::cout << "Client: " << receivedMessage << std::endl;
-
+        std::string mesaj= "Client" + receivedMessage + "\n";
+        log->add(mesaj);
         try {
             if (receivedMessage.rfind("LOGIN ", 0) == 0) {
                 std::istringstream iss(receivedMessage);
@@ -154,10 +165,12 @@ void DummyChef::handleClient()
 
                 if (handleLogin(email, password)) {
                     std::string response = "LOGIN_SUCCESS";
+                    log->add(response + "\n");
                     send(clientSocket, response.c_str(), response.length(), 0);
                 }
                 else {
                     std::string response = "LOGIN_FAILED";
+                    log->add(response+"\n");
                     send(clientSocket, response.c_str(), response.length(), 0);
                 }
             }
@@ -172,6 +185,7 @@ void DummyChef::handleClient()
 
                     registerUser("Client", nume, prenume, username, parola, telefon, data_nasterii, email, adresa);
                     std::string response = "SIGNUP_CLIENT_SUCCESS";
+                    log->add(response+"\n");
                     send(clientSocket, response.c_str(), response.size(), 0);
                 }
                 else if (userType == "CHEF") {
@@ -182,10 +196,12 @@ void DummyChef::handleClient()
                     registerUser("Bucatar", nume, prenume, username, parola, telefon,
                         data_nasterii, email, "", experienta, link_demo);
                     std::string response = "SIGNUP_CHEF_SUCCESS";
+                    log->add(response+"\n");
                     send(clientSocket, response.c_str(), response.size(), 0);
                 }
                 else {
                     send(clientSocket, "REGISTER_INVALID_TYPE", 22, 0);
+                    log->add("REGISTER_INVALID_TYPE\n");
                 }
             }
             else if (receivedMessage.rfind("FORGOT_PASSWORD ", 0) == 0) {
@@ -219,12 +235,14 @@ void DummyChef::handleClient()
             }
             else {
                 send(clientSocket, "UNKNOWN_COMMAND", 16, 0);
+                log->add("UNKNOWN_COMMAND\n");
             }
            
             
         }
         catch (const std::exception& e) {
             std::string error = "SERVER_ERROR: " + std::string(e.what());
+            log->add(error+"\n");
             send(clientSocket, error.c_str(), error.length(), 0);
         }
     }
@@ -269,17 +287,22 @@ bool DummyChef::handleLogin(const std::string& email, const std::string& passwor
 
             this->utilizator = user.release();
             std::cout << "Login successful! Welcome " << this->utilizator->getNume() << std::endl;
+            std::string mesaj = "Login successful! Welcome " + this->utilizator->getNume() + "\n";
+            log->add(mesaj);
 
             // Determină tipul utilizatorului prin dynamic_cast
             std::string response;
             if (dynamic_cast<Client*>(this->utilizator)) {
                 response = "LOGIN_SUCCESS_CLIENT";
+                log->add(response + "\n");
             }
             else if (dynamic_cast<Bucatar*>(this->utilizator)) {
                 response = "LOGIN_SUCCESS_CHEF";
+                log->add(response + "\n");
             }
             else {
                 response = "LOGIN_FAILED";
+                log->add(response + "\n");
             }
 
             send(clientSocket, response.c_str(), response.length(), 0);
@@ -289,6 +312,7 @@ bool DummyChef::handleLogin(const std::string& email, const std::string& passwor
         else {
             std::cout << "Login failed! Invalid credentials." << std::endl;
             std::string response = "LOGIN_FAILED";
+            log->add(response + "\n");
             send(clientSocket, response.c_str(), response.length(), 0);
             db.Disconnect();
             return false;
@@ -296,6 +320,7 @@ bool DummyChef::handleLogin(const std::string& email, const std::string& passwor
     }
     catch (const std::exception& e) {
         std::cerr << "Error during login: " << e.what() << std::endl;
+        log->add("Error during login\n");
         return false;
     }
 }
@@ -315,6 +340,7 @@ void DummyChef::registerUser(const std::string& userType, const std::string& num
 
             if (confirmInput != "OK") {
                 std::cerr << "Eroare: Inregistrarea a fost anulata de utilizator." << std::endl;
+                log->add("Eroare: Inregistrarea a fost anulata de utilizator.\n");
                 std::string response = "Link_demonstrativ_refuzat";
                 send(clientSocket, response.c_str(), response.size(), 0);
                 return;
@@ -338,6 +364,7 @@ void DummyChef::registerUser(const std::string& userType, const std::string& num
         // Check if user already exists
         if (db.UserExists(wEmail)) {
             std::cout << "Error: A user with this email already exists!" << std::endl;
+            log->add("Error: A user with this email already exists!\n");
             db.Disconnect();
             return;
         }
@@ -346,22 +373,26 @@ void DummyChef::registerUser(const std::string& userType, const std::string& num
             db.InsertClient(wNume, wPrenume, wNumeUtilizator, wParola, wNrTelefon,
                 wDataNasterii, wEmail, wAdresaLivrare);
             std::cout << "Client registered successfully!" << std::endl;
+            log->add("Client registered successfully!\n");
             utilizator = new Client(nume, prenume, nume_utilizator, parola, nr_telefon, data_nasterii, email, adresa_livrare);
         }
         else if (userType == "Bucatar") {
             db.InsertChef(wNume, wPrenume, wNumeUtilizator, wParola, wNrTelefon,
                 wDataNasterii, wEmail, experienta, wLinkDemonstrativ);
             std::cout << "Chef registered successfully!" << std::endl;
+            log->add("Chef registered successfully!\n");
             utilizator = new Bucatar(nume, prenume, nume_utilizator, parola, nr_telefon, data_nasterii, email,experienta,link_demonstrativ);
         }
         else {
             std::cout << "Error: Invalid user type specified!" << std::endl;
+            log->add("Error: Invalid user type specified!\n");
         }
 
         db.Disconnect();
     }
     catch (const std::exception& e) {
         std::cerr << "Error during registration: " << e.what() << std::endl;
+        log->add("Error during registration\n");
     }
 }
 
@@ -391,10 +422,12 @@ void DummyChef::handleForgotPassword(const std::string& request) {
 
             // Trimitem doar EMAIL_FOUND, conform așteptărilor clientului
             std::string response = "EMAIL_FOUND";
+            log->add("EMAIL_FOUND\n");
             send(clientSocket, response.c_str(), response.length(), 0);
         }
         else {
             std::string response = "EMAIL_NOT_FOUND";
+            log->add("EMAIL_NOT_FOUND\n");
             send(clientSocket, response.c_str(), response.length(), 0);
         }
 
@@ -403,6 +436,7 @@ void DummyChef::handleForgotPassword(const std::string& request) {
     catch (const std::exception& e) {
         std::cerr << "Eroare în handleForgotPassword: " << e.what() << std::endl;
         std::string response = "FORGOT_PASSWORD_ERROR: " + std::string(e.what());
+        log->add("FORGOT_PASSWORD_ERROR:\n");
         send(clientSocket, response.c_str(), response.length(), 0);
     }
 }
@@ -437,17 +471,19 @@ void DummyChef::handleResetPassword(const std::string& request) {
             send(clientSocket, response.c_str(), response.length(), 0);
 
             std::cout << "[RESET_PASSWORD] Parola pentru " << email << " a fost resetată cu succes!" << std::endl;
-
+            log->add("[RESET_PASSWORD] Parola pentru " + email + " a fost resetată cu succes!\n");
             db.Disconnect();
         }
         else {
             std::string response = "RESET_FAILED";
+            log->add(response + "\n");
             send(clientSocket, response.c_str(), response.length(), 0);
         }
     }
     catch (const std::exception& e) {
         std::cerr << "Eroare în handleResetPassword: " << e.what() << std::endl;
         std::string response = "RESET_ERROR: " + std::string(e.what());
+        log->add(response + "\n");
         send(clientSocket, response.c_str(), response.length(), 0);
     }
 }
@@ -482,6 +518,7 @@ void DummyChef::handleClientPreferences(const std::string& request) {
         // Check if user exists
         if (!db.UserExistsByUsername(wUsername)) {
             std::string response = "PREFERINTE_CLIENT_FAILED: User not found";
+            log->add(response + "\n");
             send(clientSocket, response.c_str(), response.length(), 0);
             db.Disconnect();
             return;
@@ -492,6 +529,7 @@ void DummyChef::handleClientPreferences(const std::string& request) {
         if (clientId == -1) {
             std::string response = "PREFERINTE_CLIENT_FAILED: User not found";
             send(clientSocket, response.c_str(), response.length(), 0);
+            log->add(response + "\n");
             db.Disconnect();
             return;
         }
@@ -512,6 +550,7 @@ void DummyChef::handleClientPreferences(const std::string& request) {
         int bytesSent = send(clientSocket, response.c_str(), response.length(), 0);
         std::cout << "Trimis catre client: " << response << " (" << bytesSent << " bytes)" << std::endl;
         std::cout << "Client preferences saved for username: " << username << std::endl;
+        log->add("Client preferences saved for username: " + username + "\n");
 
         db.Disconnect();
     }
@@ -519,6 +558,7 @@ void DummyChef::handleClientPreferences(const std::string& request) {
         std::cerr << "Error in handleClientPreferences: " << e.what() << std::endl;
         std::string response = "PREFERINTE_CLIENT_ERROR: " + std::string(e.what());
         send(clientSocket, response.c_str(), response.length(), 0);
+        log->add(response + "\n");
     }
 }
 
@@ -536,6 +576,7 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
         if (tokens.size() != 6) {
             std::string response = "ADD_RECIPE_CLIENT_FAILED: Invalid format";
             send(clientSocket, response.c_str(), response.length(), 0);
+            log->add(response + "\n");
             return;
         }
 
@@ -558,6 +599,7 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
         if (userId == -1) {
             std::string response = "ADD_RECIPE_FAILED: Email not found";
             send(clientSocket, response.c_str(), response.length(), 0);
+            log->add(response + "\n");
             db.Disconnect();
             return;
         }
@@ -574,6 +616,7 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
                 if (!db.IngredientExists(wNume)) {
                     std::string response = "ADD_RECIPE_FAILED: Ingredient inexistent - " + nume;
                     send(clientSocket, response.c_str(), response.length(), 0);
+                    log->add(response + "\n");
                     db.Disconnect();
                     return;
                 }
@@ -606,10 +649,12 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
 
         std::string response = "ADD_RECIPE_SUCCESS";
         send(clientSocket, response.c_str(), response.length(), 0);
+        log->add(response + "\n");
     }
     catch (const std::exception& e) {
         std::string error = "ADD_RECIPE_ERROR: " + std::string(e.what());
         send(clientSocket, error.c_str(), error.length(), 0);
+        log->add(error + "\n");
     }
 }
 
@@ -628,6 +673,7 @@ void DummyChef::handleAddIngredientByClient(const std::string& request) {
         if (tokens.size() != 9) {
             std::string response = "ADD_INGREDIENT_FAILED: Invalid format";
             send(clientSocket, response.c_str(), response.length(), 0);
+            log->add(response + "\n");
             return;
         }
 
@@ -674,10 +720,12 @@ void DummyChef::handleAddIngredientByClient(const std::string& request) {
 
         std::string response = "ADD_INGREDIENT_SUCCESS";
         send(clientSocket, response.c_str(), response.length(), 0);
+        log->add(response + "\n");
     }
     catch (const std::exception& e) {
         std::string error = "ADD_INGREDIENT_ERROR: " + std::string(e.what());
         send(clientSocket, error.c_str(), error.length(), 0);
+        log->add(error + "\n");
     }
 }
 
@@ -697,12 +745,14 @@ void DummyChef::handleGetMyRecipes(const std::string& request) {
         if (userId == -1) {
             std::string response = "MY_RECIPES|";
             send(clientSocket, response.c_str(), response.length(), 0);
+            log->add(response + "\n");
             db.Disconnect();
             return;
         }
 
         std::vector<std::wstring> recipes = db.GetRecipesByChefId(userId);
         std::string response = "MY_RECIPES|";
+        
 
         for (size_t i = 0; i < recipes.size(); ++i) {
             response += converter.to_bytes(recipes[i]);
@@ -711,11 +761,13 @@ void DummyChef::handleGetMyRecipes(const std::string& request) {
         }
 
         send(clientSocket, response.c_str(), response.length(), 0);
+        log->add(response + "\n");
         db.Disconnect();
     }
     catch (const std::exception& e) {
         std::string response = "MY_RECIPES_ERROR: ";
         response += e.what();
+        log->add(response + "\n");
         send(clientSocket, response.c_str(), response.length(), 0);
     }
 }
@@ -785,11 +837,13 @@ void DummyChef::handleSearchRecipes(const std::string& request) {
         }
 
         send(clientSocket, response.c_str(), response.length(), 0);
+        log->add(response + "\n");
         db.Disconnect();
     }
     catch (const std::exception& e) {
         std::string err = "RECIPE_SEARCH_ERROR: " + std::string(e.what());
         send(clientSocket, err.c_str(), err.length(), 0);
+        log->add(err + "\n");
     }
 }
 
@@ -810,6 +864,7 @@ void DummyChef::handleGenerareLista(const std::string& request) {
         int clientId = db.GetUserIdByUsername(converter.from_bytes(username));
         if (clientId == -1) {
             send(clientSocket, "NU_EXISTA_PRODUSE", 17, 0);
+            log->add("NU_EXISTA_PRODUSE\n");
             db.Disconnect();
             return;
         }
@@ -818,6 +873,7 @@ void DummyChef::handleGenerareLista(const std::string& request) {
         auto pref = db.ExecuteQuery(L"SELECT Alergii, PreferintaPret FROM PreferinteClienti WHERE IDClient = " + std::to_wstring(clientId));
         if (pref.empty()) {
             send(clientSocket, "NU_EXISTA_PRODUSE", 17, 0);
+            log->add("NU_EXISTA_PRODUSE\n");
             db.Disconnect();
             return;
         }
@@ -829,6 +885,7 @@ void DummyChef::handleGenerareLista(const std::string& request) {
         auto recipeRes = db.ExecuteQuery(L"SELECT ID FROM Retete WHERE Denumire = N'" + converter.from_bytes(recipeName) + L"'");
         if (recipeRes.empty()) {
             send(clientSocket, "NU_EXISTA_PRODUSE", 17, 0);
+            log->add("NU_EXISTA_PRODUSE\n");
             db.Disconnect();
             return;
         }
@@ -856,6 +913,7 @@ void DummyChef::handleGenerareLista(const std::string& request) {
 
         if (alergic) {
             send(clientSocket, "NU_EXISTA_PRODUSE", 17, 0);
+            log->add("NU_EXISTA_PRODUSE\n");
             db.Disconnect();
             return;
         }
@@ -868,6 +926,7 @@ void DummyChef::handleGenerareLista(const std::string& request) {
 
         if (!pretValid) {
             send(clientSocket, "NU_EXISTA_PRODUSE", 17, 0);
+            log->add("NU_EXISTA_PRODUSE\n");
             db.Disconnect();
             return;
         }
@@ -884,11 +943,12 @@ void DummyChef::handleGenerareLista(const std::string& request) {
 
         std::string response = converter.to_bytes(mesajClient.str());
         send(clientSocket, response.c_str(), response.length(), 0);
-
+        log->add(response+"\n");
         db.Disconnect();
     }
     catch (const std::exception& e) {
         std::string error = "SERVER_ERROR: " + std::string(e.what());
+        log->add(error + "\n");
         send(clientSocket, error.c_str(), error.length(), 0);
     }
 }

@@ -174,6 +174,23 @@ void Administrator::addStoc() {
     file.close();
 }
 
+void Administrator::vizualizareServer()
+{
+    std::ifstream logFile("Log.txt");
+
+    if (!logFile.is_open()) {
+        std::cout << "Eroare: Nu s-a putut deschide fisierul Log.txt.\n";
+        return;
+    }
+
+    std::string line;
+    while (std::getline(logFile, line)) {
+        std::cout << line << std::endl;
+    }
+
+    logFile.close();
+}
+
 
 void Administrator::menu()
 {
@@ -185,6 +202,7 @@ void Administrator::menu()
         std::cout << "Pentru a introduce furnizorii in baza de date apasati tasta 1:\n";
         std::cout << "Pentru a introduce ingredientele in baza de date apasati tasta 3:\n";
         std::cout << "Pentru a introduce stocul alimentelor in baza de date apasati tasta 5:\n";
+        std::cout << "Pentru a vizualiza datele din logger apasati tasta 7:\n";
         std::cin >> n;
         switch (n)
         {
@@ -198,6 +216,9 @@ void Administrator::menu()
             break;
         case 5:
             this->addStoc();
+            break;
+        case 7:
+            this->vizualizareServer();
             break;
         }
     } while (n);

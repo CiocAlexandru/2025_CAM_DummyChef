@@ -23,6 +23,7 @@ public:
 	void addIngrediente();
 	void insertIngrediente(std::vector<Ingrediente*>ingrediente);
 	void addStoc();
+	void vizualizareServer();
 	void menu();
 };
 

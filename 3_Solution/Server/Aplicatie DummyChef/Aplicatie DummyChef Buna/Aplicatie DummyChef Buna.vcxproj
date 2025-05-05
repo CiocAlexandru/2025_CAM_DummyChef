@@ -143,6 +143,7 @@
     <ClCompile Include="iStatistici.cpp" />
     <ClCompile Include="iUtilizator.cpp" />
     <ClCompile Include="ListaDeCumparaturi.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Preferinte.cpp" />
     <ClCompile Include="Reteta.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="iStatistici.h" />
     <ClInclude Include="iUtilizator.h" />
     <ClInclude Include="ListaDeCumparaturi.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="Preferinte.h" />
     <ClInclude Include="Reteta.h" />
     <ClInclude Include="Statistici.h" />
@@ -190,6 +192,7 @@
   <ItemGroup>
     <Text Include="Furnizori.txt" />
     <Text Include="Ingrediente.txt" />
+    <Text Include="Log.txt" />
     <Text Include="Stoc.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

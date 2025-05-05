@@ -13,7 +13,7 @@
 #include "DatabaseConnection.h"
 #include <string>
 #include <iostream>
-
+#include "Logger.h"
 
 
 class DummyChef
@@ -42,6 +42,7 @@ private:
 	DummyChef(Administrator* administrator) :serverSocket(INVALID_SOCKET), clientSocket(INVALID_SOCKET), resetCode(0),
 		currentEmail("") {
 		this->administrator = administrator;
+		this->log = new Logger("Log.txt");
 	};
 	~DummyChef() { Administrator::destroyInstance(); closeSocket(); };
 	std::vector<Ingrediente*>ingrediente;
@@ -54,6 +55,6 @@ private:
 	std::string currentEmail;
 	SOCKET serverSocket;
 	SOCKET clientSocket;
-
+	Logger* log;
 };
 
