@@ -1,6 +1,7 @@
 #include "recipesearchdialog.h"
 #include "ui_recipesearchdialog.h"
 #include <QMessageBox>
+#include <QDebug>
 
 RecipeSearchDialog::RecipeSearchDialog(const QString& username, QTcpSocket* socket, QWidget *parent) :
     QDialog(parent),
@@ -57,6 +58,11 @@ void RecipeSearchDialog::onSocketReadyRead()
         QString all = response.section("|", 1);
         QStringList entries = all.split("##");
 
+        if (entries.isEmpty() || (entries.size() == 1 && entries.first().trimmed().isEmpty())) {
+            QMessageBox::information(this, "Rezultate căutare", "Nu s-au găsit rețete pentru cuvintele introduse.");
+            return;
+        }
+
         QStringList finalList;
         for (const QString& entry : entries) {
             QStringList parts = entry.split("|");
@@ -74,13 +80,18 @@ void RecipeSearchDialog::onSocketReadyRead()
                              "\n-------------------";
         }
 
-        QMessageBox::information(this, "Rezultate căutare", "Nu exista astfel de retete!");
-        accept();
-    }
-    else {
+        // Afișează rețetele într-o fereastră mai prietenoasă
+        QMessageBox resultsBox(this);
+        resultsBox.setWindowTitle("Rezultate căutare");
+        resultsBox.setText(finalList.join("\n\n"));
+        resultsBox.setStandardButtons(QMessageBox::Ok);
+        resultsBox.exec();
+
+    } else {
         QMessageBox::warning(this, "Eroare", "Eroare la primirea rețetelor.");
     }
 }
+
 
 void RecipeSearchDialog::updateBackground() {
     QPixmap pixmap(":/images/AllRecipes.jpg");

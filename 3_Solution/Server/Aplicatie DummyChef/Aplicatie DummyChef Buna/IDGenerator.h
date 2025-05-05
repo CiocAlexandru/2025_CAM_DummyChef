@@ -16,7 +16,7 @@ public:
 		bool ok = true;
 		while (ok)
 		{
-			id = rand() % 100 + 1;
+			id = rand() % 100000 + 1;
 			ok = false;
 			std::for_each(id_uri.begin(), id_uri.end(), [&](int i) { if (i == id) { ok = true; }});
 		}

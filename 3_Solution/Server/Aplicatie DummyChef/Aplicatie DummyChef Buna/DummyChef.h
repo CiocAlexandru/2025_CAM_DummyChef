@@ -14,6 +14,7 @@
 #include <string>
 #include <iostream>
 #include "Logger.h"
+#include "IDGenerator.h"
 
 
 class DummyChef
@@ -43,6 +44,7 @@ private:
 		currentEmail("") {
 		this->administrator = administrator;
 		this->log = new Logger("Log.txt");
+		this->idGenerator = new IDGenerator();
 	};
 	~DummyChef() { Administrator::destroyInstance(); closeSocket(); };
 	std::vector<Ingrediente*>ingrediente;
@@ -56,5 +58,6 @@ private:
 	SOCKET serverSocket;
 	SOCKET clientSocket;
 	Logger* log;
+	IDGenerator* idGenerator;
 };
 

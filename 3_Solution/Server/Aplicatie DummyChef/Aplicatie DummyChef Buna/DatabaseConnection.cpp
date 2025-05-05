@@ -79,7 +79,7 @@ std::vector<std::vector<std::wstring>> DatabaseConnection::ExecuteQuery(const st
     while (SQLFetch(stmt) == SQL_SUCCESS) {
         std::vector<std::wstring> row;
         for (SQLSMALLINT i = 1; i <= numColumns; i++) {
-            SQLWCHAR columnData[256];
+            SQLWCHAR columnData[2048];
             SQLLEN indicator;
             SQLGetData(stmt, i, SQL_C_WCHAR, columnData, sizeof(columnData), &indicator);
             row.push_back(indicator == SQL_NULL_DATA ? L"NULL" : columnData);
@@ -855,7 +855,7 @@ std::vector<std::wstring> DatabaseConnection::GetRecipesByChefId(int chefId) {
     SQLExecute(stmt);
 
     std::vector<std::wstring> recipes;
-    wchar_t buffer[256];
+    wchar_t buffer[2048];
     SQLLEN indicator;
 
     while (SQLFetch(stmt) == SQL_SUCCESS) {

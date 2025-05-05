@@ -414,8 +414,7 @@ void DummyChef::handleForgotPassword(const std::string& request) {
 
         if (db.UserExists(wEmail)) {
             // Generează și stochează codul de resetare
-            std::srand(static_cast<unsigned>(std::time(nullptr)));
-            resetCode = 100000 + std::rand() % 900000; // Stocăm codul în variabila unică
+            resetCode = this->idGenerator->getID(); // Stocăm codul în variabila unică
             currentEmail = email; // Stocăm email-ul asociat
 
             std::cout << "[FORGOT_PASSWORD] Cod pentru " << email << ": " << resetCode << std::endl;
@@ -564,7 +563,7 @@ void DummyChef::handleClientPreferences(const std::string& request) {
 
 void DummyChef::handleAddRecipeByClient(const std::string& request) {
     try {
-        // Format: ADD_RECIPE_CLIENT|email|nume|timp|ingred1:qty1;ingred2:qty2|pasi
+        // Format: ADD_RECIPE|email|nume|timp|ingred1:qty1;ingred2:qty2|pasi
         std::vector<std::string> tokens;
         std::stringstream ss(request);
         std::string token;
@@ -574,7 +573,7 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
         }
 
         if (tokens.size() != 6) {
-            std::string response = "ADD_RECIPE_CLIENT_FAILED: Invalid format";
+            std::string response = "ADD_RECIPE_FAILED: Invalid format";
             send(clientSocket, response.c_str(), response.length(), 0);
             log->add(response + "\n");
             return;
@@ -586,14 +585,9 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
         std::string ingredienteRaw = tokens[4];
         std::string pasiPreparare = tokens[5];
 
-        // Conectare DB
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
         DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
         db.Connect();
-
-
-        
-
-        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 
         int userId = db.GetUserIdByEmail(converter.from_bytes(email));
         if (userId == -1) {
@@ -604,16 +598,19 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
             return;
         }
 
-
+        // Prelucrează ingrediente + verifică existența
+        std::vector<std::pair<std::string, std::string>> ingrediente;
         std::stringstream ingSS(ingredienteRaw);
         std::string ingPair;
+
         while (std::getline(ingSS, ingPair, ';')) {
             size_t delim = ingPair.find(':');
             if (delim != std::string::npos) {
                 std::string nume = ingPair.substr(0, delim);
-                std::wstring wNume = converter.from_bytes(nume);
+                std::string cantitate = ingPair.substr(delim + 1);
+                ingrediente.emplace_back(nume, cantitate);
 
-                if (!db.IngredientExists(wNume)) {
+                if (!db.IngredientExists(converter.from_bytes(nume))) {
                     std::string response = "ADD_RECIPE_FAILED: Ingredient inexistent - " + nume;
                     send(clientSocket, response.c_str(), response.length(), 0);
                     log->add(response + "\n");
@@ -623,7 +620,7 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
             }
         }
 
-
+        // Inserează rețeta
         int idReteta = db.InsertRecipeFromClient(
             converter.from_bytes(numeReteta),
             converter.from_bytes(timpPreparare),
@@ -631,18 +628,13 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
             userId
         );
 
-        // Ingrediente separate prin ;
-        while (std::getline(ingSS, ingPair, ';')) {
-            size_t delim = ingPair.find(':');
-            if (delim != std::string::npos) {
-                std::string nume = ingPair.substr(0, delim);
-                std::string cantitate = ingPair.substr(delim + 1);
-                db.InsertRecipeIngredient(
-                    idReteta,
-                    converter.from_bytes(nume),
-                    converter.from_bytes(cantitate)
-                );
-            }
+        // Inserează ingredientele rețetei
+        for (const auto& pair : ingrediente) {
+            db.InsertRecipeIngredient(
+                idReteta,
+                converter.from_bytes(pair.first),
+                converter.from_bytes(pair.second)
+            );
         }
 
         db.Disconnect();
@@ -780,7 +772,7 @@ void DummyChef::handleSearchRecipes(const std::string& request) {
         std::stringstream ss(keywordsPart);
         std::string token;
         while (std::getline(ss, token, ',')) {
-            std::transform(token.begin(), token.end(), token.begin(), ::tolower);  // lowercase
+            std::transform(token.begin(), token.end(), token.begin(), ::tolower);  // normalizează în lowercase
             keywords.push_back(token);
         }
 
@@ -798,7 +790,7 @@ void DummyChef::handleSearchRecipes(const std::string& request) {
             query = L"SELECT R.ID, R.Denumire, R.TimpPreparare, R.PasiPreparare FROM Retete R WHERE ";
             for (size_t i = 0; i < keywords.size(); ++i) {
                 std::wstring kw = converter.from_bytes(keywords[i]);
-                query += L"LOWER(R.Denumire) LIKE N'%" + kw + L"%'";
+                query += L"R.Denumire COLLATE Latin1_General_CI_AI LIKE N'%" + kw + L"%'";
                 if (i < keywords.size() - 1)
                     query += L" AND ";
             }
@@ -823,7 +815,7 @@ void DummyChef::handleSearchRecipes(const std::string& request) {
             for (const auto& ing : ingrediente) {
                 ingrLine += converter.to_bytes(ing[0]) + ":" + converter.to_bytes(ing[1]) + ";";
             }
-            if (!ingrLine.empty()) ingrLine.pop_back(); // remove last semicolon
+            if (!ingrLine.empty()) ingrLine.pop_back(); // elimină ultimul ;
 
             response += converter.to_bytes(denumire) + "|" +
                 converter.to_bytes(timp) + "|" +
@@ -831,9 +823,9 @@ void DummyChef::handleSearchRecipes(const std::string& request) {
                 converter.to_bytes(pasi) + "##";
         }
 
-        if (response.back() == '#' && response[response.size() - 2] == '#') {
-            response.pop_back();
-            response.pop_back();
+        // Elimină ## de la final dacă există
+        if (response.size() >= 2 && response.substr(response.size() - 2) == "##") {
+            response.erase(response.size() - 2);
         }
 
         send(clientSocket, response.c_str(), response.length(), 0);

@@ -4,33 +4,33 @@ Cartof|18.97|24
 Orez|4.20|15
 Orez|5.60|13
 Orez|18.88|18
-Ceapă|4.69|10
-Ceapă|6.07|29
-Ceapă|11.37|17
+Ceapa|4.69|10
+Ceapa|6.07|29
+Ceapa|11.37|17
 Morcov|2.08|24
 Morcov|8.03|20
 Morcov|14.78|8
 Usturoi|4.07|1
 Usturoi|8.91|18
 Usturoi|13.51|27
-Roșii|1.46|30
-Roșii|8.07|22
-Roșii|13.00|24
-Castraveți|4.37|18
-Castraveți|6.99|23
-Castraveți|16.92|14
-Salată verde|1.65|14
-Salată verde|6.73|13
-Salată verde|15.53|28
+Rosii|1.46|30
+Rosii|8.07|22
+Rosii|13.00|24
+Castraveti|4.37|18
+Castraveti|6.99|23
+Castraveti|16.92|14
+Salata verde|1.65|14
+Salata verde|6.73|13
+Salata verde|15.53|28
 Ardei gras|3.01|5
 Ardei gras|8.15|27
 Ardei gras|14.40|13
 Broccoli|4.94|6
 Broccoli|9.08|2
 Broccoli|15.99|20
-Conopidă|2.02|28
-Conopidă|8.35|2
-Conopidă|18.37|2
+Conopida|2.02|28
+Conopida|8.35|2
+Conopida|18.37|2
 Spanac|3.48|5
 Spanac|8.81|10
 Spanac|10.11|15
@@ -40,27 +40,27 @@ Fasole|18.16|9
 Linte|1.53|19
 Linte|6.88|11
 Linte|19.49|5
-Năut|3.71|5
-Năut|9.50|19
-Năut|14.36|25
+Naut|3.71|5
+Naut|9.50|19
+Naut|14.36|25
 Porumb|3.40|8
 Porumb|7.87|24
 Porumb|16.06|12
-Pătrunjel|4.09|12
-Pătrunjel|9.79|2
-Pătrunjel|13.84|19
-Mărar|1.75|17
-Mărar|9.33|24
-Mărar|12.21|1
-Leuștean|4.06|7
-Leuștean|6.58|5
-Leuștean|13.06|16
-Țelină|3.94|6
-Țelină|8.61|12
-Țelină|10.13|1
-Varză|4.99|8
-Varză|7.04|14
-Varză|10.81|23
+Patrunjel|4.09|12
+Patrunjel|9.79|2
+Patrunjel|13.84|19
+Marar|1.75|17
+Marar|9.33|24
+Marar|12.21|1
+Leustean|4.06|7
+Leustean|6.58|5
+Leustean|13.06|16
+Telina|3.94|6
+Telina|8.61|12
+Telina|10.13|1
+Varza|4.99|8
+Varza|7.04|14
+Varza|10.81|23
 Dovlecei|4.20|1
 Dovlecei|9.63|13
 Dovlecei|15.08|10
@@ -73,9 +73,9 @@ Ciuperci|17.75|11
 Ardei iute|3.93|26
 Ardei iute|8.08|6
 Ardei iute|18.99|17
-Lămâie|3.43|1
-Lămâie|5.91|19
-Lămâie|10.93|10
+Lamaie|3.43|1
+Lamaie|5.91|19
+Lamaie|10.93|10
 Portocale|4.74|15
 Portocale|6.36|9
 Portocale|11.45|22
@@ -88,39 +88,39 @@ Banane|16.59|1
 Pere|2.20|12
 Pere|7.45|24
 Pere|17.10|30
-Ouă|2.75|19
-Ouă|6.52|19
-Ouă|13.68|20
+Oua|2.75|19
+Oua|6.52|19
+Oua|13.68|20
 Lapte|4.32|13
 Lapte|6.35|15
 Lapte|11.55|28
 Iaurt|2.46|6
 Iaurt|5.38|24
 Iaurt|15.14|8
-Brânză|1.67|11
-Brânză|8.69|23
-Brânză|13.72|25
-Cașcaval|1.59|11
-Cașcaval|8.49|24
-Cașcaval|17.84|1
+Branza|1.67|11
+Branza|8.69|23
+Branza|13.72|25
+Cascaval|1.59|11
+Cascaval|8.49|24
+Cascaval|17.84|1
 Unt|1.11|25
 Unt|5.43|17
 Unt|15.43|20
-Smântână|2.57|3
-Smântână|5.91|10
-Smântână|13.45|28
+Smantana|2.57|3
+Smantana|5.91|10
+Smantana|13.45|28
 Carne de pui|2.87|12
 Carne de pui|7.73|9
 Carne de pui|16.74|23
 Carne de porc|4.55|3
 Carne de porc|6.89|3
 Carne de porc|15.00|14
-Carne de vită|4.04|21
-Carne de vită|6.19|5
-Carne de vită|15.96|12
-Pește|4.85|15
-Pește|6.73|25
-Pește|15.95|9
+Carne de vita|4.04|21
+Carne de vita|6.19|5
+Carne de vita|15.96|12
+Peste|4.85|15
+Peste|6.73|25
+Peste|15.95|9
 Somon|3.91|4
 Somon|8.94|24
 Somon|10.30|4
@@ -130,21 +130,21 @@ Ton|15.18|2
 Ulei|2.29|30
 Ulei|6.82|29
 Ulei|18.88|4
-Făină|4.51|26
-Făină|7.13|18
-Făină|15.37|1
-Zahăr|1.66|29
-Zahăr|5.74|12
-Zahăr|16.01|17
+Faina|4.51|26
+Faina|7.13|18
+Faina|15.37|1
+Zahar|1.66|29
+Zahar|5.74|12
+Zahar|16.01|17
 Sare|4.40|22
 Sare|7.46|19
 Sare|15.83|5
 Piper|4.03|21
 Piper|8.60|12
 Piper|14.04|8
-Oțet|1.02|6
-Oțet|5.63|1
-Oțet|10.28|4
+Otet|1.02|6
+Otet|5.63|1
+Otet|10.28|4
 Miere|1.44|8
 Miere|7.87|9
 Miere|17.16|10
