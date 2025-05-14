@@ -85,7 +85,7 @@ void LoginDialog::sendLoginRequest()
         socket->abort();  // Închide imediat conexiunea curentă
     }
 
-    socket->connectToHost("127.0.0.1", 12345);
+    socket->connectToHost("172.20.10.13", 12345);
 }
 
 
