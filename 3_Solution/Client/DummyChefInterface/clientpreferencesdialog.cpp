@@ -89,13 +89,13 @@ void ClientPreferencesDialog::onReadyRead()
 
     if (response == "PreferinteSucces") {
         QMessageBox::information(this, "Succes", "Preferințele au fost salvate cu succes!");
+        QMessageBox::information(this, "Atentie!", "Trebuie sa va logati din nou in cont pentru a fi actualizate modificarile.");
         raspunsPrimit = true;
 
         // Închide socketul imediat
         if (socket && socket->isOpen()) {
             socket->abort();
         }
-
         this->close();  // Închide dialogul
 
         MainWindow* mainWin = new MainWindow();

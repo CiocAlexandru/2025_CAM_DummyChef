@@ -70,7 +70,7 @@ void ChefSignUpDialog::handleSignUp()
         socket->abort();  // Închide imediat conexiunea curentă
     }
 
-    socket->connectToHost("172.20.10.13", 12345);
+    socket->connectToHost("172.20.10.2", 12345);
 }
 
 void ChefSignUpDialog::onConnected()

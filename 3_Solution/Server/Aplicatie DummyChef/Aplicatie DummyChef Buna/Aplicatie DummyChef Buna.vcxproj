@@ -140,18 +140,12 @@
     <ClCompile Include="iIngrediente.cpp" />
     <ClCompile Include="Ingrediente.cpp" />
     <ClCompile Include="iReteta.cpp" />
-    <ClCompile Include="iStatistici.cpp" />
     <ClCompile Include="iUtilizator.cpp" />
     <ClCompile Include="ListaDeCumparaturi.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Preferinte.cpp" />
     <ClCompile Include="Reteta.cpp" />
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="Statistici.cpp" />
-    <ClCompile Include="StatisticiBucatar.cpp" />
-    <ClCompile Include="StatisticiClient.cpp" />
-    <ClCompile Include="StatisticiFactory.cpp" />
-    <ClCompile Include="StatisticiReteta.cpp" />
     <ClCompile Include="Utilizator.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -166,23 +160,12 @@
     <ClInclude Include="iIngrediente.h" />
     <ClInclude Include="Ingrediente.h" />
     <ClInclude Include="iReteta.h" />
-    <ClInclude Include="iStatistici.h" />
     <ClInclude Include="iUtilizator.h" />
     <ClInclude Include="ListaDeCumparaturi.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Preferinte.h" />
     <ClInclude Include="Reteta.h" />
-    <ClInclude Include="Statistici.h" />
-    <ClInclude Include="StatisticiBucatar.h" />
-    <ClInclude Include="StatisticiClient.h" />
-    <ClInclude Include="StatisticiFactory.h" />
-    <ClInclude Include="StatisticiReteta.h" />
     <ClInclude Include="Utilizator.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

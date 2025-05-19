@@ -66,6 +66,7 @@ void ClientMainWindow::openModifyPrefrences()
 
     ClientPreferencesDialog dialog(username, socket, this);
     dialog.exec(); // deschide modal
+    this->close();
 }
 
 void ClientMainWindow::openAllRecipes()

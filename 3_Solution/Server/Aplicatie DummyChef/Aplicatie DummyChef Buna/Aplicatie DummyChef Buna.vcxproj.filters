@@ -54,24 +54,6 @@
     <ClCompile Include="Furnizor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StatisticiFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="iStatistici.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StatisticiClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StatisticiBucatar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Statistici.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StatisticiReteta.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IDGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -128,24 +110,6 @@
     <ClInclude Include="Furnizor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StatisticiFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="iStatistici.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StatisticiClient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StatisticiBucatar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Statistici.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StatisticiReteta.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IDGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -158,11 +122,6 @@
     <ClInclude Include="Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Ingrediente.txt">
