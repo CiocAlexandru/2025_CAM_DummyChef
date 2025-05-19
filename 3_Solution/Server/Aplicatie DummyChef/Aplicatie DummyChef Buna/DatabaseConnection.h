@@ -9,6 +9,11 @@
 #include <codecvt>
 
 class Utilizator;
+class Furnizor;
+class Reteta;
+class Comanda;
+class Preferinte;
+class Client;
 
 class DatabaseConnection {
 public:
@@ -59,7 +64,14 @@ public:
     bool IngredientExists(const std::wstring& ingredientName);
     void InsertOrder(int clientId, int idReteta);
     std::vector<std::vector<std::wstring>> GetOrdersByClientId(int clientId);
-
+    std::vector<Furnizor*> GetAllFurnizori();
+    std::vector<Utilizator*> GetAllUtilizatori();
+    std::vector<Reteta*> GetAllRetete();
+    std::vector<Comanda*> GetAllComenzi();
+    std::vector<Client*> GetClientiCuPreferinte();
+    bool DeleteUserByEmail(const std::wstring& email);
+    void UpdateStocDupaComanda(int idReteta);
+    bool AreIngredienteInStoc(int idReteta);
 private:
     std::wstring server, database, username, password;
     SQLHENV env;

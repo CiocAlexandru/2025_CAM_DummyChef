@@ -4,6 +4,11 @@
 #include "Client.h"
 #include "Administrator.h"
 #include "Bucatar.h"
+#include "Furnizor.h"
+#include "Reteta.h"
+#include "Comanda.h"
+#include "Preferinte.h"
+#include "Client.h"
 
 DatabaseConnection::DatabaseConnection(const std::wstring& server,
     const std::wstring& database,
@@ -925,4 +930,387 @@ std::vector<std::vector<std::wstring>> DatabaseConnection::GetOrdersByClientId(i
         L"WHERE C.IDClient = " + std::to_wstring(clientId);
 
     return ExecuteQuery(query);
+}
+
+
+
+std::vector<Furnizor*> DatabaseConnection::GetAllFurnizori(){
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    std::vector<Furnizor*> listaFurnizori;
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"SELECT Nume, Telefon, Email, AdresaLivrare FROM Furnizori";
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+    SQLExecute(stmt);
+
+    wchar_t nume[100], telefon[50], email[100], adresa[200];
+    SQLLEN indicator;
+
+    while (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_WCHAR, nume, sizeof(nume), &indicator);
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        std::string sNume = converter.to_bytes(nume);
+
+        SQLGetData(stmt, 2, SQL_C_WCHAR, telefon, sizeof(telefon), &indicator);
+        std::string sTel = converter.to_bytes(telefon);
+
+        SQLGetData(stmt, 3, SQL_C_WCHAR, email, sizeof(email), &indicator);
+        std::string sEmail = converter.to_bytes(email);
+
+        SQLGetData(stmt, 4, SQL_C_WCHAR, adresa, sizeof(adresa), &indicator);
+        std::string sAdr = converter.to_bytes(adresa);
+
+        Furnizor* f = new Furnizor(sNume, sTel, sEmail, sAdr);
+        listaFurnizori.push_back(f);
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return listaFurnizori;
+}
+
+
+
+std::vector<Utilizator*> DatabaseConnection::GetAllUtilizatori() {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    std::vector<Utilizator*> utilizatori;
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"SELECT Nume, Prenume, NumeUtilizator, Parola, NrTelefon, DataNasterii, Email, AdresaLivrare, Experienta, LinkDemonstrativ, TipUtilizator FROM Utilizatori";
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+    SQLExecute(stmt);
+
+    wchar_t nume[100], prenume[100], numeUtil[100], parola[100], nrTel[50], dataN[50], email[100], adresa[200], tip[20], linkDemo[100];
+    int experienta;
+    SQLLEN indicator;
+
+    while (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_WCHAR, nume, sizeof(nume), &indicator);
+        SQLGetData(stmt, 2, SQL_C_WCHAR, prenume, sizeof(prenume), &indicator);
+        SQLGetData(stmt, 3, SQL_C_WCHAR, numeUtil, sizeof(numeUtil), &indicator);
+        SQLGetData(stmt, 4, SQL_C_WCHAR, parola, sizeof(parola), &indicator);
+        SQLGetData(stmt, 5, SQL_C_WCHAR, nrTel, sizeof(nrTel), &indicator);
+        SQLGetData(stmt, 6, SQL_C_WCHAR, dataN, sizeof(dataN), &indicator);
+        SQLGetData(stmt, 7, SQL_C_WCHAR, email, sizeof(email), &indicator);
+        SQLGetData(stmt, 8, SQL_C_WCHAR, adresa, sizeof(adresa), &indicator);
+        SQLGetData(stmt, 9, SQL_C_LONG, &experienta, 0, &indicator);
+        SQLGetData(stmt, 10, SQL_C_WCHAR, linkDemo, sizeof(linkDemo), &indicator);
+        SQLGetData(stmt, 11, SQL_C_WCHAR, tip, sizeof(tip), &indicator);
+
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+
+        std::string sNume = conv.to_bytes(nume);
+        std::string sPrenume = conv.to_bytes(prenume);
+        std::string sNumeUtil = conv.to_bytes(numeUtil);
+        std::string sParola = conv.to_bytes(parola);
+        std::string sTel = conv.to_bytes(nrTel);
+        std::string sDataN = conv.to_bytes(dataN);
+        std::string sEmail = conv.to_bytes(email);
+        std::string sAdresa = conv.to_bytes(adresa);
+        std::string sTip = conv.to_bytes(tip);
+        std::string sLink = conv.to_bytes(linkDemo);
+
+        if (sTip == "Client") {
+            utilizatori.push_back(new Client(sNume, sPrenume, sNumeUtil, sParola, sTel, sDataN, sEmail, sAdresa));
+        }
+        else if (sTip == "Bucatar") {
+            utilizatori.push_back(new Bucatar(sNume, sPrenume, sNumeUtil, sParola, sTel, sDataN, sEmail, experienta, sLink));
+        }
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return utilizatori;
+}
+
+
+
+
+std::vector<Reteta*> DatabaseConnection::GetAllRetete() {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    std::vector<Reteta*> retete;
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query =
+        L"SELECT R.ID, R.Denumire, R.TimpPreparare, R.PasiPreparare, "
+        L"I.Nume, RI.Cantitate "
+        L"FROM Retete R "
+        L"JOIN ReteteIngrediente RI ON R.ID = RI.RetetaID "
+        L"JOIN Ingrediente I ON RI.IngredientID = I.ID "
+        L"ORDER BY R.ID";
+
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+    SQLExecute(stmt);
+
+    int idReteta = -1, lastId = -1;
+    wchar_t denumire[100], timp[20], pasi[1000], numeIng[100], cantitate[50];
+    SQLLEN indicator;
+    Reteta* current = nullptr;
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+
+    while (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_LONG, &idReteta, 0, &indicator);
+        SQLGetData(stmt, 2, SQL_C_WCHAR, denumire, sizeof(denumire), &indicator);
+        SQLGetData(stmt, 3, SQL_C_WCHAR, timp, sizeof(timp), &indicator);
+        SQLGetData(stmt, 4, SQL_C_WCHAR, pasi, sizeof(pasi), &indicator);
+        SQLGetData(stmt, 5, SQL_C_WCHAR, numeIng, sizeof(numeIng), &indicator);
+        SQLGetData(stmt, 6, SQL_C_WCHAR, cantitate, sizeof(cantitate), &indicator);
+
+        if (idReteta != lastId) {
+            if (current) retete.push_back(current);
+            current = new Reteta(
+                conv.to_bytes(denumire),
+                conv.to_bytes(timp),
+                conv.to_bytes(pasi)
+            );
+            lastId = idReteta;
+        }
+
+        std::string sNumeIng = conv.to_bytes(numeIng);
+        int cant = std::stoi(conv.to_bytes(cantitate));
+
+        Ingrediente* ing = new Ingrediente(sNumeIng, 0.0, 0); // dummy data
+        current->addIngredient(cant, ing);
+    }
+
+    if (current) retete.push_back(current);
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return retete;
+}
+
+
+
+std::vector<Comanda*> DatabaseConnection::GetAllComenzi() {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    std::vector<Comanda*> comenzi;
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"SELECT C.ID, C.IDClient, R.Denumire, C.DataExecutare "
+        L"FROM Comenzi C "
+        L"JOIN Retete R ON C.IDReteta = R.ID";
+
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+    SQLExecute(stmt);
+
+    int idComanda, idClient;
+    wchar_t denumire[100], dataExec[100];
+    SQLLEN indicator;
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+
+    while (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_LONG, &idComanda, 0, &indicator);
+        SQLGetData(stmt, 2, SQL_C_LONG, &idClient, 0, &indicator);
+        SQLGetData(stmt, 3, SQL_C_WCHAR, denumire, sizeof(denumire), &indicator);
+        SQLGetData(stmt, 4, SQL_C_WCHAR, dataExec, sizeof(dataExec), &indicator);
+
+        std::string sDenumire = conv.to_bytes(denumire);
+        std::string sData = conv.to_bytes(dataExec);
+
+        comenzi.push_back(new Comanda(idComanda, idClient, sDenumire, sData));
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return comenzi;
+}
+
+
+
+
+
+std::vector<Client*> DatabaseConnection::GetClientiCuPreferinte() {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    std::vector<Client*> clienti;
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"SELECT U.Nume, U.Prenume, U.NumeUtilizator, U.Parola, U.NrTelefon, "
+        L"U.DataNasterii, U.Email, U.AdresaLivrare, "
+        L"P.PreferinteAlimentare, P.Alergii, P.OraLivrare, P.PreferintaPret, P.Notite "
+        L"FROM Utilizatori U "
+        L"JOIN PreferinteClienti P ON U.ID = P.IDClient "
+        L"WHERE U.TipUtilizator = 'Client'";
+
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+    SQLExecute(stmt);
+
+    // bufferuri
+    wchar_t nume[100], prenume[100], numeUtil[100], parola[100], telefon[50], dataN[50], email[100], adresa[200];
+    wchar_t pref[500], alergii[100], ora[50], pret[50], notite[500];
+    SQLLEN ind;
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+
+    while (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 1, SQL_C_WCHAR, nume, sizeof(nume), &ind);
+        SQLGetData(stmt, 2, SQL_C_WCHAR, prenume, sizeof(prenume), &ind);
+        SQLGetData(stmt, 3, SQL_C_WCHAR, numeUtil, sizeof(numeUtil), &ind);
+        SQLGetData(stmt, 4, SQL_C_WCHAR, parola, sizeof(parola), &ind);
+        SQLGetData(stmt, 5, SQL_C_WCHAR, telefon, sizeof(telefon), &ind);
+        SQLGetData(stmt, 6, SQL_C_WCHAR, dataN, sizeof(dataN), &ind);
+        SQLGetData(stmt, 7, SQL_C_WCHAR, email, sizeof(email), &ind);
+        SQLGetData(stmt, 8, SQL_C_WCHAR, adresa, sizeof(adresa), &ind);
+        SQLGetData(stmt, 9, SQL_C_WCHAR, pref, sizeof(pref), &ind);
+        SQLGetData(stmt, 10, SQL_C_WCHAR, alergii, sizeof(alergii), &ind);
+        SQLGetData(stmt, 11, SQL_C_WCHAR, ora, sizeof(ora), &ind);
+        SQLGetData(stmt, 12, SQL_C_WCHAR, pret, sizeof(pret), &ind);
+        SQLGetData(stmt, 13, SQL_C_WCHAR, notite, sizeof(notite), &ind);
+
+        // conversie
+        std::string sNume = conv.to_bytes(nume);
+        std::string sPrenume = conv.to_bytes(prenume);
+        std::string sUtil = conv.to_bytes(numeUtil);
+        std::string sParola = conv.to_bytes(parola);
+        std::string sTel = conv.to_bytes(telefon);
+        std::string sDataN = conv.to_bytes(dataN);
+        std::string sEmail = conv.to_bytes(email);
+        std::string sAdr = conv.to_bytes(adresa);
+
+        std::string sPref = conv.to_bytes(pref);
+        std::string sAlergii = conv.to_bytes(alergii);
+        std::string sOra = conv.to_bytes(ora);
+        std::string sPret = conv.to_bytes(pret);
+        std::string sNote = conv.to_bytes(notite);
+
+        Client* client = new Client(
+            sNume, sPrenume, sUtil, sParola, sTel, sDataN, sEmail, sAdr
+        );
+
+        Preferinte* preferinte = new Preferinte(sPref, sAlergii, sOra, sPret, sNote);
+        client->setPreferinte(preferinte); // metodă pe care o vom adăuga imediat în clasa Client
+
+        clienti.push_back(client);
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return clienti;
+}
+
+
+
+bool DatabaseConnection::DeleteUserByEmail(const std::wstring& email) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query = L"DELETE FROM Utilizatori WHERE Email = ?";
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR,
+        email.length(), 0, (SQLPOINTER)email.c_str(), 0, nullptr);
+
+    SQLRETURN ret = SQLExecute(stmt);
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+
+    return SQL_SUCCEEDED(ret);
+}
+
+
+
+
+
+bool DatabaseConnection::AreIngredienteInStoc(int idReteta) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmt;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+    std::wstring query =
+        L"SELECT I.ID, S.Cantiate, RI.Cantitate "
+        L"FROM ReteteIngrediente RI "
+        L"JOIN Ingrediente I ON RI.IngredientID = I.ID "
+        L"JOIN Stoc S ON I.ID = S.IngredientID "
+        L"WHERE RI.RetetaID = ?";
+
+    SQLPrepareW(stmt, (SQLWCHAR*)query.c_str(), SQL_NTS);
+    SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &idReteta, 0, nullptr);
+    SQLExecute(stmt);
+
+    int cantitateStoc = 0;
+    wchar_t cantitateNecesarW[50];
+    SQLLEN ind;
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+
+    while (SQLFetch(stmt) == SQL_SUCCESS) {
+        SQLGetData(stmt, 2, SQL_C_LONG, &cantitateStoc, 0, &ind);
+        SQLGetData(stmt, 3, SQL_C_WCHAR, cantitateNecesarW, sizeof(cantitateNecesarW), &ind);
+
+        int cantitateNecesar = 0;
+        try {
+            cantitateNecesar = std::stoi(conv.to_bytes(cantitateNecesarW));
+        }
+        catch (...) {
+            std::cerr << "Cantitate invalidă pentru stoc: " << conv.to_bytes(cantitateNecesarW) << std::endl;
+            continue;
+        }
+
+        if (cantitateNecesar > cantitateStoc) {
+            SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+            return false;
+        }
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    return true;
+}
+
+
+
+void DatabaseConnection::UpdateStocDupaComanda(int idReteta) {
+    if (!isConnected) throw std::runtime_error("Not connected to database");
+
+    SQLHSTMT stmtSelect;
+    SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmtSelect);
+
+    std::wstring querySelect = L"SELECT IngredientID, Cantitate FROM ReteteIngrediente WHERE RetetaID = ?";
+    SQLPrepareW(stmtSelect, (SQLWCHAR*)querySelect.c_str(), SQL_NTS);
+    SQLBindParameter(stmtSelect, 1, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &idReteta, 0, nullptr);
+    SQLExecute(stmtSelect);
+
+    int ingredientId;
+    wchar_t cantitateW[50];
+    SQLLEN ind;
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+
+    while (SQLFetch(stmtSelect) == SQL_SUCCESS) {
+        SQLGetData(stmtSelect, 1, SQL_C_LONG, &ingredientId, 0, &ind);
+        SQLGetData(stmtSelect, 2, SQL_C_WCHAR, cantitateW, sizeof(cantitateW), &ind);
+
+        std::string cantStr = conv.to_bytes(cantitateW);
+
+        int cantitate = 0;
+        try {
+            cantitate = std::stoi(cantStr);
+        }
+        catch (...) {
+            std::cerr << "Cantitate invalidă în ReteteIngrediente pentru ID: " << ingredientId << std::endl;
+            continue;
+        }
+
+        SQLHSTMT stmtUpdate;
+        SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmtUpdate);
+
+        // AICI folosim "Cantiate" din baza de date
+        std::wstring updateQuery = L"UPDATE Stoc SET Cantiate = Cantiate - ? WHERE IngredientID = ?";
+        SQLPrepareW(stmtUpdate, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
+        SQLBindParameter(stmtUpdate, 1, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &cantitate, 0, nullptr);
+        SQLBindParameter(stmtUpdate, 2, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &ingredientId, 0, nullptr);
+        SQLExecute(stmtUpdate);
+
+        SQLFreeHandle(SQL_HANDLE_STMT, stmtUpdate);
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, stmtSelect);
 }

@@ -36,7 +36,6 @@ private:
         return "UNKNOWN_TIME";
     }
 
-
     void WriteToFile(const std::string& entry) {
         std::ofstream outFile(filename, std::ios::app);
         if (outFile.is_open()) {

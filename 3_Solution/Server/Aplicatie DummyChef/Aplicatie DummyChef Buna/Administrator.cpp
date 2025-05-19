@@ -1,4 +1,4 @@
-#include "Administrator.h"
+﻿#include "Administrator.h"
 #include "DatabaseConnection.h"
 
 
@@ -130,7 +130,7 @@ void Administrator::insertIngrediente(std::vector<Ingrediente*> ingrediente)
 
         try {
             db.InsertIngredient(nume, pret, furnizorId);
-            std::wcout << L"Ingredient adaugat �n DB: " << nume << L" (pret: " << pret << L", furnizor: " << furnizorId << L")" << std::endl;
+            std::wcout << L"Ingredient adaugat în DB: " << nume << L" (pret: " << pret << L", furnizor: " << furnizorId << L")" << std::endl;
         }
         catch (const std::exception& e) {
             std::cerr << "Eroare la inserarea ingredientului " << numeStr << ": " << e.what() << std::endl;
@@ -203,16 +203,20 @@ void Administrator::menu()
         std::cout << "Pentru a introduce ingredientele in baza de date apasati tasta 3:\n";
         std::cout << "Pentru a introduce stocul alimentelor in baza de date apasati tasta 5:\n";
         std::cout << "Pentru a vizualiza datele din logger apasati tasta 7:\n";
+        std::cout << "Pentru a vizualiza toti furnizorii din baza de date apasati tasta 9:\n";
+        std::cout << "Pentru a vizualiza toti utilizatorii(clienti/bucatari) din baza de date apasati 11:\n";
+        std::cout << "Pentru a vizualiza toate retetele din baza de date apasati 13:\n";
+        std::cout << "Pentru a vizualiza toate comenzile efectuate de toti clientii din baza de date apasati 15:\n";
+        std::cout << "Pentru a vizualiza preferintele fiecarui client din baza de date apasati 17:\n";
+        std::cout << "Pentru a sterge un utilizator(client/bucatar) din baza de date apasati 19:\n";
         std::cin >> n;
         switch (n)
         {
         case 1:
             this->addFurnizori();
-            this->insertFurnizori(this->furnizori);
             break;
         case 3:
             this->addIngrediente();
-            this->insertIngrediente(this->ingrediente);
             break;
         case 5:
             this->addStoc();
@@ -220,7 +224,155 @@ void Administrator::menu()
         case 7:
             this->vizualizareServer();
             break;
+        case 9:
+            this->afisareFurnizori();
+            break;
+        case 11:
+            this->afisareUtilizatori();
+            break;
+        case 13:
+            this->afisareRetete();
+            break;
+        case 15:
+            this->afisareComenzi();
+            break;
+        case 17:
+            this->afisarePreferinteClientiCuObiecte();
+            break;
+        case 19:
+            this->stergereUtilizator();
+            break;
         }
     } while (n);
 
+}
+
+
+void Administrator::afisareFurnizori() {
+    DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+    db.Connect();
+
+    this->furnizori = db.GetAllFurnizori();
+
+    std::cout << "Furnizori existenti in baza de date:\n";
+    for (Furnizor* f : this->furnizori) {
+        f->printFurnizor(); // metodă deja definită în clasa ta
+    }
+
+    // Curățare memorie
+    for (Furnizor* f : this->furnizori) {
+        delete f;
+    }
+
+    db.Disconnect();
+}
+
+
+void Administrator::afisareUtilizatori() {
+    DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+    db.Connect();
+
+    this->utilizatori = db.GetAllUtilizatori();
+
+    std::cout << "\nUtilizatori existenti in baza de date:\n";
+    for (Utilizator* u : utilizatori) {
+        u->printInfo();
+        std::cout << "\n";
+    }
+
+    for (Utilizator* u : utilizatori)
+        delete u;
+
+    db.Disconnect();
+}
+
+
+void Administrator::afisareRetete() {
+    DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+    db.Connect();
+
+    this->retete = db.GetAllRetete();
+
+    std::cout << "\nLista de retete existente in baza de date:\n";
+    for (Reteta* r : retete) {
+        r->printReteta();
+        std::cout << "------------------------------\n";
+    }
+
+    for (Reteta* r : retete) {
+        for (auto& pair : r->ingredienteNecesare)
+            delete pair.second;
+        delete r;
+    }
+
+    db.Disconnect();
+}
+
+
+
+void Administrator::afisareComenzi() {
+    DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+    db.Connect();
+
+    this->comenzi= db.GetAllComenzi();
+
+    std::cout << "\nComenzi efectuate:\n";
+    for (Comanda* c : comenzi) {
+        c->PrintComanda();
+    }
+
+    for (Comanda* c : comenzi) {
+        delete c;
+    }
+
+    db.Disconnect();
+}
+
+
+
+
+
+
+void Administrator::afisarePreferinteClientiCuObiecte() {
+    DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+    db.Connect();
+
+    std::vector<Client*> clienti = db.GetClientiCuPreferinte();
+
+    for (Client* c : clienti) {
+        c->printInfo();
+        Preferinte* p = c->getPreferinte();
+        if (p) {
+            p->printPreferinte();
+        }
+        std::cout << "------------------------\n";
+        delete p;
+        delete c;
+    }
+
+    db.Disconnect();
+}
+
+
+
+void Administrator::stergereUtilizator() {
+    std::string email;
+    std::cout << "Introduceti emailul utilizatorului de sters: ";
+    std::cin >> email;
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+    std::wstring wemail = conv.from_bytes(email);
+
+    DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
+    db.Connect();
+
+    bool success = db.DeleteUserByEmail(wemail);
+    db.Disconnect();
+
+    if (success) {
+        std::cout << "Utilizatorul cu emailul \"" << email << "\" a fost sters cu succes.\n";
+    }
+    else {
+        std::cout << "Eroare: utilizatorul nu a putut fi sters sau nu exista.\n";
+    }
 }

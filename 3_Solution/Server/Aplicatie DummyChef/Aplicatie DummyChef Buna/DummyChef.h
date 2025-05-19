@@ -53,7 +53,6 @@ private:
 	std::vector<Ingrediente*>ingrediente;
 	Reteta* retete;
 	Utilizator* utilizator;
-	std::vector<Furnizor*>furnizori;
 	Administrator* administrator;
 	static DummyChef* app;
 	int resetCode;

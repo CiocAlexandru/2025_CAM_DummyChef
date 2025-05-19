@@ -18,5 +18,7 @@ public:
 		return "Client";
 	}
 	void printInfo()const override;
+	void setPreferinte(Preferinte* preferinta) { this->preferinte = preferinta; }
+	Preferinte* getPreferinte() { return this->preferinte; }
 };
 

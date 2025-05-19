@@ -966,7 +966,7 @@ void DummyChef::handlePlaceOrder(const std::string& request) {
     }
 
     std::string email = tokens[1];
-    int idReteta = std::stoi(tokens[2]);  // ATENȚIE: acum trimitem ID-ul rețetei
+    int idReteta = std::stoi(tokens[2]);
 
     try {
         DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
@@ -979,8 +979,17 @@ void DummyChef::handlePlaceOrder(const std::string& request) {
             return;
         }
 
-        // Salvează comanda cu ID-ul rețetei
+        // ✅ Verificăm dacă avem destul stoc
+        if (!db.AreIngredienteInStoc(idReteta)) {
+            send(clientSocket, "PLACE_ORDER_FAILED: Not enough stock", 38, 0);
+            log->add("PLACE_ORDER_FAILED: Not enough stock\n");
+            db.Disconnect();
+            return;
+        }
+
+        // ✅ Plasăm comanda și actualizăm stocul
         db.InsertOrder(userId, idReteta);
+        db.UpdateStocDupaComanda(idReteta);
 
         send(clientSocket, "PLACE_ORDER_SUCCESS", 20, 0);
         log->add("PLACE_ORDER_SUCCESS\n");
@@ -992,6 +1001,7 @@ void DummyChef::handlePlaceOrder(const std::string& request) {
         log->add(error + "\n");
     }
 }
+
 
 
 

@@ -5,6 +5,9 @@
 #include"Utilizator.h"
 #include "Furnizor.h"
 #include "Ingrediente.h"
+#include "Reteta.h"
+#include "Comanda.h"
+#include "Client.h"
 
 class Administrator
 {
@@ -13,6 +16,8 @@ private:
 	std::vector<Utilizator*>utilizatori;
 	std::vector<Furnizor*>furnizori;
 	std::vector<Ingrediente*>ingrediente;
+	std::vector<Reteta*>retete;
+	std::vector<Comanda*>comenzi;
 	Administrator() {};
 	~Administrator() {};
 public:
@@ -25,5 +30,11 @@ public:
 	void addStoc();
 	void vizualizareServer();
 	void menu();
+	void afisareFurnizori();
+	void afisareUtilizatori();
+	void afisareRetete();
+	void afisareComenzi();
+	void afisarePreferinteClientiCuObiecte();
+	void stergereUtilizator();
 };
 

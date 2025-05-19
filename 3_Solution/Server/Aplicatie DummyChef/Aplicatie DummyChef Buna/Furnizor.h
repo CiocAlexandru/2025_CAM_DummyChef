@@ -22,7 +22,7 @@ public:
     std::string GetTelefon() const  { return telefon; }
     std::string GetEmail() const  { return email; }
     std::string GetAdresaLivrare() const  { return adresaLivrare; }
-
+    void printFurnizor()override { std::cout << this->nume << " " << this->email << std::endl; };
     void SetNume(const std::string& name) { nume = name; }
     void SetTelefon(const std::string& phone) { telefon = phone; }
     void SetEmail(const std::string& mail) { email = mail; }

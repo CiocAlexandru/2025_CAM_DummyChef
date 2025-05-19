@@ -16,7 +16,7 @@ public:
     std::string GetNume() const { return nume; }
     double GetPret() const { return pret; }
     int GetFurnizorId() const { return idFurnizor; }
-
+    void printIngredient() override { std::cout << this->nume <<" "<< this->pret << std::endl; }
     void SetNume(const std::string& name) {nume = name; }
     void SetPret(double price) { pret = price; }
     void SetFurnizorId(int id) { idFurnizor = id; }

@@ -132,6 +132,7 @@
     <ClCompile Include="Administrator.cpp" />
     <ClCompile Include="Bucatar.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Comanda.cpp" />
     <ClCompile Include="DatabaseConnection.cpp" />
     <ClCompile Include="DummyChef.cpp" />
     <ClCompile Include="Furnizor.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Administrator.h" />
     <ClInclude Include="Bucatar.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="Comanda.h" />
     <ClInclude Include="DatabaseConnection.h" />
     <ClInclude Include="DummyChef.h" />
     <ClInclude Include="Furnizor.h" />
