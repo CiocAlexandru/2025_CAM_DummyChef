@@ -42,27 +42,6 @@ LoginDialog::LoginDialog(QWidget *parent) :
 
 void LoginDialog::handleLogin()  // Nume modificat
 {
-    sendLoginRequest();
-}
-
-void LoginDialog::updateBackground()
-{
-    QPixmap pixmap(":/images/LoginBuna.jpg");  // Încarcă imaginea
-    backgroundLabel->setPixmap(pixmap);
-    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Ocupă întreaga fereastră
-}
-
-
-void LoginDialog::resizeEvent(QResizeEvent *event)
-{
-    QDialog::resizeEvent(event);
-    setWindowState(windowState() | Qt::WindowFullScreen);
-    updateBackground();  // Redimensionează fundalul
-}
-
-
-void LoginDialog::sendLoginRequest()
-{
     QString username = ui->usernameLineEdit->text().trimmed();
     QString email = ui->emailLineEdit->text().trimmed();
     QString password = ui->passwordLineEdit->text();
@@ -86,6 +65,21 @@ void LoginDialog::sendLoginRequest()
     }
 
     socket->connectToHost("172.20.10.3", 12345);
+}
+
+void LoginDialog::updateBackground()
+{
+    QPixmap pixmap(":/images/LoginBuna.jpg");  // Încarcă imaginea
+    backgroundLabel->setPixmap(pixmap);
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Ocupă întreaga fereastră
+}
+
+
+void LoginDialog::resizeEvent(QResizeEvent *event)
+{
+    QDialog::resizeEvent(event);
+    setWindowState(windowState() | Qt::WindowFullScreen);
+    updateBackground();  // Redimensionează fundalul
 }
 
 

@@ -32,8 +32,6 @@ private:
     QTcpSocket *socket;
 
     void updateBackground();
-    void sendLoginRequest();
-
 };
 
 #endif
