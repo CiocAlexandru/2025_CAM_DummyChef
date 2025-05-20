@@ -2233,3 +2233,282 @@ Furnizor: ￯ﾻ﾿FreshFoodsSRL
 
 20/05/2025 09:52:42 - PLACE_ORDER_SUCCESS
 
+20/05/2025 12:07:11 - Client conectat!
+
+20/05/2025 12:07:11 - ClientLOGIN cazanalexandra@yahoo.com 2133
+
+20/05/2025 12:07:12 - Login successful! Welcome 
+
+20/05/2025 12:07:12 - LOGIN_SUCCESS_CHEF
+
+20/05/2025 12:07:12 - LOGIN_SUCCESS
+
+20/05/2025 12:07:18 - ClientGET_MY_RECIPES|cazanalexandra@yahoo.com
+
+20/05/2025 12:07:18 - MY_RECIPES|Tocanita rustica de legume cu carne de pui##Sandwich cu pui
+
+20/05/2025 12:07:28 - Clientul s-a deconectat.
+
+20/05/2025 12:07:44 - Client conectat!
+
+20/05/2025 12:07:44 - ClientLOGIN ciocalex@yahoo.ro 2907
+
+20/05/2025 12:07:44 - Login successful! Welcome 
+
+20/05/2025 12:07:44 - LOGIN_SUCCESS_CLIENT
+
+20/05/2025 12:07:44 - LOGIN_SUCCESS
+
+20/05/2025 12:07:48 - ClientGET_ORDERS|ciocalex@yahoo.ro
+
+20/05/2025 12:07:54 - ClientSEARCH_RECIPES 
+
+20/05/2025 12:07:54 - RECIPE_RESULTS|Sandwich cu pui|00:15|Carne de pui:1;Cascaval:2;Paine:2|Se taie puiul, se prajeste in tigaie, si se adauga intre cele doua felii de paine alaturi de cascaval.##Paste cu usturoi si spanac|00:25|Usturoi:2;Spanac:1;Ulei:1;Sare:1;Paste:1|Fierbe pastele conform instructiunilor de pe ambalaj. Intr-o tigaie, incinge putin ulei. Adauga usturoiul taiat felii si caleste-l usor. Adauga spanacul spalat si scurs, gateste pana se inmoaie. Adauga pastele scurse peste spanac si usturoi. Condimenteaza cu sare dupa gust si amesteca bine. Serveste cald.##Salata de legume proaspete|00:16|Rosii:2;Castraveti:1;Salata verde:1;Ceapa:1;Ulei:1;Sare:1|Spala rosiile, castravetii, salata si ceapa. Taie rosiile si castravetii felii. Rupe frunzele de salata in bucati potrivite. Taie ceapa julien. Amesteca toate legumele intr-un bol. Adauga un praf de sare si stropeste cu putin ulei. Serveste imediat pentru prospetime maxima.##Tocanita rustica de legume cu carne de pui|01:15|Ceapa:2;Morcov:2;Cartof:3;Usturoi:2;Rosii:2;Ardei gras:1;Ulei:2;Carne de pui:1;Sare:1;Piper:1|Caleste ceapa si usturoiul in ulei pana devin aurii.Adauga morcovul taiat rondele si caleste inca 2-3 minute.Pune cubulete de carne de pui si rumeneste-le usor.Adauga cartofii taiati cuburi, rosiile taiate si ardeiul. Amesteca.Toarna 500 ml de apa, acopera si lasa la foc mediu 25–30 minute.Potriveste de sare si piper, apoi mai lasa 5 minute fara capac.Serveste cald.
+
+20/05/2025 12:08:27 - ClientSEARCH_RECIPES pui
+
+20/05/2025 12:08:27 - RECIPE_RESULTS|Tocanita rustica de legume cu carne de pui|01:15|Ceapa:2;Morcov:2;Cartof:3;Usturoi:2;Rosii:2;Ardei gras:1;Ulei:2;Carne de pui:1;Sare:1;Piper:1|Caleste ceapa si usturoiul in ulei pana devin aurii.Adauga morcovul taiat rondele si caleste inca 2-3 minute.Pune cubulete de carne de pui si rumeneste-le usor.Adauga cartofii taiati cuburi, rosiile taiate si ardeiul. Amesteca.Toarna 500 ml de apa, acopera si lasa la foc mediu 25–30 minute.Potriveste de sare si piper, apoi mai lasa 5 minute fara capac.Serveste cald.##Sandwich cu pui|00:15|Carne de pui:1;Cascaval:2;Paine:2|Se taie puiul, se prajeste in tigaie, si se adauga intre cele doua felii de paine alaturi de cascaval.
+
+20/05/2025 12:08:46 - Eroare la receptionare.Inchidem clientul
+
+20/05/2025 12:09:07 - Client conectat!
+
+20/05/2025 12:09:07 - ClientLOGIN ciocalex@yahoo.ro 2907
+
+20/05/2025 12:09:07 - Login successful! Welcome 
+
+20/05/2025 12:09:07 - LOGIN_SUCCESS_CLIENT
+
+20/05/2025 12:09:07 - LOGIN_SUCCESS
+
+20/05/2025 12:09:19 - ClientGENERARE_LISTA ciocalex@yahoo.ro Sandwich cu pui
+
+
+20/05/2025 12:09:19 - Trimis c�tre client: ID_RETETA|5|Lista cumpărături pentru rețeta "Sandwich cu pui":
+
+Carne de pui (1) - 2.87 RON
+Cascaval (2) - 1.59 RON
+Paine (2) - 3.5 RON
+
+Total: 7.96 RON
+Furnizor: ￯ﾻ﾿FreshFoodsSRL
+
+20/05/2025 12:09:22 - ClientPLACE_ORDER|ciocalex@yahoo.ro|5
+
+
+20/05/2025 12:09:22 - PLACE_ORDER_SUCCESS
+
+20/05/2025 12:09:37 - Clientul s-a deconectat.
+
+20/05/2025 12:10:58 - Client conectat!
+
+20/05/2025 12:10:58 - ClientLOGIN ciocalex@yahoo.ro 2907
+
+20/05/2025 12:10:58 - Login successful! Welcome 
+
+20/05/2025 12:10:58 - LOGIN_SUCCESS_CLIENT
+
+20/05/2025 12:10:58 - LOGIN_SUCCESS
+
+20/05/2025 12:11:01 - ClientGET_ORDERS|ciocalex@yahoo.ro
+
+20/05/2025 12:11:04 - ClientSEARCH_RECIPES 
+
+20/05/2025 12:11:04 - RECIPE_RESULTS|Sandwich cu pui|00:15|Carne de pui:1;Cascaval:2;Paine:2|Se taie puiul, se prajeste in tigaie, si se adauga intre cele doua felii de paine alaturi de cascaval.##Paste cu usturoi si spanac|00:25|Usturoi:2;Spanac:1;Ulei:1;Sare:1;Paste:1|Fierbe pastele conform instructiunilor de pe ambalaj. Intr-o tigaie, incinge putin ulei. Adauga usturoiul taiat felii si caleste-l usor. Adauga spanacul spalat si scurs, gateste pana se inmoaie. Adauga pastele scurse peste spanac si usturoi. Condimenteaza cu sare dupa gust si amesteca bine. Serveste cald.##Salata de legume proaspete|00:16|Rosii:2;Castraveti:1;Salata verde:1;Ceapa:1;Ulei:1;Sare:1|Spala rosiile, castravetii, salata si ceapa. Taie rosiile si castravetii felii. Rupe frunzele de salata in bucati potrivite. Taie ceapa julien. Amesteca toate legumele intr-un bol. Adauga un praf de sare si stropeste cu putin ulei. Serveste imediat pentru prospetime maxima.##Tocanita rustica de legume cu carne de pui|01:15|Ceapa:2;Morcov:2;Cartof:3;Usturoi:2;Rosii:2;Ardei gras:1;Ulei:2;Carne de pui:1;Sare:1;Piper:1|Caleste ceapa si usturoiul in ulei pana devin aurii.Adauga morcovul taiat rondele si caleste inca 2-3 minute.Pune cubulete de carne de pui si rumeneste-le usor.Adauga cartofii taiati cuburi, rosiile taiate si ardeiul. Amesteca.Toarna 500 ml de apa, acopera si lasa la foc mediu 25–30 minute.Potriveste de sare si piper, apoi mai lasa 5 minute fara capac.Serveste cald.
+
+20/05/2025 12:11:14 - ClientSEARCH_RECIPES pui
+
+20/05/2025 12:11:14 - RECIPE_RESULTS|Tocanita rustica de legume cu carne de pui|01:15|Ceapa:2;Morcov:2;Cartof:3;Usturoi:2;Rosii:2;Ardei gras:1;Ulei:2;Carne de pui:1;Sare:1;Piper:1|Caleste ceapa si usturoiul in ulei pana devin aurii.Adauga morcovul taiat rondele si caleste inca 2-3 minute.Pune cubulete de carne de pui si rumeneste-le usor.Adauga cartofii taiati cuburi, rosiile taiate si ardeiul. Amesteca.Toarna 500 ml de apa, acopera si lasa la foc mediu 25–30 minute.Potriveste de sare si piper, apoi mai lasa 5 minute fara capac.Serveste cald.##Sandwich cu pui|00:15|Carne de pui:1;Cascaval:2;Paine:2|Se taie puiul, se prajeste in tigaie, si se adauga intre cele doua felii de paine alaturi de cascaval.
+
+20/05/2025 12:11:31 - ClientGENERARE_LISTA ciocalex@yahoo.ro Sandwich cu pui
+
+
+20/05/2025 12:11:31 - Trimis c�tre client: ID_RETETA|5|Lista cumpărături pentru rețeta "Sandwich cu pui":
+
+Carne de pui (1) - 2.87 RON
+Cascaval (2) - 1.59 RON
+Paine (2) - 3.5 RON
+
+Total: 7.96 RON
+Furnizor: ￯ﾻ﾿FreshFoodsSRL
+
+20/05/2025 12:11:35 - ClientPLACE_ORDER|ciocalex@yahoo.ro|5
+
+
+20/05/2025 12:11:35 - PLACE_ORDER_SUCCESS
+
+20/05/2025 12:11:40 - Clientul s-a deconectat.
+
+20/05/2025 14:40:38 - Client conectat!
+
+20/05/2025 14:40:38 - ClientLOGIN stefan.arseni@mta.ro cetasc
+
+20/05/2025 14:40:38 - Login successful! Welcome 
+
+20/05/2025 14:40:38 - LOGIN_SUCCESS_CHEF
+
+20/05/2025 14:40:38 - LOGIN_SUCCESS
+
+20/05/2025 14:40:58 - ClientGET_MY_RECIPES|stefan.arseni@mta.ro
+
+20/05/2025 14:40:58 - MY_RECIPES|Salata de legume proaspete##Paste cu usturoi si spanac
+
+20/05/2025 14:44:46 - Clientul s-a deconectat.
+
+20/05/2025 14:45:07 - Client conectat!
+
+20/05/2025 14:45:07 - ClientLOGIN cazanalexandra@yahoo.com 2133
+
+20/05/2025 14:45:07 - Login successful! Welcome 
+
+20/05/2025 14:45:07 - LOGIN_SUCCESS_CHEF
+
+20/05/2025 14:45:07 - LOGIN_SUCCESS
+
+20/05/2025 14:46:02 - ClientADD_RECIPE|cazanalexandra@yahoo.com|Varza cu carne|00:30|Varza alba:1;Carne porc:2|Se caleste varza, se prajeste carnea
+
+20/05/2025 14:46:02 - ADD_RECIPE_FAILED: Ingredient inexistent - Varza alba
+
+20/05/2025 14:47:33 - ClientADD_RECIPE|cazanalexandra@yahoo.com|Varza cu carne|00:30|Varza:1;Carne de porc:1;Ceapa:3|aaaaaaa
+
+20/05/2025 14:47:33 - ADD_RECIPE_SUCCESS
+
+20/05/2025 14:47:50 - Clientul s-a deconectat.
+
+20/05/2025 14:48:55 - Client conectat!
+
+20/05/2025 14:48:55 - ClientLOGIN ciocalex@yahoo.ro 2907
+
+20/05/2025 14:48:55 - Login successful! Welcome 
+
+20/05/2025 14:48:55 - LOGIN_SUCCESS_CLIENT
+
+20/05/2025 14:48:55 - LOGIN_SUCCESS
+
+20/05/2025 14:49:04 - ClientGET_ORDERS|ciocalex@yahoo.ro
+
+20/05/2025 14:49:12 - ClientSEARCH_RECIPES 
+
+20/05/2025 14:49:12 - RECIPE_RESULTS|Varza cu carne|00:30|Varza:1;Carne de porc:1;Ceapa:3|aaaaaaa##Sandwich cu pui|00:15|Carne de pui:1;Cascaval:2;Paine:2|Se taie puiul, se prajeste in tigaie, si se adauga intre cele doua felii de paine alaturi de cascaval.##Paste cu usturoi si spanac|00:25|Usturoi:2;Spanac:1;Ulei:1;Sare:1;Paste:1|Fierbe pastele conform instructiunilor de pe ambalaj. Intr-o tigaie, incinge putin ulei. Adauga usturoiul taiat felii si caleste-l usor. Adauga spanacul spalat si scurs, gateste pana se inmoaie. Adauga pastele scurse peste spanac si usturoi. Condimenteaza cu sare dupa gust si amesteca bine. Serveste cald.##Salata de legume proaspete|00:16|Rosii:2;Castraveti:1;Salata verde:1;Ceapa:1;Ulei:1;Sare:1|Spala rosiile, castravetii, salata si ceapa. Taie rosiile si castravetii felii. Rupe frunzele de salata in bucati potrivite. Taie ceapa julien. Amesteca toate legumele intr-un bol. Adauga un praf de sare si stropeste cu putin ulei. Serveste imediat pentru prospetime maxima.##Tocanita rustica de legume cu carne de pui|01:15|Ceapa:2;Morcov:2;Cartof:3;Usturoi:2;Rosii:2;Ardei gras:1;Ulei:2;Carne de pui:1;Sare:1;Piper:1|Caleste ceapa si usturoiul in ulei pana devin aurii.Adauga morcovul taiat rondele si caleste inca 2-3 minute.Pune cubulete de carne de pui si rumeneste-le usor.Adauga cartofii taiati cuburi, rosiile taiate si ardeiul. Amesteca.Toarna 500 ml de apa, acopera si lasa la foc mediu 25–30 minute.Potriveste de sare si piper, apoi mai lasa 5 minute fara capac.Serveste cald.
+
+20/05/2025 14:49:59 - ClientSEARCH_RECIPES Pui
+
+20/05/2025 14:50:00 - RECIPE_RESULTS|Tocanita rustica de legume cu carne de pui|01:15|Ceapa:2;Morcov:2;Cartof:3;Usturoi:2;Rosii:2;Ardei gras:1;Ulei:2;Carne de pui:1;Sare:1;Piper:1|Caleste ceapa si usturoiul in ulei pana devin aurii.Adauga morcovul taiat rondele si caleste inca 2-3 minute.Pune cubulete de carne de pui si rumeneste-le usor.Adauga cartofii taiati cuburi, rosiile taiate si ardeiul. Amesteca.Toarna 500 ml de apa, acopera si lasa la foc mediu 25–30 minute.Potriveste de sare si piper, apoi mai lasa 5 minute fara capac.Serveste cald.##Sandwich cu pui|00:15|Carne de pui:1;Cascaval:2;Paine:2|Se taie puiul, se prajeste in tigaie, si se adauga intre cele doua felii de paine alaturi de cascaval.
+
+20/05/2025 14:51:07 - ClientSEARCH_RECIPES pui
+
+20/05/2025 14:51:07 - RECIPE_RESULTS|Tocanita rustica de legume cu carne de pui|01:15|Ceapa:2;Morcov:2;Cartof:3;Usturoi:2;Rosii:2;Ardei gras:1;Ulei:2;Carne de pui:1;Sare:1;Piper:1|Caleste ceapa si usturoiul in ulei pana devin aurii.Adauga morcovul taiat rondele si caleste inca 2-3 minute.Pune cubulete de carne de pui si rumeneste-le usor.Adauga cartofii taiati cuburi, rosiile taiate si ardeiul. Amesteca.Toarna 500 ml de apa, acopera si lasa la foc mediu 25–30 minute.Potriveste de sare si piper, apoi mai lasa 5 minute fara capac.Serveste cald.##Sandwich cu pui|00:15|Carne de pui:1;Cascaval:2;Paine:2|Se taie puiul, se prajeste in tigaie, si se adauga intre cele doua felii de paine alaturi de cascaval.
+
+20/05/2025 14:51:12 - Clientul s-a deconectat.
+
+20/05/2025 14:51:27 - Client conectat!
+
+20/05/2025 14:51:27 - ClientLOGIN ciocalex@yahoo.ro 2907
+
+20/05/2025 14:51:27 - Login successful! Welcome 
+
+20/05/2025 14:51:27 - LOGIN_SUCCESS_CLIENT
+
+20/05/2025 14:51:27 - LOGIN_SUCCESS
+
+20/05/2025 14:51:49 - ClientSEARCH_RECIPES pui,tocanita
+
+20/05/2025 14:51:49 - RECIPE_RESULTS|Tocanita rustica de legume cu carne de pui|01:15|Ceapa:2;Morcov:2;Cartof:3;Usturoi:2;Rosii:2;Ardei gras:1;Ulei:2;Carne de pui:1;Sare:1;Piper:1|Caleste ceapa si usturoiul in ulei pana devin aurii.Adauga morcovul taiat rondele si caleste inca 2-3 minute.Pune cubulete de carne de pui si rumeneste-le usor.Adauga cartofii taiati cuburi, rosiile taiate si ardeiul. Amesteca.Toarna 500 ml de apa, acopera si lasa la foc mediu 25–30 minute.Potriveste de sare si piper, apoi mai lasa 5 minute fara capac.Serveste cald.
+
+20/05/2025 14:52:08 - ClientSEARCH_RECIPES 
+
+20/05/2025 14:52:08 - RECIPE_RESULTS|Varza cu carne|00:30|Varza:1;Carne de porc:1;Ceapa:3|aaaaaaa##Sandwich cu pui|00:15|Carne de pui:1;Cascaval:2;Paine:2|Se taie puiul, se prajeste in tigaie, si se adauga intre cele doua felii de paine alaturi de cascaval.##Paste cu usturoi si spanac|00:25|Usturoi:2;Spanac:1;Ulei:1;Sare:1;Paste:1|Fierbe pastele conform instructiunilor de pe ambalaj. Intr-o tigaie, incinge putin ulei. Adauga usturoiul taiat felii si caleste-l usor. Adauga spanacul spalat si scurs, gateste pana se inmoaie. Adauga pastele scurse peste spanac si usturoi. Condimenteaza cu sare dupa gust si amesteca bine. Serveste cald.##Salata de legume proaspete|00:16|Rosii:2;Castraveti:1;Salata verde:1;Ceapa:1;Ulei:1;Sare:1|Spala rosiile, castravetii, salata si ceapa. Taie rosiile si castravetii felii. Rupe frunzele de salata in bucati potrivite. Taie ceapa julien. Amesteca toate legumele intr-un bol. Adauga un praf de sare si stropeste cu putin ulei. Serveste imediat pentru prospetime maxima.##Tocanita rustica de legume cu carne de pui|01:15|Ceapa:2;Morcov:2;Cartof:3;Usturoi:2;Rosii:2;Ardei gras:1;Ulei:2;Carne de pui:1;Sare:1;Piper:1|Caleste ceapa si usturoiul in ulei pana devin aurii.Adauga morcovul taiat rondele si caleste inca 2-3 minute.Pune cubulete de carne de pui si rumeneste-le usor.Adauga cartofii taiati cuburi, rosiile taiate si ardeiul. Amesteca.Toarna 500 ml de apa, acopera si lasa la foc mediu 25–30 minute.Potriveste de sare si piper, apoi mai lasa 5 minute fara capac.Serveste cald.
+
+20/05/2025 14:53:38 - ClientGENERARE_LISTA ciocalex@yahoo.ro Paste cu usturoi si spanac
+
+
+20/05/2025 14:53:38 - Trimis c�tre client: ID_RETETA|3|Lista cumpărături pentru rețeta "Paste cu usturoi si spanac":
+
+Usturoi (2) - 4.07 RON
+Spanac (1) - 3.48 RON
+Ulei (1) - 2.29 RON
+Sare (1) - 4.4 RON
+Paste (1) - 12.5 RON
+
+Total: 26.74 RON
+Furnizor: ￯ﾻ﾿FreshFoodsSRL
+
+20/05/2025 14:53:44 - ClientPLACE_ORDER|ciocalex@yahoo.ro|3
+
+
+20/05/2025 14:53:44 - PLACE_ORDER_SUCCESS
+
+20/05/2025 14:53:53 - Clientul s-a deconectat.
+
+20/05/2025 14:54:06 - Client conectat!
+
+20/05/2025 14:54:06 - ClientLOGIN ciocalex@yahoo.ro 2907
+
+20/05/2025 14:54:06 - Login successful! Welcome 
+
+20/05/2025 14:54:06 - LOGIN_SUCCESS_CLIENT
+
+20/05/2025 14:54:06 - LOGIN_SUCCESS
+
+20/05/2025 14:57:28 - Eroare la receptionare.Inchidem clientul
+
+20/05/2025 14:58:53 - Client conectat!
+
+20/05/2025 14:58:53 - ClientSIGNUP CHEF bucur rares bucurie21 111 0711111111 01.01.2000 b@yahoo.com 50 http://bucurie.ro
+
+20/05/2025 14:59:20 - Chef registered successfully!
+
+20/05/2025 14:59:20 - SIGNUP_CHEF_SUCCESS
+
+20/05/2025 15:00:42 - Clientul s-a deconectat.
+
+20/05/2025 15:01:12 - Client conectat!
+
+20/05/2025 15:01:12 - ClientLOGIN b@yahoo.com 111
+
+20/05/2025 15:01:12 - Login successful! Welcome 
+
+20/05/2025 15:01:12 - LOGIN_SUCCESS_CHEF
+
+20/05/2025 15:01:12 - LOGIN_SUCCESS
+
+20/05/2025 15:01:19 - Clientul s-a deconectat.
+
+20/05/2025 15:01:32 - Client conectat!
+
+20/05/2025 15:01:32 - ClientFORGOT_PASSWORD b@yahoo.com
+
+20/05/2025 15:01:32 - EMAIL_FOUND
+
+20/05/2025 15:02:15 - ClientRESET_PASSWORD b@yahoo.com 32429 mama
+
+20/05/2025 15:02:15 - RESET_FAILED
+
+20/05/2025 15:02:25 - ClientRESET_PASSWORD b@yahoo.com 32439 mama
+
+20/05/2025 15:02:25 - [RESET_PASSWORD] Parola pentru b@yahoo.com a fost resetat� cu succes!
+
+20/05/2025 15:02:28 - Clientul s-a deconectat.
+
+20/05/2025 15:02:50 - Client conectat!
+
+20/05/2025 15:02:50 - ClientFORGOT_PASSWORD b@yahoo.com
+
+20/05/2025 15:02:50 - EMAIL_FOUND
+
+20/05/2025 15:03:06 - ClientRESET_PASSWORD b@yahoo.com 32439 tata
+
+20/05/2025 15:03:06 - RESET_FAILED
+
+20/05/2025 15:04:33 - Client conectat!
+
+20/05/2025 15:04:33 - ClientLOGIN b@yahoo.com mama
+
+20/05/2025 15:04:34 - Login successful! Welcome 
+
+20/05/2025 15:04:34 - LOGIN_SUCCESS_CHEF
+
+20/05/2025 15:04:34 - LOGIN_SUCCESS
+
+20/05/2025 15:04:39 - Clientul s-a deconectat.
+
