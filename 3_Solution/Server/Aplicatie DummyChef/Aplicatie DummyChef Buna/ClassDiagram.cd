@@ -1,2 +1,130 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Administrator" Collapsed="true">
+    <Position X="11.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAEAAAEgAACMAAAAAAEAAgRwEFIAgQAQAAAAAgAAAA=</HashCode>
+      <FileName>Administrator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bucatar" Collapsed="true">
+    <Position X="4" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAEAUAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Bucatar.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Client" Collapsed="true">
+    <Position X="6.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAQABAAAAAAAAAEAAAAiAAAAAgAAAAAAQ=</HashCode>
+      <FileName>Client.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Comanda" Collapsed="true">
+    <Position X="13.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAACAAARAAAAAQAgAAAAAAAAAEABEAAAAAAAAACA=</HashCode>
+      <FileName>Comanda.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DatabaseConnection" Collapsed="true">
+    <Position X="15" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQAGAWGSEASQwBgAUABwMEAAAAGQCAIACEABgIQgKI=</HashCode>
+      <FileName>DatabaseConnection.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DummyChef" Collapsed="true">
+    <Position X="11.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAQiFEAAoAAAASAQAACRAAACJgKogAACABABYACAI=</HashCode>
+      <FileName>DummyChef.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Furnizor" Collapsed="true">
+    <Position X="9" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UAEAAAAACIAAEBAgAAAAAAAAAAEEAAAAAAAAAIABBAA=</HashCode>
+      <FileName>Furnizor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDGenerator" Collapsed="true">
+    <Position X="13.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAACAAAAAAABAAAAAIEAAAAAAAA=</HashCode>
+      <FileName>IDGenerator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="iFurnizior" Collapsed="true">
+    <Position X="9" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>iFurnizior.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="iIngrediente" Collapsed="true">
+    <Position X="7" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>iIngrediente.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ingrediente" Collapsed="true">
+    <Position X="7" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QRAAAAAAAAAAgAAAgAAACAACAAAEAAAAAAAQAAAABAg=</HashCode>
+      <FileName>Ingrediente.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="iReteta" Collapsed="true">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>iReteta.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="iUtilizator" Collapsed="true">
+    <Position X="5.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>iUtilizator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ListaDeCumparaturi" Collapsed="true">
+    <Position X="15" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAIAAACAEAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ListaDeCumparaturi.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Logger" Collapsed="true">
+    <Position X="11.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAQAABAAAIAAAAAAAAAAAAAAAgAAAAEAAAAAAACAAA=</HashCode>
+      <FileName>Logger.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Preferinte" Collapsed="true">
+    <Position X="13.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAEABBAAAAAAAABAAAAggAAAAAASQAAAIIA=</HashCode>
+      <FileName>Preferinte.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Reteta" Collapsed="true">
+    <Position X="4" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABBACACAAAAgAQQEAARAAAAAEAAAAAAA=</HashCode>
+      <FileName>Reteta.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utilizator" Collapsed="true">
+    <Position X="5.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAQQQhAAAAAAAIAAAEgAAAAAACAAQAAgQ=</HashCode>
+      <FileName>Utilizator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
