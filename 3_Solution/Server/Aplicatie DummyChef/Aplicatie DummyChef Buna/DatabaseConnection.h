@@ -70,7 +70,6 @@ public:
     std::vector<Comanda*> GetAllComenzi();
     std::vector<Client*> GetClientiCuPreferinte();
     bool DeleteUserByEmail(const std::wstring& email);
-    void UpdateStocDupaComanda(int idReteta);
     bool AreIngredienteInStoc(int idReteta);
 private:
     std::wstring server, database, username, password;

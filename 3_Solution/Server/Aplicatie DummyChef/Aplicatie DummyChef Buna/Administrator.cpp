@@ -256,10 +256,10 @@ void Administrator::afisareFurnizori() {
 
     std::cout << "Furnizori existenti in baza de date:\n";
     for (Furnizor* f : this->furnizori) {
-        f->printFurnizor(); // metodă deja definită în clasa ta
+        f->printFurnizor(); 
     }
 
-    // Curățare memorie
+  
     for (Furnizor* f : this->furnizori) {
         delete f;
     }

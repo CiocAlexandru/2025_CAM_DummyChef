@@ -1976,3 +1976,136 @@ Furnizor: ￯ﾻ﾿FreshFoodsSRL
 
 19/05/2025 22:58:33 - Eroare la receptionare.Inchidem clientul
 
+20/05/2025 08:24:06 - Client conectat!
+
+20/05/2025 08:24:07 - ClientLOGIN ciocalex@yahoo.com 2907
+
+20/05/2025 08:24:07 - LOGIN_FAILED
+
+20/05/2025 08:24:07 - LOGIN_FAILED
+
+20/05/2025 08:24:34 - Clientul s-a deconectat.
+
+20/05/2025 08:24:34 - Client conectat!
+
+20/05/2025 08:24:34 - ClientLOGIN ciocalex@yahoo.ro 2907
+
+20/05/2025 08:24:34 - Login successful! Welcome 
+
+20/05/2025 08:24:34 - LOGIN_SUCCESS_CLIENT
+
+20/05/2025 08:24:34 - LOGIN_SUCCESS
+
+20/05/2025 08:25:04 - ClientGENERARE_LISTA ciocalex@yahoo.ro Paste cu usturoi si spanac
+
+
+20/05/2025 08:25:04 - Trimis c�tre client: ID_RETETA|3|Lista cumpărături pentru rețeta "Paste cu usturoi si spanac":
+
+Usturoi (2) - 4.07 RON
+Spanac (1) - 3.48 RON
+Ulei (1) - 2.29 RON
+Sare (1) - 4.4 RON
+Paste (1) - 12.5 RON
+
+Total: 26.74 RON
+Furnizor: ￯ﾻ﾿FreshFoodsSRL
+
+20/05/2025 08:25:08 - ClientPLACE_ORDER|ciocalex@yahoo.ro|3
+
+
+20/05/2025 08:25:08 - PLACE_ORDER_SUCCESS
+
+20/05/2025 08:25:20 - Clientul s-a deconectat.
+
+20/05/2025 08:39:19 - Client conectat!
+
+20/05/2025 08:39:19 - ClientLOGIN ciocalex@yahoo.ro 2907
+
+20/05/2025 08:39:19 - Login successful! Welcome 
+
+20/05/2025 08:39:19 - LOGIN_SUCCESS_CLIENT
+
+20/05/2025 08:39:19 - LOGIN_SUCCESS
+
+20/05/2025 08:39:33 - ClientGENERARE_LISTA ciocalex@yahoo.ro Paste cu usturoi si spanac
+
+
+20/05/2025 08:39:33 - Trimis c�tre client: ID_RETETA|3|Lista cumpărături pentru rețeta "Paste cu usturoi si spanac":
+
+Usturoi (2) - 4.07 RON
+Spanac (1) - 3.48 RON
+Ulei (1) - 2.29 RON
+Sare (1) - 4.4 RON
+Paste (1) - 12.5 RON
+
+Total: 26.74 RON
+Furnizor: ￯ﾻ﾿FreshFoodsSRL
+
+20/05/2025 08:39:35 - ClientPLACE_ORDER|ciocalex@yahoo.ro|3
+
+
+20/05/2025 08:39:35 - PLACE_ORDER_SUCCESS
+
+20/05/2025 08:47:18 - Client conectat!
+
+20/05/2025 08:47:18 - ClientLOGIN ciocalex@yahoo.ro 2907
+
+20/05/2025 08:47:19 - Login successful! Welcome 
+
+20/05/2025 08:47:19 - LOGIN_SUCCESS_CLIENT
+
+20/05/2025 08:47:19 - LOGIN_SUCCESS
+
+20/05/2025 08:47:37 - ClientGENERARE_LISTA ciocalex@yahoo.ro Paste cu usturoi si spanac
+
+
+20/05/2025 08:47:37 - Trimis c�tre client: ID_RETETA|3|Lista cumpărături pentru rețeta "Paste cu usturoi si spanac":
+
+Usturoi (2) - 4.07 RON
+Spanac (1) - 3.48 RON
+Ulei (1) - 2.29 RON
+Sare (1) - 4.4 RON
+Paste (1) - 12.5 RON
+
+Total: 26.74 RON
+Furnizor: ￯ﾻ﾿FreshFoodsSRL
+
+20/05/2025 08:47:38 - ClientPLACE_ORDER|ciocalex@yahoo.ro|3
+
+
+20/05/2025 08:47:38 - PLACE_ORDER_SUCCESS
+
+20/05/2025 08:52:25 - Client conectat!
+
+20/05/2025 08:52:25 - ClientSIGNUP CLIENT aaa aaa aaa aaa 1122334455 01.01.2000 aa@yahoo.ro aaa
+
+20/05/2025 08:52:25 - Client registered successfully!
+
+20/05/2025 08:52:25 - SIGNUP_CLIENT_SUCCESS
+
+20/05/2025 08:52:36 - ClientPREFERINTE_CLIENT aaa aaa aaa Dimineata(8-12) Economic aaa
+
+20/05/2025 08:52:36 - Client preferences saved for username: aaa
+
+20/05/2025 08:52:40 - Clientul s-a deconectat.
+
+20/05/2025 09:35:42 - Client conectat!
+
+20/05/2025 09:35:42 - ClientLOGIN cazanalexandra@yahoo.com 2133
+
+20/05/2025 09:35:42 - Login successful! Welcome 
+
+20/05/2025 09:35:42 - LOGIN_SUCCESS_CHEF
+
+20/05/2025 09:35:42 - LOGIN_SUCCESS
+
+20/05/2025 09:38:51 - ClientADD_INGREDIENT|cazanalexandra@yahoo.com|Paine|3.50|100|SC.PAINEBUNA.SRL|0771039160|painebuna@yahoo.ro|Str.Painii,Sector6,Bucuresti
+
+20/05/2025 09:38:51 - ADD_INGREDIENT_SUCCESS
+
+20/05/2025 09:40:13 - ClientADD_RECIPE|cazanalexandra@yahoo.com|Sandwich cu pui|00:15|Carne de pui:1;Cascaval:2;Paine:2|Se taie puiul, se prajeste in tigaie, si se adauga intre cele doua felii de paine alaturi de cascaval.
+
+20/05/2025 09:40:13 - ADD_RECIPE_SUCCESS
+
+20/05/2025 09:42:51 - Eroare la receptionare.Inchidem clientul
+

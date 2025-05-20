@@ -58,9 +58,9 @@ void DummyChef::run()
         } while (n);
     }
     catch (...) {
-        closeSocket(); // Asigura-te că socket-urile sunt inchise in caz de eroare
+        closeSocket(); 
         this->log->add("Eroare!\n");
-        throw; // Re-arunca exceptia pentru gestionare ulterioara
+        throw;
     }
     
 }
@@ -258,7 +258,7 @@ void DummyChef::handleClient()
 
 void DummyChef::closeSocket()
 {
-    // Inchide socketurile
+
     if (clientSocket != INVALID_SOCKET) {
         closesocket(clientSocket);
         clientSocket = INVALID_SOCKET;
@@ -295,7 +295,6 @@ bool DummyChef::handleLogin(const std::string& email, const std::string& passwor
             std::string mesaj = "Login successful! Welcome " + this->utilizator->getNume() + "\n";
             log->add(mesaj);
 
-            // Determină tipul utilizatorului prin dynamic_cast
             std::string response;
             if (dynamic_cast<Client*>(this->utilizator)) {
                 response = "LOGIN_SUCCESS_CLIENT";
@@ -354,7 +353,7 @@ void DummyChef::registerUser(const std::string& userType, const std::string& num
         DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
         db.Connect();
 
-        // Convert strings to wstrings for database compatibility
+        
         std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
         std::wstring wNume = converter.from_bytes(nume);
         std::wstring wPrenume = converter.from_bytes(prenume);
@@ -366,7 +365,7 @@ void DummyChef::registerUser(const std::string& userType, const std::string& num
         std::wstring wAdresaLivrare = converter.from_bytes(adresa_livrare);
         std::wstring wLinkDemonstrativ = converter.from_bytes(link_demonstrativ);
 
-        // Check if user already exists
+      
         if (db.UserExists(wEmail)) {
             std::cout << "Error: A user with this email already exists!" << std::endl;
             log->add("Error: A user with this email already exists!\n");
@@ -418,13 +417,13 @@ void DummyChef::handleForgotPassword(const std::string& request) {
         std::wstring wEmail = converter.from_bytes(email);
 
         if (db.UserExists(wEmail)) {
-            // Generează și stochează codul de resetare
-            resetCode = this->idGenerator->getID(); // Stocăm codul în variabila unică
-            currentEmail = email; // Stocăm email-ul asociat
+        
+            resetCode = this->idGenerator->getID();
+            currentEmail = email;
 
             std::cout << "[FORGOT_PASSWORD] Cod pentru " << email << ": " << resetCode << std::endl;
 
-            // Trimitem doar EMAIL_FOUND, conform așteptărilor clientului
+           
             std::string response = "EMAIL_FOUND";
             log->add("EMAIL_FOUND\n");
             send(clientSocket, response.c_str(), response.length(), 0);
@@ -454,7 +453,6 @@ void DummyChef::handleResetPassword(const std::string& request) {
     try {
         int receivedCode = std::stoi(codeStr);
 
-        // Verificăm dacă codul și email-ul sunt valide
         if (email == currentEmail && receivedCode == resetCode) {
             DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
             db.Connect();
@@ -463,11 +461,10 @@ void DummyChef::handleResetPassword(const std::string& request) {
             std::wstring wEmail = converter.from_bytes(email);
             std::wstring wNewPassword = converter.from_bytes(newPassword);
 
-            // Actualizăm parola în baza de date
             std::wstring sqlQuery = L"UPDATE Utilizatori SET Parola = N'" + wNewPassword + L"' WHERE Email = N'" + wEmail + L"'";
             db.ExecuteNonQuery(sqlQuery);
 
-            // Resetăm codul și email-ul
+        
             resetCode = 0;
             currentEmail = "";
 
@@ -500,14 +497,13 @@ void DummyChef::handleClientPreferences(const std::string& request) {
     iss >> command >> username >> std::quoted(foodPreferences) >> std::quoted(allergies) >>
         std::quoted(deliveryTime) >> std::quoted(pricePreference) >> std::quoted(notes);
 
-    // Log the received values for debugging
+
     std::cout << "Received deliveryTime: " << deliveryTime << std::endl;
 
     try {
         DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
         db.Connect();
 
-        // Convert strings to wstrings for database compatibility
         std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
         std::wstring wUsername = converter.from_bytes(username);
         std::wstring wFoodPreferences = converter.from_bytes(foodPreferences);
@@ -516,10 +512,10 @@ void DummyChef::handleClientPreferences(const std::string& request) {
         std::wstring wPricePreference = converter.from_bytes(pricePreference);
         std::wstring wNotes = converter.from_bytes(notes);
 
-        // Log the converted deliveryTime for debugging
+    
         std::wcout << L"Converted wDeliveryTime: " << wDeliveryTime << std::endl;
 
-        // Check if user exists
+    
         if (!db.UserExistsByUsername(wUsername)) {
             std::string response = "PREFERINTE_CLIENT_FAILED: User not found";
             log->add(response + "\n");
@@ -528,7 +524,7 @@ void DummyChef::handleClientPreferences(const std::string& request) {
             return;
         }
 
-        // Get client ID
+      
         int clientId = db.GetUserIdByUsername(wUsername);
         if (clientId == -1) {
             std::string response = "PREFERINTE_CLIENT_FAILED: User not found";
@@ -538,15 +534,15 @@ void DummyChef::handleClientPreferences(const std::string& request) {
             return;
         }
 
-        // Check if preferences already exist for this client
+ 
         bool preferencesExist = db.PreferencesExist(clientId);
 
         if (preferencesExist) {
-            // Update existing preferences
+         
             db.UpdateClientPreferences(clientId, wFoodPreferences, wAllergies, wDeliveryTime, wPricePreference, wNotes);
         }
         else {
-            // Insert new preferences
+          
             db.InsertPreferinte(clientId, wFoodPreferences, wAllergies, wDeliveryTime, wPricePreference, wNotes);
         }
 
@@ -568,7 +564,7 @@ void DummyChef::handleClientPreferences(const std::string& request) {
 
 void DummyChef::handleAddRecipeByClient(const std::string& request) {
     try {
-        // Format: ADD_RECIPE|email|nume|timp|ingred1:qty1;ingred2:qty2|pasi
+        
         std::vector<std::string> tokens;
         std::stringstream ss(request);
         std::string token;
@@ -603,7 +599,6 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
             return;
         }
 
-        // Prelucrează ingrediente + verifică existența
         std::vector<std::pair<std::string, std::string>> ingrediente;
         std::stringstream ingSS(ingredienteRaw);
         std::string ingPair;
@@ -625,7 +620,7 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
             }
         }
 
-        // Inserează rețeta
+
         int idReteta = db.InsertRecipeFromClient(
             converter.from_bytes(numeReteta),
             converter.from_bytes(timpPreparare),
@@ -633,7 +628,6 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
             userId
         );
 
-        // Inserează ingredientele rețetei
         for (const auto& pair : ingrediente) {
             db.InsertRecipeIngredient(
                 idReteta,
@@ -658,7 +652,6 @@ void DummyChef::handleAddRecipeByClient(const std::string& request) {
 
 void DummyChef::handleAddIngredientByClient(const std::string& request) {
     try {
-        // Format: ADD_INGREDIENT|email|nume|pret|stoc|furnizor|telefon|email_furnizor|adresa
         std::vector<std::string> tokens;
         std::stringstream ss(request);
         std::string token;
@@ -691,10 +684,8 @@ void DummyChef::handleAddIngredientByClient(const std::string& request) {
         DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
         db.Connect();
 
-        // Verifică dacă furnizorul există
         int furnizorId = db.GetFurnizorIdByEmail(converter.from_bytes(emailFurnizor));
         if (furnizorId == -1) {
-            // Inserare furnizor nou
             furnizorId = db.InsertFurnizor(
                 converter.from_bytes(numeFurnizor),
                 converter.from_bytes(telefon),
@@ -703,14 +694,12 @@ void DummyChef::handleAddIngredientByClient(const std::string& request) {
             );
         }
 
-        // Adaugă ingredient
         int ingredientId = db.InsertIngredient(
             converter.from_bytes(numeIngredient),
             pret,
             furnizorId
         );
 
-        // Adaugă în stoc
         db.InsertStock(ingredientId, cantitate);
 
         db.Disconnect();
@@ -729,7 +718,6 @@ void DummyChef::handleAddIngredientByClient(const std::string& request) {
 
 void DummyChef::handleGetMyRecipes(const std::string& request) {
     try {
-        // Format: GET_MY_RECIPES|email
         std::string email = request.substr(strlen("GET_MY_RECIPES|"));
 
         std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
@@ -777,7 +765,7 @@ void DummyChef::handleSearchRecipes(const std::string& request) {
         std::stringstream ss(keywordsPart);
         std::string token;
         while (std::getline(ss, token, ',')) {
-            std::transform(token.begin(), token.end(), token.begin(), ::tolower);  // normalizează în lowercase
+            std::transform(token.begin(), token.end(), token.begin(), ::tolower);
             keywords.push_back(token);
         }
 
@@ -820,7 +808,7 @@ void DummyChef::handleSearchRecipes(const std::string& request) {
             for (const auto& ing : ingrediente) {
                 ingrLine += converter.to_bytes(ing[0]) + ":" + converter.to_bytes(ing[1]) + ";";
             }
-            if (!ingrLine.empty()) ingrLine.pop_back(); // elimină ultimul ;
+            if (!ingrLine.empty()) ingrLine.pop_back();
 
             response += converter.to_bytes(denumire) + "|" +
                 converter.to_bytes(timp) + "|" +
@@ -828,7 +816,6 @@ void DummyChef::handleSearchRecipes(const std::string& request) {
                 converter.to_bytes(pasi) + "##";
         }
 
-        // Elimină ## de la final dacă există
         if (response.size() >= 2 && response.substr(response.size() - 2) == "##") {
             response.erase(response.size() - 2);
         }
@@ -850,7 +837,7 @@ void DummyChef::handleGenerareLista(const std::string& request) {
     std::string command, email, recipeName;
     iss >> command >> email;
     std::getline(iss, recipeName);
-    recipeName = recipeName.substr(1); // elimină spațiul rămas după email
+    recipeName = recipeName.substr(1);
 
     try {
         DatabaseConnection db(L"DESKTOP-OM4UDQM\\SQLEXPRESS", L"DummyChefDB", L"", L"");
@@ -923,8 +910,6 @@ void DummyChef::handleGenerareLista(const std::string& request) {
             db.Disconnect();
             return;
         }
-
-        // Obținem furnizorul (opțional)
         auto furnizor = db.ExecuteQuery(L"SELECT TOP 1 Nume FROM Furnizori");
         std::wstring numeFurnizor = furnizor.empty() ? L"Furnizor Standard" : furnizor[0][0];
 
@@ -951,7 +936,6 @@ void DummyChef::handleGenerareLista(const std::string& request) {
 
 
 void DummyChef::handlePlaceOrder(const std::string& request) {
-    // Format: PLACE_ORDER|email|id_reteta
     std::vector<std::string> tokens;
     std::stringstream ss(request);
     std::string token;
@@ -978,7 +962,6 @@ void DummyChef::handlePlaceOrder(const std::string& request) {
             return;
         }
 
-        // ✅ Verificăm dacă avem destul stoc
         if (!db.AreIngredienteInStoc(idReteta)) {
             send(clientSocket, "PLACE_ORDER_FAILED: Not enough stock", 38, 0);
             log->add("PLACE_ORDER_FAILED: Not enough stock\n");
@@ -986,10 +969,7 @@ void DummyChef::handlePlaceOrder(const std::string& request) {
             return;
         }
 
-        // ✅ Plasăm comanda și actualizăm stocul
         db.InsertOrder(userId, idReteta);
-        db.UpdateStocDupaComanda(idReteta);
-
         send(clientSocket, "PLACE_ORDER_SUCCESS", 20, 0);
         log->add("PLACE_ORDER_SUCCESS\n");
         db.Disconnect();
@@ -1007,7 +987,6 @@ void DummyChef::handlePlaceOrder(const std::string& request) {
 
 
 void DummyChef::handleGetOrders(const std::string& request) {
-    // Format: GET_ORDERS|email
     std::string email = request.substr(strlen("GET_ORDERS|"));
 
     try {

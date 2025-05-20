@@ -26,7 +26,7 @@ private:
         std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 
         std::tm timeInfo;
-        localtime_s(&timeInfo, &now_c);  // versiune sigurã
+        localtime_s(&timeInfo, &now_c);  
 
         char buffer[100];
         if (std::strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M:%S", &timeInfo)) {

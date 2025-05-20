@@ -112,3 +112,21 @@ ADD CONSTRAINT FK_ReteteIngrediente_Reteta
 FOREIGN KEY (RetetaID) REFERENCES Retete(ID)
 ON DELETE CASCADE;
 
+ALTER TABLE ReteteIngrediente
+ALTER COLUMN Cantitate INT NOT NULL;
+
+
+
+CREATE TRIGGER TRG_ScadereStocDupaComanda
+ON Comenzi
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE S
+    SET S.Cantiate = S.Cantiate - RI.Cantitate
+    FROM Inserted I
+    INNER JOIN ReteteIngrediente RI ON RI.RetetaID = I.IDReteta
+    INNER JOIN Stoc S ON S.IngredientID = RI.IngredientID;
+END;
