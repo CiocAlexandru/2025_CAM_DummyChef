@@ -37,8 +37,7 @@ void DummyChef::run()
 {
    
     try {
-        std::cout << "Bun venit in serverul aplicatiei DummyChef!\n";
-        
+        std::cout << "Bun venit in serverul aplicatiei DummyChef!\n";  
         int n;
         do {
             std::cout << "Pentru inchiderea aplicatiei apsati tasta 0:\n";

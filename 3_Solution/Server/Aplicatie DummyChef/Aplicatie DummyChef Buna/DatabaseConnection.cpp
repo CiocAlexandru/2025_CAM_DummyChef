@@ -1252,7 +1252,7 @@ bool DatabaseConnection::AreIngredienteInStoc(int idReteta) {
             cantitateNecesar = std::stoi(conv.to_bytes(cantitateNecesarW));
         }
         catch (...) {
-            std::cerr << "Cantitate invalidă pentru stoc: " << conv.to_bytes(cantitateNecesarW) << std::endl;
+            std::cerr << "Cantitate invalida pentru stoc: " << conv.to_bytes(cantitateNecesarW) << std::endl;
             continue;
         }
 
