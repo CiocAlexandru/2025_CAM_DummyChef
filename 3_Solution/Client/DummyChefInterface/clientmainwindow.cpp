@@ -53,6 +53,7 @@ void ClientMainWindow::openShoppingList()
 {
     ShoppingListDialog* dialog=new ShoppingListDialog(email,socket,this);
     dialog->exec();
+    QMessageBox::information(this, "Atentie!", "Trebuie sa va logati din nou in cont pentru a fi actualizate modificarile.");
 }
 
 void ClientMainWindow::openModifyPrefrences()
@@ -81,7 +82,7 @@ void ClientMainWindow::updateBackground() {
 
 void ClientMainWindow::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
-    updateBackground();  // Redimensionează fundalul
+    updateBackground();
 }
 
 void ClientMainWindow::handleLogout()
