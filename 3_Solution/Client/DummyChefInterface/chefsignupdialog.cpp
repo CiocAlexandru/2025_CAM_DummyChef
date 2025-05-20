@@ -15,7 +15,6 @@ ChefSignUpDialog::ChefSignUpDialog(QWidget *parent) :
     backgroundLabel->setScaledContents(true);
     backgroundLabel->lower();
 
-    // Configurare câmpuri
     ui->nameLineEdit->setPlaceholderText("Introduceți numele");
     ui->surnameLineEdit->setPlaceholderText("Introduceți prenumele");
     ui->usernameLineEdit->setPlaceholderText("Introduceți numele de utilizator");
@@ -29,7 +28,6 @@ ChefSignUpDialog::ChefSignUpDialog(QWidget *parent) :
     ui->experienceYearsLineEdit->setPlaceholderText("Introduceți anii de vechime");
     ui->experienceLinkLineEdit->setPlaceholderText("Introduceți link demonstrativ");
 
-    // Conectare buton sign-up
     connect(ui->signupButton, &QPushButton::clicked, this, &ChefSignUpDialog::handleSignUp);
     connect(socket, &QTcpSocket::connected, this, &ChefSignUpDialog::onConnected);
     connect(socket, &QTcpSocket::errorOccurred, this, &ChefSignUpDialog::onError);
@@ -63,14 +61,13 @@ void ChefSignUpDialog::handleSignUp()
         return;
     }
 
-    // Dacă e deja conectat sau în proces de conectare, deconectează-l
     if (socket->state() == QAbstractSocket::ConnectedState ||
         socket->state() == QAbstractSocket::ConnectingState) {
 
-        socket->abort();  // Închide imediat conexiunea curentă
+        socket->abort();
     }
 
-    socket->connectToHost("172.20.10.3", 12345);
+    socket->connectToHost("172.20.10.13", 12345);
 }
 
 void ChefSignUpDialog::onConnected()
@@ -103,13 +100,13 @@ void ChefSignUpDialog::onReadyRead()
         QMessageBox::information(this, "Succes", "Cont de bucătar creat cu succes!");
 
         if (socket && socket->isOpen()) {
-            socket->abort();  // Închide conexiunea imediat
+            socket->abort();
         }
 
-        this->close();  // Închide dialogul
+        this->close();
 
         MainWindow* mainWin = new MainWindow();
-        mainWin->show();  // Reafișează fereastra principală
+        mainWin->show();
         return;
     }
 
@@ -122,11 +119,11 @@ void ChefSignUpDialog::onReadyRead()
         ui->passwordLineEdit->clear();
         ui->confirmPasswordLineEdit->clear();
         ui->phoneLineEdit->clear();
-        ui->birthDateEdit->setDate(QDate::currentDate());  // Reset la data curentă
+        ui->birthDateEdit->setDate(QDate::currentDate());
         ui->emailLineEdit->clear();
         ui->experienceYearsLineEdit->clear();
         ui->experienceLinkLineEdit->clear();
-        ui->nameLineEdit->setFocus();  // Focus pe primul câmp
+        ui->nameLineEdit->setFocus();
     }
     else {
         QMessageBox::warning(this, "Eroare", "Înregistrare eșuată!");
@@ -137,24 +134,24 @@ void ChefSignUpDialog::onReadyRead()
         ui->passwordLineEdit->clear();
         ui->confirmPasswordLineEdit->clear();
         ui->phoneLineEdit->clear();
-        ui->birthDateEdit->setDate(QDate::currentDate());  // Reset la data curentă
+        ui->birthDateEdit->setDate(QDate::currentDate());
         ui->emailLineEdit->clear();
         ui->experienceYearsLineEdit->clear();
         ui->experienceLinkLineEdit->clear();
-        ui->nameLineEdit->setFocus();  // Focus pe primul câmp
+        ui->nameLineEdit->setFocus();
     }
 }
 
 void ChefSignUpDialog::updateBackground() {
-    QPixmap pixmap(":/images/LoginBucatar.jpg");  // Încarcă imaginea din resurse
+    QPixmap pixmap(":/images/LoginBucatar.jpg");
     backgroundLabel->setPixmap(pixmap);
-    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Acoperă întreaga fereastră
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());
 }
 
 void ChefSignUpDialog::resizeEvent(QResizeEvent *event) {
     QDialog::resizeEvent(event);
     setWindowState(windowState() | Qt::WindowFullScreen);
-    updateBackground();  // Actualizează dimensiunea fundalului la redimensionare
+    updateBackground();
 }
 
 ChefSignUpDialog::~ChefSignUpDialog()

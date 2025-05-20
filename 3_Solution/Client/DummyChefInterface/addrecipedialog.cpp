@@ -14,7 +14,6 @@ AddRecipeDialog::AddRecipeDialog(const QString& chefEmail, QTcpSocket* socket, Q
     backgroundLabel->setScaledContents(true);
     backgroundLabel->lower();
 
-    // Setări tabel
     ui->ingredientsTable->setColumnCount(2);
     ui->ingredientsTable->setHorizontalHeaderLabels({"Ingredient", "Cantitate"});
     ui->ingredientsTable->horizontalHeader()->setStretchLastSection(true);
@@ -75,7 +74,7 @@ void AddRecipeDialog::on_submitButton_clicked()
 {
     if (recipeAlreadySent)
     {
-        return;  // Protecție
+        return;
     }
     recipeAlreadySent = true;
     QString name = ui->recipeNameLineEdit->text().trimmed();
@@ -87,7 +86,6 @@ void AddRecipeDialog::on_submitButton_clicked()
         return;
     }
 
-    // Colectăm ingredientele
     QStringList ingredientList;
     for (int i = 0; i < ui->ingredientsTable->rowCount(); ++i) {
         QTableWidgetItem* item1 = ui->ingredientsTable->item(i, 0);
@@ -96,14 +94,13 @@ void AddRecipeDialog::on_submitButton_clicked()
             QMessageBox::warning(this, "Eroare", "Toate ingredientele trebuie completate.");
             return;
         }
-        QString ing = item1->text().replace("|", " "); // evităm separatorul
+        QString ing = item1->text().replace("|", " ");
         QString qty = item2->text().replace("|", " ");
         ingredientList.append(ing + ":" + qty);
     }
 
     QString ingredientsStr = ingredientList.join(";");
 
-    // Format mesaj: ADD_RECIPE|email|nume|timp|ingrediente|pași
     QString message = QString("ADD_RECIPE|%1|%2|%3|%4|%5")
                           .arg(chefEmail)
                           .arg(name)

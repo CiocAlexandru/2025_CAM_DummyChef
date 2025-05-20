@@ -28,9 +28,6 @@ ClientMainWindow::ClientMainWindow(const QString& username,const QString& email,
     connect(ui->logoutButton, &QPushButton::clicked,this, &ClientMainWindow::handleLogout);
     connect(ui->viewOrdersButton, &QPushButton::clicked, this, &ClientMainWindow::openOrderHistory);
 
-
-
-
 }
 
 ClientMainWindow::~ClientMainWindow()
@@ -65,7 +62,7 @@ void ClientMainWindow::openModifyPrefrences()
     qDebug() << "[DEBUG] Username:" << username;
 
     ClientPreferencesDialog dialog(username, socket, this);
-    dialog.exec(); // deschide modal
+    dialog.exec();
     this->close();
 }
 
@@ -77,9 +74,9 @@ void ClientMainWindow::openAllRecipes()
 
 
 void ClientMainWindow::updateBackground() {
-    QPixmap pixmap(":/images/MainWindowClient.jpg");  // Încarcă imaginea din resurse
+    QPixmap pixmap(":/images/MainWindowClient.jpg");
     backgroundLabel->setPixmap(pixmap);
-    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Acoperă întreaga fereastră
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());
 }
 
 void ClientMainWindow::resizeEvent(QResizeEvent *event) {
@@ -93,8 +90,8 @@ void ClientMainWindow::handleLogout()
         socket->disconnectFromHost();
     }
 
-    this->close();  // Închide fereastra curentă
+    this->close();
 
-    MainWindow *mainWin = new MainWindow();  // Creează o nouă instanță
-    mainWin->show();  // Afișează fereastra principală
+    MainWindow *mainWin = new MainWindow();
+    mainWin->show();
 }

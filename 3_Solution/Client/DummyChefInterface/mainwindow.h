@@ -18,23 +18,23 @@ public:
     ~MainWindow();
 
 protected:
-    void resizeEvent(QResizeEvent *event) override;  // Suprascriem resizeEvent pentru fundal
+    void resizeEvent(QResizeEvent *event) override;
 
 
 private slots:
-    void handleSignUp();      // Funcție pentru Sign Up
-    void handleLogin();       // Funcție pentru Login
-    void handleForgotPassword(); // Funcție pentru Forgot Password
-    void onConnected();// Slot pentru a gestiona conexiunea
-    void onError(QTcpSocket::SocketError socketError);// Slot pentru a gestiona erorile
+    void handleSignUp();
+    void handleLogin();
+    void handleForgotPassword();
+    void onConnected();
+    void onError(QTcpSocket::SocketError socketError);
 
 
 private:
     Ui::MainWindow *ui;
     QTcpSocket *socket;
-    QLabel *backgroundLabel;  // Adăugăm QLabel pentru fundal
+    QLabel *backgroundLabel;
 
-    void updateBackground();  // Funcție pentru actualizarea fundalului
+    void updateBackground();
 };
 
 #endif // MAINWINDOW_H

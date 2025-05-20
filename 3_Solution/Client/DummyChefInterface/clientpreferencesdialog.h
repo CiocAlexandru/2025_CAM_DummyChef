@@ -18,7 +18,7 @@ public:
     ~ClientPreferencesDialog();
 
 private slots:
-    void sendPreferences();  // înlocuiește onConnected
+    void sendPreferences();
     void onReadyRead();
     void onError(QAbstractSocket::SocketError socketError);
     void handleSavePreferences();

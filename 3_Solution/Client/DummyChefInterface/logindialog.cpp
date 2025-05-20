@@ -20,12 +20,9 @@ LoginDialog::LoginDialog(QWidget *parent) :
 
     updateBackground();
 
-    // CONECTĂRI MANUALE:
-    // 1. Butonul de login
     connect(ui->loginButton, &QPushButton::clicked,
             this, &LoginDialog::handleLogin);
 
-    // 2. Socket
     connect(socket, &QTcpSocket::connected,
             this, &LoginDialog::onConnected);
     connect(socket, &QTcpSocket::errorOccurred,
@@ -33,20 +30,18 @@ LoginDialog::LoginDialog(QWidget *parent) :
     connect(socket, &QTcpSocket::readyRead,
             this, &LoginDialog::onReadyRead);
 
-    // Configurare opțională câmpuri
     ui->usernameLineEdit->setPlaceholderText("Introduceți username");
     ui->emailLineEdit->setPlaceholderText("Introduceți email");
     ui->passwordLineEdit->setPlaceholderText("Introduceți parola");
     ui->passwordLineEdit->setEchoMode(QLineEdit::Password);
 }
 
-void LoginDialog::handleLogin()  // Nume modificat
+void LoginDialog::handleLogin()
 {
     QString username = ui->usernameLineEdit->text().trimmed();
     QString email = ui->emailLineEdit->text().trimmed();
     QString password = ui->passwordLineEdit->text();
 
-    // Validare
     if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
         QMessageBox::warning(this, "Eroare", "Completați toate câmpurile!");
         return;
@@ -57,21 +52,20 @@ void LoginDialog::handleLogin()  // Nume modificat
         return;
     }
 
-    // Dacă e deja conectat sau în proces de conectare, deconectează-l
     if (socket->state() == QAbstractSocket::ConnectedState ||
         socket->state() == QAbstractSocket::ConnectingState) {
 
-        socket->abort();  // Închide imediat conexiunea curentă
+        socket->abort();
     }
 
-    socket->connectToHost("172.20.10.3", 12345);
+    socket->connectToHost("172.20.10.13", 12345);
 }
 
 void LoginDialog::updateBackground()
 {
-    QPixmap pixmap(":/images/LoginBuna.jpg");  // Încarcă imaginea
+    QPixmap pixmap(":/images/LoginBuna.jpg");
     backgroundLabel->setPixmap(pixmap);
-    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Ocupă întreaga fereastră
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());
 }
 
 
@@ -79,7 +73,7 @@ void LoginDialog::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
     setWindowState(windowState() | Qt::WindowFullScreen);
-    updateBackground();  // Redimensionează fundalul
+    updateBackground();
 }
 
 
@@ -109,13 +103,12 @@ void LoginDialog::onReadyRead()
    if (response == "LOGIN_SUCCESS_CLIENT") {
         QMessageBox::information(this, "Succes", "Autentificare reușită ca CLIENT!");
 
-        // ✅ Aici e ce ne interesează acum:
         socket->setParent(nullptr);
         ClientMainWindow *clientWindow = new ClientMainWindow(username,email, socket);
         socket->setParent(clientWindow);
         clientWindow->show();
-        socket->readAll();  // ✅ Golește bufferul imediat după răspuns
-        this->accept();  // închide dialogul de login
+        socket->readAll();
+        this->accept();
     } else if (response == "LOGIN_SUCCESS_CHEF") {
         QMessageBox::information(this, "Succes", "Autentificare reușită ca BUCĂTAR!");
 
@@ -139,5 +132,4 @@ void LoginDialog::onReadyRead()
 LoginDialog::~LoginDialog()
 {
     delete ui;
-  //  socket->deleteLater();
 }

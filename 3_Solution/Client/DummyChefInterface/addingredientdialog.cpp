@@ -27,8 +27,6 @@ AddIngredientDialog::AddIngredientDialog(const QString& chefEmail, QTcpSocket* s
     connect(ui->submitButtom, &QPushButton::clicked,
             this, &AddIngredientDialog::on_submitButton_clicked);
     connect(socket, &QTcpSocket::readyRead, this, &AddIngredientDialog::onReadyRead);
-
-
 }
 
 AddIngredientDialog::~AddIngredientDialog()
@@ -43,7 +41,7 @@ void AddIngredientDialog::onReadyRead()
 
     if (reply == "ADD_INGREDIENT_SUCCESS") {
         QMessageBox::information(this, "Succes", "Ingredientul a fost adăugat cu succes în baza de date.");
-        accept(); // Închide dialogul
+        accept();
     }
     else if (reply.startsWith("ADD_INGREDIENT_ERROR")) {
         QMessageBox::critical(this, "Eroare", "A apărut o eroare la adăugarea ingredientului:\n" + reply.section(':', 1));
@@ -67,7 +65,6 @@ void AddIngredientDialog::on_submitButton_clicked()
     QString mail = ui->mailSupplierLineEdit->text().trimmed();
     QString adresa = ui->adresaSupplierLineEdit->text().trimmed();
 
-    // Validare câmpuri
     if (name.isEmpty() || price.isEmpty() || stock.isEmpty() ||
         supplier.isEmpty() || phoneNumber.isEmpty() || mail.isEmpty() || adresa.isEmpty()) {
         QMessageBox::warning(this, "Eroare", "Toate câmpurile trebuie completate.");
@@ -86,7 +83,6 @@ void AddIngredientDialog::on_submitButton_clicked()
         return;
     }
 
-    // Format: ADD_INGREDIENT|email|nume|pret|stoc|furnizor|telefon|email_furnizor|adresa_furnizor
     QString message = QString("ADD_INGREDIENT|%1|%2|%3|%4|%5|%6|%7|%8")
                           .arg(chefEmail)
                           .arg(name.replace("|", " "))

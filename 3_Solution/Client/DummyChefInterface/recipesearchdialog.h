@@ -19,9 +19,9 @@ public:
     ~RecipeSearchDialog();
 
 private slots:
-    void onAddKeywordClicked();     // pentru butonul "Adaugă"
-    void onSearchClicked();         // pentru butonul "Caută rețete"
-    void onSocketReadyRead();       // pentru primirea răspunsului
+    void onAddKeywordClicked();
+    void onSearchClicked();
+    void onSocketReadyRead();
 protected:
     void resizeEvent(QResizeEvent *event) override;
 

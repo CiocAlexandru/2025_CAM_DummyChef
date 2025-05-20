@@ -12,7 +12,7 @@ MyOrdersDialog::MyOrdersDialog(const QString& email, QTcpSocket* socket, QWidget
     ui->setupUi(this);
     setWindowTitle("Comenzile mele");
 
-    requestOrders();  // trimite cererea la server când se deschide
+    requestOrders();
 }
 
 MyOrdersDialog::~MyOrdersDialog()
@@ -30,7 +30,7 @@ void MyOrdersDialog::requestOrders()
     QString message = "GET_ORDERS|" + email;
     socket->write(message.toUtf8());
     socket->flush();
-    socket->waitForReadyRead(3000);  // așteaptă răspuns
+    socket->waitForReadyRead(3000);
 
     QByteArray response = socket->readAll();
     qDebug() << response;

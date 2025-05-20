@@ -15,7 +15,6 @@ ClientSignUpDialog::ClientSignUpDialog(QWidget *parent) :
     backgroundLabel->setScaledContents(true);
     backgroundLabel->lower();
 
-    // Configurare câmpuri
     ui->nameLineEdit->setPlaceholderText("Introduceți numele");
     ui->surnameLineEdit->setPlaceholderText("Introduceți prenumele");
     ui->usernameLineEdit->setPlaceholderText("Introduceți numele de utilizator");
@@ -62,14 +61,13 @@ void ClientSignUpDialog::handleSignUp()
         return;
     }
 
-    // Dacă e deja conectat sau în proces de conectare, deconectează-l
     if (socket->state() == QAbstractSocket::ConnectedState ||
         socket->state() == QAbstractSocket::ConnectingState) {
 
-        socket->abort();  // Închide imediat conexiunea curentă
+        socket->abort();
     }
 
-    socket->connectToHost("172.20.10.3", 12345);
+    socket->connectToHost("172.20.10.13", 12345);
 }
 
 void ClientSignUpDialog::onConnected()
@@ -107,7 +105,6 @@ void ClientSignUpDialog::onReadyRead()
     } else {
         QMessageBox::warning(this, "Eroare", "Înregistrare eșuată!");
 
-        // Golește toate câmpurile
         ui->nameLineEdit->clear();
         ui->surnameLineEdit->clear();
         ui->usernameLineEdit->clear();
@@ -118,21 +115,21 @@ void ClientSignUpDialog::onReadyRead()
         ui->emailLineEdit->clear();
         ui->adressLineEdit->clear();
 
-        ui->nameLineEdit->setFocus();  // Pune focusul pe primul câmp
+        ui->nameLineEdit->setFocus();
     }
 }
 
 
 void ClientSignUpDialog::updateBackground() {
-    QPixmap pixmap(":/images/LoginClient.jpg");  // Încarcă imaginea din resurse
+    QPixmap pixmap(":/images/LoginClient.jpg");
     backgroundLabel->setPixmap(pixmap);
-    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Acoperă întreaga fereastră
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());
 }
 
 void ClientSignUpDialog::resizeEvent(QResizeEvent *event) {
     QDialog::resizeEvent(event);
     setWindowState(windowState() | Qt::WindowFullScreen);
-    updateBackground();  // Actualizează dimensiunea fundalului la redimensionare
+    updateBackground();
 }
 
 ClientSignUpDialog::~ClientSignUpDialog()

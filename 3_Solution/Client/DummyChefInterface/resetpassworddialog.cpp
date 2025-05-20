@@ -17,7 +17,7 @@ ResetPasswordDialog::ResetPasswordDialog(const QString &email, QTcpSocket* exist
     ui->confirmPasswordLineEdit->setPlaceholderText("Confirmați noua parolă");
     ui->confirmPasswordLineEdit->setEchoMode(QLineEdit::Password);
 
-    // Conectare buton "Resetează Parola"
+
     connect(ui->resetButton, &QPushButton::clicked, this, &ResetPasswordDialog::handleResetPassword);
     connect(socket, &QTcpSocket::connected, this, &ResetPasswordDialog::onConnected);
     connect(socket, &QTcpSocket::errorOccurred, this, &ResetPasswordDialog::onError);
@@ -54,11 +54,10 @@ void ResetPasswordDialog::onConnected()
         .arg(ui->newPasswordLineEdit->text());
 
     socket->write(message.toUtf8());
-    socket->flush();  // Ne asigurăm că mesajul este trimis imediat
+    socket->flush();
 
-    socket->waitForBytesWritten(3000); // Așteaptă trimiterea completă
+    socket->waitForBytesWritten(3000);
 
-    // Acum așteptăm și răspunsul (doar 1 dată, max 3 secunde)
     if (!socket->waitForReadyRead(3000)) {
         QMessageBox::critical(this, "Eroare", "Serverul nu a răspuns în timp util.");
         return;
@@ -95,9 +94,9 @@ void ResetPasswordDialog::updateBackground()
 
 void ResetPasswordDialog::resizeEvent(QResizeEvent *event)
 {
-    QDialog::resizeEvent(event); // Apelare funcție de bază
+    QDialog::resizeEvent(event);
     setWindowState(windowState() | Qt::WindowFullScreen);
-    updateBackground(); // Actualizare dimensiuni fundal
+    updateBackground();
 }
 
 

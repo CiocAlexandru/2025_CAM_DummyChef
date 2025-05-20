@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QTcpSocket>
 #include <QLabel>
-#include "clientsignupdialog.h"  // Fereastra pentru client
+#include "clientsignupdialog.h"
 #include "chefsignupdialog.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {class SignUpDialog;}
@@ -23,7 +23,7 @@ public:
     ~SignUpDialog();
 
 protected:
-    void resizeEvent(QResizeEvent *event) override;  // Suprascriem resizeEvent pentru fundal
+    void resizeEvent(QResizeEvent *event) override;
 
 private slots:
     void on_clientButton_clicked();
@@ -31,7 +31,7 @@ private slots:
 
 private:
     Ui::SignUpDialog *ui;
-    QLabel *backgroundLabel;  // Adăugăm QLabel pentru fundal
+    QLabel *backgroundLabel;
     QTcpSocket *socket;
     void updateBackground();
 };

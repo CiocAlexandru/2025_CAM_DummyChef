@@ -9,7 +9,7 @@ RecipeSearchDialog::RecipeSearchDialog(const QString& username, QTcpSocket* sock
     username(username),
     socket(socket)
 {
-    ui->setupUi(this);  // Încarcă interfața grafică din .ui
+    ui->setupUi(this);
     setWindowTitle("Cauta retete in functie de cuvinte cheie: ");
     backgroundLabel = new QLabel(this);
     backgroundLabel->setScaledContents(true);
@@ -17,7 +17,6 @@ RecipeSearchDialog::RecipeSearchDialog(const QString& username, QTcpSocket* sock
 
     ui->keywordEdit->setPlaceholderText("Introduceți cuvinte cheie pentru cautare");
 
-    // Conectăm butoanele la funcțiile noastre
     connect(ui->addButton, &QPushButton::clicked, this, &RecipeSearchDialog::onAddKeywordClicked);
     connect(ui->searchButton, &QPushButton::clicked, this, &RecipeSearchDialog::onSearchClicked);
     connect(socket, &QTcpSocket::readyRead, this, &RecipeSearchDialog::onSocketReadyRead);
@@ -80,7 +79,6 @@ void RecipeSearchDialog::onSocketReadyRead()
                              "\n-------------------";
         }
 
-        // Afișează rețetele într-o fereastră mai prietenoasă
         QMessageBox resultsBox(this);
         resultsBox.setWindowTitle("Rezultate căutare");
         resultsBox.setText(finalList.join("\n\n"));

@@ -1,4 +1,4 @@
-// chefmainwindow.h
+
 #ifndef CHEFMAINWINDOW_H
 #define CHEFMAINWINDOW_H
 

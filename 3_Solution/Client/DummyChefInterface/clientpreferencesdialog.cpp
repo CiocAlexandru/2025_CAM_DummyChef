@@ -25,7 +25,6 @@ ClientPreferencesDialog::ClientPreferencesDialog(const QString& username, QTcpSo
     ui->deliveryTimeCombo->addItems({"Orice_ora", "Dimineata(8-12)", "Pranz(12-15)", "Seara(15-20)", "Noapte(20-24)"});
     ui->pricePreferenceCombo->addItems({"Orice_pret", "Economic", "Moderat", "Premium"});
 
-    // Conectăm semnalele socket-ului
     connect(socket, &QTcpSocket::readyRead, this, &ClientPreferencesDialog::onReadyRead);
     connect(socket, &QTcpSocket::errorOccurred, this, &ClientPreferencesDialog::onError);
 
@@ -65,12 +64,11 @@ void ClientPreferencesDialog::sendPreferences()
     qDebug() << "Trimitem la server:" << message;
 
     socket->write(message.toUtf8());
-    socket->flush();  // Ne asigurăm că mesajul este trimis imediat
+    socket->flush();
 
-    socket->waitForBytesWritten(3000); // Așteaptă trimiterea completă
+    socket->waitForBytesWritten(3000);
 
 
-    // Acum așteptăm și răspunsul (doar 1 dată, max 3 secunde)
     if (!socket->waitForReadyRead(3000)) {
         QMessageBox::critical(this, "Eroare", "Serverul nu a răspuns în timp util.");
         return;
@@ -92,14 +90,13 @@ void ClientPreferencesDialog::onReadyRead()
         QMessageBox::information(this, "Atentie!", "Trebuie sa va logati din nou in cont pentru a fi actualizate modificarile.");
         raspunsPrimit = true;
 
-        // Închide socketul imediat
         if (socket && socket->isOpen()) {
             socket->abort();
         }
-        this->close();  // Închide dialogul
+        this->close();
 
         MainWindow* mainWin = new MainWindow();
-        mainWin->show();  // Reafișează fereastra principală
+        mainWin->show();
     }
      else {
         QMessageBox::warning(this, "Eroare", "Salvarea preferințelor a eșuat!");
@@ -129,5 +126,4 @@ void ClientPreferencesDialog::resizeEvent(QResizeEvent *event)
 ClientPreferencesDialog::~ClientPreferencesDialog()
 {
     delete ui;
-    // NU ștergem socket-ul aici, e deținut de ClientSignUpDialog
 }

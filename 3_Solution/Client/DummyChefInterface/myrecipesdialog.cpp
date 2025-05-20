@@ -18,7 +18,6 @@ MyRecipesDialog::MyRecipesDialog(const QString& chefEmail, QTcpSocket* socket, Q
 
     connect(socket, &QTcpSocket::readyRead, this, &MyRecipesDialog::onReadyRead);
 
-    // Cerem rețetele de la server
     QString request = QString("GET_MY_RECIPES|%1").arg(chefEmail);
     socket->write(request.toUtf8());
 }

@@ -8,7 +8,7 @@
 ForgotPasswordDialog::ForgotPasswordDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ForgotPasswordDialog),
-    socket(new QTcpSocket(this))  // Inițializează socket-ul aici!
+    socket(new QTcpSocket(this))
 {
     ui->setupUi(this);
     setWindowTitle("Recuperare parolă");
@@ -28,15 +28,15 @@ ForgotPasswordDialog::ForgotPasswordDialog(QWidget *parent) :
 
 
 void ForgotPasswordDialog::updateBackground() {
-    QPixmap pixmap(":/images/ForgotPassword.jpg");  // Încarcă imaginea din resurse
+    QPixmap pixmap(":/images/ForgotPassword.jpg");
     backgroundLabel->setPixmap(pixmap);
-    backgroundLabel->setGeometry(0, 0, this->width(), this->height());  // Acoperă întreaga fereastră
+    backgroundLabel->setGeometry(0, 0, this->width(), this->height());
 }
 
 void ForgotPasswordDialog::resizeEvent(QResizeEvent *event) {
     QDialog::resizeEvent(event);
     setWindowState(windowState() | Qt::WindowFullScreen);
-    updateBackground();  // Actualizează dimensiunea fundalului la redimensionare
+    updateBackground();
 }
 
 void ForgotPasswordDialog::handleSendRequest()
@@ -47,13 +47,12 @@ void ForgotPasswordDialog::handleSendRequest()
         QMessageBox::warning(this, "Eroare", "Introduceți un email valabil!");
         return;
     }
-    // Dacă e deja conectat sau în proces de conectare, deconectează-l
     if (socket->state() == QAbstractSocket::ConnectedState ||
         socket->state() == QAbstractSocket::ConnectingState) {
 
-        socket->abort();  // Închide imediat conexiunea curentă
+        socket->abort();
     }
-    socket->connectToHost("172.20.10.2", 12345);
+    socket->connectToHost("172.20.10.13", 12345);
 }
 
 void ForgotPasswordDialog::onConnected()

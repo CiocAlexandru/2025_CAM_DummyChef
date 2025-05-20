@@ -14,21 +14,21 @@ class LoginDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit LoginDialog(QWidget *parent = nullptr);  // Constructor
+    explicit LoginDialog(QWidget *parent = nullptr);
     ~LoginDialog();
 
 protected:
-    void resizeEvent(QResizeEvent *event) override;    // Suprascriem resizeEvent pentru fundal
+    void resizeEvent(QResizeEvent *event) override;
 
 private slots:
-    void handleLogin();    // Slot pentru butonul de login
-    void onConnected();  // Slot pentru conexiune reușită
-    void onError(QAbstractSocket::SocketError socketError);  // Slot pentru erori
+    void handleLogin();
+    void onConnected();
+    void onError(QAbstractSocket::SocketError socketError);
     void onReadyRead();
 
 private:
     Ui::LoginDialog *ui;
-    QLabel *backgroundLabel;  // Adăugăm QLabel pentru fundal
+    QLabel *backgroundLabel;
     QTcpSocket *socket;
 
     void updateBackground();
